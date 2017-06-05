@@ -4,6 +4,7 @@ import com.bit101.components.HBox;
 import com.bit101.components.Panel;
 import com.bit101.components.PushButton;
 import com.bit101.components.Style;
+import flash.display.Shape;
 import flash.display.Sprite;
 import flash.events.Event;
 /**
@@ -28,6 +29,7 @@ public class EditUI extends Sprite
 		this.removeEventListener(Event.ADDED_TO_STAGE, addToStageHandler);
 		this.initSytle();
 		this.initUI();
+		this.initMask();
 	}
 	
 	/**
@@ -67,6 +69,20 @@ public class EditUI extends Sprite
 		this.exportBtn.setSize(120, 30);
 	}
 	
-	
+	/**
+	 * 初始化遮罩
+	 */
+	private function initMask():void
+	{
+		var sp:Shape = new Shape();
+		sp.graphics.beginFill(0xff0000);
+		sp.graphics.drawRect(0, 0, 
+							this.stagePanel.width,  
+							this.stagePanel.height);
+		sp.graphics.endFill();
+		sp.x = this.stagePanel.x;
+		sp.y = this.stagePanel.y;
+		Layer.UI_STAGE.mask = sp;
+	}
 }
 }

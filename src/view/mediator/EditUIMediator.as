@@ -66,6 +66,7 @@ public class EditUIMediator extends Mediator
 	{
 		this.editUI.importBtn.addEventListener(MouseEvent.CLICK, importBtnClickHandler);
 		this.editUI.exportBtn.addEventListener(MouseEvent.CLICK, exportBtnClickHandler);
+		Layer.UI.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		Layer.STAGE.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDownHandler);
 		Layer.STAGE.addEventListener(KeyboardEvent.KEY_UP, onKeyUpHandler);
 	}
@@ -212,6 +213,13 @@ public class EditUIMediator extends Mediator
 		this.drawSelectedBound(event.currentTarget as Image);
 		this.curSelectedSpt = event.currentTarget as Image;
 		this.curSelectedSpt.startDrag();
+	}
+	
+	
+	private function onMouseDownHandler(event:MouseEvent):void 
+	{
+		this.drawSelectedBound(null);
+		this.curSelectedSpt = null;
 	}
 	
 	private function stageMouseUpHandler(event:MouseEvent):void 

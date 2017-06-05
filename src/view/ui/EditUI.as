@@ -7,6 +7,7 @@ import com.bit101.components.Style;
 import flash.display.Shape;
 import flash.display.Sprite;
 import flash.events.Event;
+import flash.geom.Point;
 /**
  * ...编辑器主场景
  * @author Kanon
@@ -19,6 +20,7 @@ public class EditUI extends Sprite
 	public var attributePanel:Panel;
 	public var importBtn:PushButton;
 	public var exportBtn:PushButton;
+	public var center:Point;
 	public function EditUI() 
 	{
 		this.addEventListener(Event.ADDED_TO_STAGE, addToStageHandler);
@@ -67,6 +69,9 @@ public class EditUI extends Sprite
 		this.exportBtn = new PushButton(hbox, 0, 5, "export");
 		this.importBtn.setSize(120, 30);
 		this.exportBtn.setSize(120, 30);
+		
+		this.center = new Point(this.stagePanel.x + this.stagePanel.width / 2, 
+								this.stagePanel.y + this.stagePanel.height / 2);
 	}
 	
 	/**

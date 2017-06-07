@@ -9,6 +9,7 @@ import flash.events.FocusEvent;
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
 import flash.filesystem.File;
+import flash.geom.Point;
 import flash.net.FileFilter;
 import flash.ui.Keyboard;
 import flash.ui.Mouse;
@@ -152,6 +153,19 @@ public class EditUIMediator extends Mediator
 			spt.parent.removeChild(spt);
 	}
 	
+	/**
+	 * 设置当前选中对象的属性
+	 */
+	private function setCurSptProp():void
+	{
+		if (this.editUI && this.curSelectedSpt)
+		{
+			var pos:Point = this.editUI.getPosTxtValue();
+			this.curSelectedSpt.x = pos.x;
+			this.curSelectedSpt.y = pos.y;
+		}
+	}
+	
 	//-----------------------------event--------------------------------
 	/////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////
@@ -272,13 +286,12 @@ public class EditUIMediator extends Mediator
 	
 	private function posYValueTxtfocusOutHandler(event:FocusEvent):void 
 	{
-		event.stopPropagation();
-		trace("inihn");
+		this.setCurSptProp();
 	}
 	
 	private function posXValueTxtfocusOutHandler(event:FocusEvent):void 
 	{
-		event.stopPropagation();
+		this.setCurSptProp();
 	}
 	
 	private function enterFrameHandler(event:Event):void 

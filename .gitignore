@@ -1,2 +1,4 @@
 # Build and Release Folders
 res/
+/obj/PlatformMapEditConfig.xml
+/obj/PlatformMapEditConfig.old

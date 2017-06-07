@@ -162,5 +162,16 @@ public class EditUI extends Sprite
 			this.posYValueTxt.text = (spt.y + this.stageHeight / 2).toString();
 		}
 	}
+	
+	/**
+	 * 获取文本的坐标
+	 * @return
+	 */
+	public function getPosTxtValue():Point
+	{
+		var x:Number = Number(this.posXValueTxt.text) - this.stageWidth / 2;
+		var y:Number = Number(this.posYValueTxt.text) - this.stageHeight / 2;
+		return new Point(x, y);
+	}
 }
 }

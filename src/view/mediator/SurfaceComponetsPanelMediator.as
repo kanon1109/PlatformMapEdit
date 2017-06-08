@@ -77,37 +77,31 @@ public class SurfaceComponetsPanelMediator extends Mediator
 				break;
 		}
 		this.faceComponet = face;
-		face.addEventListener(MouseEvent.MOUSE_DOWN, faceMouseDownHandler);
-		Layer.STAGE.addEventListener(Event.ENTER_FRAME, enterFrameHandler);
+		this.faceComponet.startDrag();
+		this.faceComponet.x = Layer.STAGE.mouseX - this.faceComponet.width / 2;
+		this.faceComponet.y = Layer.STAGE.mouseY - this.faceComponet.height / 2;
+		this.faceComponet.addEventListener(MouseEvent.MOUSE_DOWN, faceMouseDownHandler);
 		Layer.STAGE.addEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler);
 	}
 	
 	private function stageMouseUpHandler(event:MouseEvent):void 
 	{
+		this.faceComponet.stopDrag();
 		Layer.STAGE.removeEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler);
-		Layer.STAGE.removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
-		var pos:Point = Layer.TERRAIN_LAYER.globalToLocal(new Point(event.stageX, event.stageY));
-		this.faceComponet.x = pos.x - this.faceComponet.width / 2;
-		this.faceComponet.y = pos.y - this.faceComponet.height / 2;
-		Layer.TERRAIN_LAYER.addChild(this.faceComponet);
+		if (!Layer.TERRAIN_LAYER.contains(this.faceComponet))
+		{
+			var pos:Point = Layer.TERRAIN_LAYER.globalToLocal(new Point(event.stageX, event.stageY));
+			this.faceComponet.x = pos.x - this.faceComponet.width / 2;
+			this.faceComponet.y = pos.y - this.faceComponet.height / 2;
+			Layer.TERRAIN_LAYER.addChild(this.faceComponet);
+		}
 	}
 
 	private function faceMouseDownHandler(event:MouseEvent):void 
 	{
 		this.faceComponet = event.currentTarget as SurfaceComponet;
+		this.faceComponet.startDrag();
 		Layer.STAGE.addEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler);
-		Layer.STAGE.addEventListener(Event.ENTER_FRAME, enterFrameHandler);	
-		Layer.TOP_LAYER.addChild(this.faceComponet);
-
-	}
-		
-	private function enterFrameHandler(event:Event):void 
-	{
-		if (this.faceComponet)
-		{
-			this.faceComponet.x = Layer.STAGE.mouseX - this.faceComponet.width / 2;
-			this.faceComponet.y = Layer.STAGE.mouseY - this.faceComponet.height / 2;
-		}
 	}
 }
 }

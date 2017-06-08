@@ -5,6 +5,7 @@ import componets.Image;
 import flash.display.Sprite;
 import flash.events.ErrorEvent;
 import flash.events.Event;
+import flash.events.FocusEvent;
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
 import flash.filesystem.File;
@@ -57,6 +58,7 @@ public class EditUIMediator extends Mediator
 	{
 		this.editUI = new EditUI();
 		Layer.UI.addChild(this.editUI);
+		
 	}
 	
 	/**
@@ -66,6 +68,9 @@ public class EditUIMediator extends Mediator
 	{
 		this.editUI.importBtn.addEventListener(MouseEvent.CLICK, importBtnClickHandler);
 		this.editUI.exportBtn.addEventListener(MouseEvent.CLICK, exportBtnClickHandler);
+		this.editUI.vSlider.addEventListener(Event.CHANGE, vSliderChangeHandler);
+		this.editUI.posXValueTxt.addEventListener(FocusEvent.FOCUS_OUT, posXValueTxtfocusOutHandler);
+		this.editUI.posYValueTxt.addEventListener(FocusEvent.FOCUS_OUT, posYValueTxtfocusOutHandler);
 		Layer.UI.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		Layer.STAGE.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDownHandler);
 		Layer.STAGE.addEventListener(KeyboardEvent.KEY_UP, onKeyUpHandler);
@@ -101,6 +106,8 @@ public class EditUIMediator extends Mediator
 			Layer.UI_STAGE.addChild(image);
 			this.drawSelectedBound(image);
 			this.curSelectedSpt = image;
+			if (this.editUI) 
+				this.editUI.selectSpt(this.curSelectedSpt);
 		}
 	}
 	
@@ -166,6 +173,7 @@ public class EditUIMediator extends Mediator
 	{
 		if (event.keyCode == Keyboard.DELETE)
 		{
+			if (this.editUI) this.editUI.selectSpt(null);
 			this.removeSpt(this.curSelectedSpt);
 			this.curSelectedSpt = null;
 		}
@@ -196,8 +204,8 @@ public class EditUIMediator extends Mediator
 		image.loadBytes(this.imageFile.data);
 		image.resName = this.imageFile.name;
 		image.pathName = this.imageFile.nativePath;
-		image.x = Layer.STAGE.width / 2;
-		image.y = Layer.STAGE.height / 2;
+		image.x = this.editUI.center.x;
+		image.y = this.editUI.center.y;
 		Layer.UI_STAGE.addChild(image);
 	}
 	
@@ -213,11 +221,12 @@ public class EditUIMediator extends Mediator
 		this.drawSelectedBound(event.currentTarget as Image);
 		this.curSelectedSpt = event.currentTarget as Image;
 		this.curSelectedSpt.startDrag();
+		if (this.editUI) this.editUI.selectSpt(this.curSelectedSpt);
 	}
-	
 	
 	private function onMouseDownHandler(event:MouseEvent):void 
 	{
+		if (this.editUI) this.editUI.selectSpt(null);
 		this.drawSelectedBound(null);
 		this.curSelectedSpt = null;
 	}
@@ -230,13 +239,26 @@ public class EditUIMediator extends Mediator
 			this.curSelectedSpt.stopDrag();
 	}
 	
+	private function vSliderChangeHandler(event:Event):void 
+	{
+		if (this.editUI)
+			this.editUI.scaleStage(this.editUI.vSlider.value / 100);
+	}
+	
+	private function posYValueTxtfocusOutHandler(event:FocusEvent):void 
+	{
+		
+	}
+	
+	private function posXValueTxtfocusOutHandler(event:FocusEvent):void 
+	{
+		
+	}
+	
 	private function enterFrameHandler(event:Event):void 
 	{
-		//if (this.curSelectedSpt)
-		//{
-			//this.curSelectedSpt.x = Layer.STAGE.mouseX;
-			//this.curSelectedSpt.y = Layer.STAGE.mouseY;
-		//}
+		if (this.editUI)
+			this.editUI.selectSpt(this.curSelectedSpt);
 	}
 }
 }

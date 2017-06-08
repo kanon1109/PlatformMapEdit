@@ -13,6 +13,7 @@ public class Layer
 	public static var STAGE:Stage;
 	public static var UI:Sprite;
 	public static var UI_STAGE:Sprite;
+	public static var UI_EDIT:Sprite;
 	public static var UI_SYSTEM:Sprite;
 	
 	public static function initLayer(root:DisplayObjectContainer):void
@@ -25,6 +26,9 @@ public class Layer
 		
 		UI_STAGE = new Sprite();
 		root.addChild(UI_STAGE);
+		
+		UI_EDIT = new Sprite();
+		root.addChild(UI_EDIT);
 		
 		UI_SYSTEM = new Sprite();
 		root.addChild(UI_SYSTEM);

@@ -7,6 +7,7 @@ package message
 public class Message 
 {
 	public static var START:String = "start";
+	public static var INIT:String = "init";
 
 }
 }

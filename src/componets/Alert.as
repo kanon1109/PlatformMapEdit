@@ -22,7 +22,7 @@ public class Alert
 		{
 			var alertWidth:int = 200;
 			var alertHeight:int = 100;
-			alert = new Window(Layer.UI_SYSTEM, Layer.STAGE.stageWidth / 2 - alertWidth / 2, Layer.STAGE.stageHeight / 2 - alertHeight / 2, title); 
+			alert = new Window(Layer.SYSTEM_LAYER, Layer.STAGE.stageWidth / 2 - alertWidth / 2, Layer.STAGE.stageHeight / 2 - alertHeight / 2, title); 
 			alert.width = alertWidth;
 			alert.height = alertHeight;
 			alert.hasCloseButton = true;

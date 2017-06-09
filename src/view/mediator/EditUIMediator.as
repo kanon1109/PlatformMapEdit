@@ -11,6 +11,8 @@ import flash.events.MouseEvent;
 import flash.filesystem.File;
 import flash.net.FileFilter;
 import flash.ui.Keyboard;
+import flash.ui.Mouse;
+import flash.ui.MouseCursor;
 import message.Message;
 import org.puremvc.as3.interfaces.INotification;
 import org.puremvc.as3.patterns.mediator.Mediator;
@@ -27,6 +29,7 @@ public class EditUIMediator extends Mediator
 	private var imageFile:File;
 	private var imageFilter:FileFilter;
 	private var curSelectedSpt:Sprite;
+	private var isSpaceKey:Boolean;
 	public function EditUIMediator() 
 	{
 		super(NAME);
@@ -57,8 +60,7 @@ public class EditUIMediator extends Mediator
 	private function initEditUI():void
 	{
 		this.editUI = new EditUI();
-		Layer.UI.addChild(this.editUI);
-		
+		Layer.UI_LAYER.addChild(this.editUI);
 	}
 	
 	/**
@@ -71,9 +73,12 @@ public class EditUIMediator extends Mediator
 		this.editUI.vSlider.addEventListener(Event.CHANGE, vSliderChangeHandler);
 		this.editUI.posXValueTxt.addEventListener(FocusEvent.FOCUS_OUT, posXValueTxtfocusOutHandler);
 		this.editUI.posYValueTxt.addEventListener(FocusEvent.FOCUS_OUT, posYValueTxtfocusOutHandler);
-		Layer.UI.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
+		this.editUI.stagePanel.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		Layer.STAGE.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDownHandler);
+		Layer.STAGE.addEventListener(MouseEvent.MOUSE_DOWN, onStageMouseDownHandler);
+		Layer.STAGE.addEventListener(MouseEvent.MOUSE_UP, onStageMouseUpHandler);
 		Layer.STAGE.addEventListener(KeyboardEvent.KEY_UP, onKeyUpHandler);
+		this.sendNotification(Message.INIT, this.editUI);
 	}
 	
 	/**
@@ -103,7 +108,7 @@ public class EditUIMediator extends Mediator
 			image.x = o.x + 20;
 			image.y = o.y + 20;
 			image.addEventListener(MouseEvent.MOUSE_DOWN, sptOnMouseDownHandler);
-			Layer.UI_STAGE.addChild(image);
+			Layer.STAGE_BG_LAYER.addChild(image);
 			this.drawSelectedBound(image);
 			this.curSelectedSpt = image;
 			if (this.editUI) 
@@ -167,6 +172,11 @@ public class EditUIMediator extends Mediator
 		{
 			this.setSptDepth(this.curSelectedSpt, false);
 		}
+		else if (event.keyCode == Keyboard.SPACE)
+		{
+			this.isSpaceKey = true;
+			Mouse.cursor = MouseCursor.HAND;
+		}
 	}
 	
 	private function onKeyUpHandler(event:KeyboardEvent):void 
@@ -176,6 +186,11 @@ public class EditUIMediator extends Mediator
 			if (this.editUI) this.editUI.selectSpt(null);
 			this.removeSpt(this.curSelectedSpt);
 			this.curSelectedSpt = null;
+		}
+		else if (event.keyCode == Keyboard.SPACE)
+		{
+			this.isSpaceKey = false;
+			Mouse.cursor = MouseCursor.ARROW;
 		}
 	}
 	
@@ -204,9 +219,7 @@ public class EditUIMediator extends Mediator
 		image.loadBytes(this.imageFile.data);
 		image.resName = this.imageFile.name;
 		image.pathName = this.imageFile.nativePath;
-		image.x = this.editUI.center.x;
-		image.y = this.editUI.center.y;
-		Layer.UI_STAGE.addChild(image);
+		Layer.STAGE_BG_LAYER.addChild(image);
 	}
 	
 	private function loadImageErrorHandler(event:ErrorEvent):void
@@ -226,9 +239,21 @@ public class EditUIMediator extends Mediator
 	
 	private function onMouseDownHandler(event:MouseEvent):void 
 	{
+		trace("onMouseDownHandler");
 		if (this.editUI) this.editUI.selectSpt(null);
 		this.drawSelectedBound(null);
 		this.curSelectedSpt = null;
+	}
+		
+	private function onStageMouseDownHandler(event:MouseEvent):void 
+	{
+		if (this.isSpaceKey)
+			Layer.STAGE_LAYER.startDrag();
+	}
+		
+	private function onStageMouseUpHandler(event:MouseEvent):void 
+	{
+		Layer.STAGE_LAYER.stopDrag();
 	}
 	
 	private function stageMouseUpHandler(event:MouseEvent):void 
@@ -247,12 +272,13 @@ public class EditUIMediator extends Mediator
 	
 	private function posYValueTxtfocusOutHandler(event:FocusEvent):void 
 	{
-		
+		event.stopPropagation();
+		trace("inihn");
 	}
 	
 	private function posXValueTxtfocusOutHandler(event:FocusEvent):void 
 	{
-		
+		event.stopPropagation();
 	}
 	
 	private function enterFrameHandler(event:Event):void 

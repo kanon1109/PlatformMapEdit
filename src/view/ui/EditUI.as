@@ -25,7 +25,6 @@ public class EditUI extends Sprite
 	public var importBtn:PushButton;
 	public var exportBtn:PushButton;
 	public var vSlider:VUISlider;
-	public var center:Point;
 	public var posXTxt:Label;
 	public var posYTxt:Label;
 	public var posXValueTxt:InputText;
@@ -34,6 +33,8 @@ public class EditUI extends Sprite
 	public var stageHeight:Number = 600;
 	public var attributeLayout:HBox;
 	public var faceComponetsPanel:SufaceComponetsPanel;
+	
+	private var center:Point;
 	public function EditUI() 
 	{
 		this.addEventListener(Event.ADDED_TO_STAGE, addToStageHandler);
@@ -88,7 +89,7 @@ public class EditUI extends Sprite
 		this.center = new Point(this.stagePanel.x + this.stagePanel.width / 2, 
 								this.stagePanel.y + this.stagePanel.height / 2);
 								
-		this.vSlider = new VUISlider(Layer.UI_EDIT, 0, 0, "舞台缩放比");
+		this.vSlider = new VUISlider(Layer.EDIT_LAYER, 0, 0, "舞台缩放比");
 		this.vSlider.x = this.stagePanel.x + this.stagePanel.width - 65;
 		this.vSlider.y = this.stagePanel.y ;
 		this.vSlider.minimum = 0;
@@ -122,11 +123,9 @@ public class EditUI extends Sprite
 		sp.graphics.endFill();
 		sp.x = this.stagePanel.x;
 		sp.y = this.stagePanel.y;
-		Layer.UI_STAGE.x = this.stagePanel.x;
-		Layer.UI_STAGE.y = this.stagePanel.y;
-		//Layer.UI_STAGE.width = this.stageWidth;
-		//Layer.UI_STAGE.height = this.stageHeight;
-		Layer.UI_STAGE.mask = sp;
+		Layer.STAGE_LAYER.x = this.center.x;
+		Layer.STAGE_LAYER.y = this.center.y;
+		Layer.STAGE_LAYER.mask = sp;
 	}
 	
 	/**
@@ -136,8 +135,8 @@ public class EditUI extends Sprite
 	{
 		var sp:Shape = new Shape();
 		sp.graphics.lineStyle(1, 0xFFFFFF);
-		sp.graphics.drawRect(0, 0, width, height);
-		Layer.UI_STAGE.addChild(sp);
+		sp.graphics.drawRect( -width / 2, -height / 2, width, height);
+		Layer.STAGE_LAYER.addChild(sp);
 	}
 	
 	/**
@@ -146,10 +145,8 @@ public class EditUI extends Sprite
 	 */
 	public function scaleStage(scale:Number):void
 	{
-		Layer.UI_STAGE.scaleX = scale;
-		Layer.UI_STAGE.scaleY = scale;
-		Layer.UI_STAGE.x = this.stagePanel.x + this.stageWidth / 2 * (1 - Layer.UI_STAGE.scaleX);
-		Layer.UI_STAGE.y = this.stagePanel.y + this.stageHeight / 2 * (1 - Layer.UI_STAGE.scaleY);
+		Layer.STAGE_LAYER.scaleX = scale;
+		Layer.STAGE_LAYER.scaleY = scale;
 	}
 	
 	/**
@@ -161,8 +158,8 @@ public class EditUI extends Sprite
 		this.attributeLayout.visible = spt != null;
 		if (spt)
 		{
-			this.posXValueTxt.text = spt.x.toString();
-			this.posYValueTxt.text = spt.y.toString();
+			this.posXValueTxt.text = (spt.x + this.stageWidth / 2).toString();
+			this.posYValueTxt.text = (spt.y + this.stageHeight / 2).toString();
 		}
 	}
 }

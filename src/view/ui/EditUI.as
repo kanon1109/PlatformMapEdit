@@ -32,8 +32,7 @@ public class EditUI extends Sprite
 	public var stageWidth:Number = 1100;
 	public var stageHeight:Number = 600;
 	public var attributeLayout:HBox;
-	public var faceComponetsPanel:SufaceComponetsPanel;
-	
+	public var faceComponetsPanel:SurfaceComponetsPanel;
 	private var center:Point;
 	public function EditUI() 
 	{
@@ -109,7 +108,7 @@ public class EditUI extends Sprite
 		this.posYValueTxt.restrict = "0-9\\-";
 		
 		var vBox:VBox = new VBox(this.componentsPanel);
-		this.faceComponetsPanel = new SufaceComponetsPanel(vBox);
+		this.faceComponetsPanel = new SurfaceComponetsPanel(vBox);
 	}
 	
 	/**
@@ -158,8 +157,10 @@ public class EditUI extends Sprite
 		this.attributeLayout.visible = spt != null;
 		if (spt)
 		{
-			this.posXValueTxt.text = (spt.x + this.stageWidth / 2).toString();
-			this.posYValueTxt.text = (spt.y + this.stageHeight / 2).toString();
+			var pos:Point = spt.parent.localToGlobal(new Point(spt.x, spt.y));
+			pos = this.stagePanel.globalToLocal(pos);
+			this.posXValueTxt.text = pos.x.toString();
+			this.posYValueTxt.text = pos.y.toString();
 		}
 	}
 	
@@ -173,5 +174,8 @@ public class EditUI extends Sprite
 		var y:Number = Number(this.posYValueTxt.text) - this.stageHeight / 2;
 		return new Point(x, y);
 	}
+	
+	
+	
 }
 }

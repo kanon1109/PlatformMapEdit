@@ -31,8 +31,8 @@ public class Image extends Sprite
 	private function loadCompleteHandler(event:Event):void 
 	{
 		this.addChild(this.loader.content);
-		this.loader.content.x = -this.loader.content.width / 2;
-		this.loader.content.y = -this.loader.content.height / 2;
+		//this.loader.content.x = -this.loader.content.width / 2;
+		//this.loader.content.y = -this.loader.content.height / 2;
 		this.dispatchEvent(event);
 	}
 
@@ -55,8 +55,8 @@ public class Image extends Sprite
 		var image:Image = new Image();
 		var bmp:Bitmap = this.getChildAt(0) as Bitmap;
 		var newBmp:Bitmap = new Bitmap(bmp.bitmapData);
-		newBmp.x = -newBmp.width / 2;
-		newBmp.y = -newBmp.height / 2;
+		//newBmp.x = -newBmp.width / 2;
+		//newBmp.y = -newBmp.height / 2;
 		image.addChild(newBmp);
 		image.scaleX = this.scaleX;
 		image.scaleY = this.scaleY;

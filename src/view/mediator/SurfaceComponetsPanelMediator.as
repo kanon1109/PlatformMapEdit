@@ -3,21 +3,23 @@ package view.mediator
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
+import flash.geom.Point;
 import message.Message;
 import org.puremvc.as3.interfaces.INotification;
 import org.puremvc.as3.patterns.mediator.Mediator;
 import view.ui.EditUI;
-import view.ui.SufaceComponetsPanel;
+import view.ui.SurfaceComponet;
+import view.ui.SurfaceComponetsPanel;
 /**
  * ...面组件面板中介
  * @author ...Kanon
  */
-public class SufaceComponetsPanelMediator extends Mediator 
+public class SurfaceComponetsPanelMediator extends Mediator 
 {
 	private var editUI:EditUI;
-	private var faceComponetsPanel:SufaceComponetsPanel;
-	private var curSuface:Sprite;
-	public function SufaceComponetsPanelMediator(mediatorName:String=null, viewComponent:Object=null) 
+	private var faceComponetsPanel:SurfaceComponetsPanel;
+	private var faceComponet:SurfaceComponet;
+	public function SurfaceComponetsPanelMediator(mediatorName:String=null, viewComponent:Object=null) 
 	{
 		super(mediatorName, viewComponent);
 	}
@@ -54,52 +56,57 @@ public class SufaceComponetsPanelMediator extends Mediator
 	private function onMouseDownHandler(event:MouseEvent):void 
 	{
 		var componets:Sprite = event.currentTarget as Sprite;
+		var face:SurfaceComponet = new SurfaceComponet();
+		Layer.TOP_LAYER.addChild(face);
 		switch (componets.name) 
 		{
 			case "rect":
-				this.curSuface = this.faceComponetsPanel.createRectSuface();
+				face.setShape(1);
 				break;
 			case "quad1":
-				this.curSuface = this.faceComponetsPanel.createQuadSuface(true);
+				face.setShape(2);
 				break;
 			case "quad2":
-				this.curSuface = this.faceComponetsPanel.createQuadSuface(false);
+				face.setShape(3);
 				break;
 			case "trapezoid1":
-				this.curSuface = this.faceComponetsPanel.createTrapezoidSuface(true);
+				face.setShape(4);
 				break;
 			case "trapezoid2":
-				this.curSuface = this.faceComponetsPanel.createTrapezoidSuface(false);
+				face.setShape(5);
 				break;
 		}
-		if (this.curSuface)
-		{
-			Layer.TOP_LAYER.addChild(this.curSuface);
-			Layer.STAGE.addEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler);
-			Layer.STAGE.addEventListener(Event.ENTER_FRAME, enterFrameHandler);
-		}
+		this.faceComponet = face;
+		face.addEventListener(MouseEvent.MOUSE_DOWN, faceMouseDownHandler);
+		Layer.STAGE.addEventListener(Event.ENTER_FRAME, enterFrameHandler);
+		Layer.STAGE.addEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler);
 	}
 	
 	private function stageMouseUpHandler(event:MouseEvent):void 
 	{
 		Layer.STAGE.removeEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler);
 		Layer.STAGE.removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
-		
-		
-		
-		if (this.curSuface && this.curSuface.parent)
-		{
-			this.curSuface.parent.removeChild(this.curSuface);
-			this.curSuface = null;
-		}
+		var pos:Point = Layer.TERRAIN_LAYER.globalToLocal(new Point(event.stageX, event.stageY));
+		this.faceComponet.x = pos.x - this.faceComponet.width / 2;
+		this.faceComponet.y = pos.y - this.faceComponet.height / 2;
+		Layer.TERRAIN_LAYER.addChild(this.faceComponet);
+	}
+
+	private function faceMouseDownHandler(event:MouseEvent):void 
+	{
+		this.faceComponet = event.currentTarget as SurfaceComponet;
+		Layer.STAGE.addEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler);
+		Layer.STAGE.addEventListener(Event.ENTER_FRAME, enterFrameHandler);	
+		Layer.TOP_LAYER.addChild(this.faceComponet);
+
 	}
 		
 	private function enterFrameHandler(event:Event):void 
 	{
-		if (this.curSuface)
+		if (this.faceComponet)
 		{
-			this.curSuface.x = Layer.STAGE.mouseX - this.curSuface.width / 2;
-			this.curSuface.y = Layer.STAGE.mouseY - this.curSuface.height / 2;
+			this.faceComponet.x = Layer.STAGE.mouseX - this.faceComponet.width / 2;
+			this.faceComponet.y = Layer.STAGE.mouseY - this.faceComponet.height / 2;
 		}
 	}
 }

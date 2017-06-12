@@ -81,7 +81,42 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		this.faceComponet.x = Layer.STAGE.mouseX - this.faceComponet.width / 2;
 		this.faceComponet.y = Layer.STAGE.mouseY - this.faceComponet.height / 2;
 		this.faceComponet.addEventListener(MouseEvent.MOUSE_DOWN, faceMouseDownHandler);
+		this.faceComponet.upLeftPoint.addEventListener(MouseEvent.MOUSE_DOWN, upLeftMouseDownHandler);
+		this.faceComponet.downLeftPoint.addEventListener(MouseEvent.MOUSE_DOWN, downLeftMouseDownHandler);
+		this.faceComponet.upRightPoint.addEventListener(MouseEvent.MOUSE_DOWN, upRightMouseDownHandler);
+		this.faceComponet.downRightPoint.addEventListener(MouseEvent.MOUSE_DOWN, downRightMouseDownHandler);
 		Layer.STAGE.addEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler);
+	}
+		
+	private function upLeftMouseDownHandler(event:MouseEvent):void 
+	{
+		event.stopImmediatePropagation();
+		var upLeftPoint:Sprite = event.currentTarget as Sprite;
+		Layer.STAGE.addEventListener(Event.ENTER_FRAME, enterFrameHandler);
+	}
+	
+	private function enterFrameHandler(event:Event):void 
+	{
+		var upLeftPoint:Sprite = event.currentTarget as Sprite;
+		var pos:Point = upLeftPoint.parent.globalToLocal(new Point(event.stageX, event.stageY));
+		upLeftPoint.x = pos.x;
+		upLeftPoint.y = pos.y;
+	}
+
+	
+	private function downLeftMouseDownHandler(event:MouseEvent):void 
+	{
+		event.stopImmediatePropagation();
+	}
+	
+	private function downRightMouseDownHandler(event:MouseEvent):void 
+	{
+		event.stopImmediatePropagation();
+	}
+	
+	private function upRightMouseDownHandler(event:MouseEvent):void 
+	{
+		event.stopImmediatePropagation();
 	}
 	
 	private function stageMouseUpHandler(event:MouseEvent):void 

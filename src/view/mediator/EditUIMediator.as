@@ -2,6 +2,7 @@ package view.mediator
 {
 import componets.Alert;
 import componets.Image;
+import flash.display.DisplayObject;
 import flash.display.Sprite;
 import flash.events.ErrorEvent;
 import flash.events.Event;
@@ -19,6 +20,7 @@ import org.puremvc.as3.interfaces.INotification;
 import org.puremvc.as3.patterns.mediator.Mediator;
 import utils.AdvanceColorUtil;
 import view.ui.EditUI;
+import view.ui.SurfaceComponet;
 /**
  * ...编辑器中介
  * @author Kanon
@@ -40,6 +42,7 @@ public class EditUIMediator extends Mediator
 	{
 		var arr:Array = [];
 		arr.push(Message.START);
+		arr.push(Message.FACE_MOUSE_DOWN);
 		return arr;
 	}
 	
@@ -50,7 +53,12 @@ public class EditUIMediator extends Mediator
 			case Message.START:
 				this.initEditUI();
 				this.initEvent();
-			break;
+				break;
+			case Message.FACE_MOUSE_DOWN:
+					this.select(notification.getBody() as Sprite);	
+					Layer.STAGE.addEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler);
+					Layer.STAGE.addEventListener(Event.ENTER_FRAME, enterFrameHandler);
+				break;
 			default:
 		}
 	}
@@ -71,6 +79,7 @@ public class EditUIMediator extends Mediator
 	{
 		this.editUI.importBtn.addEventListener(MouseEvent.CLICK, importBtnClickHandler);
 		this.editUI.exportBtn.addEventListener(MouseEvent.CLICK, exportBtnClickHandler);
+		this.editUI.clearBtn.addEventListener(MouseEvent.CLICK, clearBtnClickHandler);
 		this.editUI.vSlider.addEventListener(Event.CHANGE, vSliderChangeHandler);
 		this.editUI.posXValueTxt.addEventListener(FocusEvent.FOCUS_OUT, posXValueTxtfocusOutHandler);
 		this.editUI.posYValueTxt.addEventListener(FocusEvent.FOCUS_OUT, posYValueTxtfocusOutHandler);
@@ -110,10 +119,16 @@ public class EditUIMediator extends Mediator
 			image.y = o.y + 20;
 			image.addEventListener(MouseEvent.MOUSE_DOWN, sptOnMouseDownHandler);
 			Layer.STAGE_BG_LAYER.addChild(image);
-			this.drawSelectedBound(image);
-			this.curSelectedSpt = image;
-			if (this.editUI) 
-				this.editUI.selectSpt(this.curSelectedSpt);
+			this.select(image);	
+		}
+		else if (o is SurfaceComponet)
+		{
+			var surfaceComponet:SurfaceComponet = SurfaceComponet(o).clone();
+			surfaceComponet.x = o.x + 20;
+			surfaceComponet.y = o.y + 20;
+			Layer.TERRAIN_LAYER.addChild(surfaceComponet); 
+			this.select(surfaceComponet);
+			this.sendNotification(Message.COPY, surfaceComponet);
 		}
 	}
 	
@@ -166,6 +181,48 @@ public class EditUIMediator extends Mediator
 		}
 	}
 	
+	/**
+	 * 选中某物
+	 * @param	spt	某物
+	 */
+	private function select(spt:Sprite):void
+	{
+		this.drawSelectedBound(spt);
+		this.curSelectedSpt = spt;
+		if (this.editUI) 
+			this.editUI.selectSpt(spt);
+	}
+	
+	/**
+	 * 删除所有
+	 */
+	private function removeAll():void
+	{
+		var count:int = Layer.STAGE_BG_LAYER.numChildren - 1
+		for (var i:int = count; i >= 0; --i) 
+		{
+			var o:DisplayObject = Layer.STAGE_BG_LAYER.getChildAt(i);
+			if (o && o.parent)
+				o.parent.removeChild(o);
+		}
+		
+		count = Layer.TERRAIN_LAYER.numChildren - 1;
+		for (i = count; i >= 0; --i) 
+		{
+			o = Layer.TERRAIN_LAYER.getChildAt(i);
+			if (o && o.parent)
+				o.parent.removeChild(o);
+		}
+		
+		count = Layer.STAGE_FG_LAYER.numChildren - 1;
+		for (i = count; i >= 0; --i) 
+		{
+			o = Layer.STAGE_FG_LAYER.getChildAt(i);
+			if (o && o.parent)
+				o.parent.removeChild(o);
+		}
+	}
+	
 	//-----------------------------event--------------------------------
 	/////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////
@@ -197,6 +254,8 @@ public class EditUIMediator extends Mediator
 	{
 		if (event.keyCode == Keyboard.DELETE)
 		{
+			if (this.curSelectedSpt is SurfaceComponet)
+				this.sendNotification(Message.DELETE);
 			if (this.editUI) this.editUI.selectSpt(null);
 			this.removeSpt(this.curSelectedSpt);
 			this.curSelectedSpt = null;
@@ -216,6 +275,14 @@ public class EditUIMediator extends Mediator
 	private function importBtnClickHandler(event:MouseEvent):void 
 	{
 		this.selectImage();
+	}
+	
+	private function clearBtnClickHandler(event:MouseEvent):void 
+	{
+		this.removeAll();
+		this.sendNotification(Message.DELETE);
+		if (this.editUI) this.editUI.selectSpt(null);
+		this.curSelectedSpt = null;
 	}
 	
 	private function selectImageFileHandler(event:Event):void
@@ -245,18 +312,14 @@ public class EditUIMediator extends Mediator
 	{
 		Layer.STAGE.addEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler);
 		Layer.STAGE.addEventListener(Event.ENTER_FRAME, enterFrameHandler);
-		this.drawSelectedBound(event.currentTarget as Image);
-		this.curSelectedSpt = event.currentTarget as Image;
+		this.select(event.currentTarget as Image);
 		this.curSelectedSpt.startDrag();
-		if (this.editUI) this.editUI.selectSpt(this.curSelectedSpt);
 	}
 	
 	private function onMouseDownHandler(event:MouseEvent):void 
 	{
 		trace("onMouseDownHandler");
-		if (this.editUI) this.editUI.selectSpt(null);
-		this.drawSelectedBound(null);
-		this.curSelectedSpt = null;
+		this.select(null);
 	}
 		
 	private function onStageMouseDownHandler(event:MouseEvent):void 
@@ -298,6 +361,6 @@ public class EditUIMediator extends Mediator
 	{
 		if (this.editUI)
 			this.editUI.selectSpt(this.curSelectedSpt);
-	}
+	}	
 }
 }

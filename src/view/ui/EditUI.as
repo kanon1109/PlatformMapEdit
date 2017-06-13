@@ -24,6 +24,7 @@ public class EditUI extends Sprite
 	public var attributePanel:Panel;
 	public var importBtn:PushButton;
 	public var exportBtn:PushButton;
+	public var clearBtn:PushButton;
 	public var vSlider:VUISlider;
 	public var posXTxt:Label;
 	public var posYTxt:Label;
@@ -82,8 +83,10 @@ public class EditUI extends Sprite
 		var hbox:HBox = new HBox(this.navPanel);
 		this.importBtn = new PushButton(hbox, 0, 5, "import");
 		this.exportBtn = new PushButton(hbox, 0, 5, "export");
+		this.clearBtn = new PushButton(hbox, 0, 5, "clear");
 		this.importBtn.setSize(120, 30);
 		this.exportBtn.setSize(120, 30);
+		this.clearBtn.setSize(120, 30);
 		
 		this.center = new Point(this.stagePanel.x + this.stagePanel.width / 2, 
 								this.stagePanel.y + this.stagePanel.height / 2);

@@ -29,6 +29,11 @@ public class SurfaceComponet extends Sprite
 		this.upRightPoint = new Sprite();
 		this.downRightPoint = new Sprite();
 		
+		this.upLeftPoint.name = "upLeft";
+		this.downLeftPoint.name = "downLeft";
+		this.upRightPoint.name = "upRight";
+		this.downRightPoint.name = "downRight";
+		
 		this.upLeftPoint.graphics.beginFill(0xff0000, .5);
 		this.upLeftPoint.graphics.drawCircle(0, 0, 5);
 		this.upLeftPoint.graphics.endFill();
@@ -129,10 +134,8 @@ public class SurfaceComponet extends Sprite
 			this.downLeftPoint.x = 0;
 			this.downLeftPoint.y = 70;
 		}
-		
 		this.draw();
 	}
-	
 	
 	/**
 	 * 绘制
@@ -147,6 +150,44 @@ public class SurfaceComponet extends Sprite
 		this.graphics.lineTo(this.downRightPoint.x, this.downRightPoint.y);
 		this.graphics.lineTo(this.downLeftPoint.x, this.downLeftPoint.y);
 		this.graphics.endFill();
+		this.graphics.lineStyle(1, 0);
+		this.graphics.moveTo( -5, 0);
+		this.graphics.lineTo( 5, 0);
+		this.graphics.moveTo( 0, -5);
+		this.graphics.lineTo( 0, 5);
+	}
+	
+	/**
+	 * 克隆一个face
+	 * @return face
+	 */
+	public function clone():SurfaceComponet
+	{
+		var faceComponet:SurfaceComponet = new SurfaceComponet();
+		faceComponet.upLeftPoint.x = this.upLeftPoint.x;
+		faceComponet.upLeftPoint.y = this.upLeftPoint.y;
+		faceComponet.upRightPoint.x = this.upRightPoint.x;
+		faceComponet.upRightPoint.y = this.upRightPoint.y;
+		faceComponet.downLeftPoint.x = this.downLeftPoint.x;
+		faceComponet.downLeftPoint.y = this.downLeftPoint.y;
+		faceComponet.downRightPoint.x = this.downRightPoint.x;
+		faceComponet.downRightPoint.y = this.downRightPoint.y;
+		faceComponet.draw();
+		return faceComponet;
+	}
+	
+	/**
+	 * 输出字符串
+	 * @return
+	 */
+	override public function toString():String
+	{
+		return this.upLeftPoint.x + 
+			   "," + this.downLeftPoint.x + 
+			   "," + this.upRightPoint.x + 
+			   "," + this.downRightPoint.x + 
+			   "," + this.upLeftPoint.y + 
+			   "," + this.downLeftPoint.y;
 	}
 	
 	override public function get width():Number 

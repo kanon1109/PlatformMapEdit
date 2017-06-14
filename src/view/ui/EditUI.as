@@ -26,15 +26,30 @@ public class EditUI extends Sprite
 	public var exportBtn:PushButton;
 	public var clearBtn:PushButton;
 	public var vSlider:VUISlider;
-	public var posXTxt:Label;
-	public var posYTxt:Label;
 	public var posXValueTxt:InputText;
 	public var posYValueTxt:InputText;
 	public var stageWidth:Number = 1100;
 	public var stageHeight:Number = 600;
 	public var attributeLayout:HBox;
+	public var faceAttributeLayout:HBox;
 	public var faceComponetsPanel:SurfaceComponetsPanel;
+	public var upLeftXTxt:InputText;
+	public var downLeftXTxt:InputText;
+	public var upRightXTxt:InputText;
+	public var downRightXTxt:InputText;
+	public var upYTxt:InputText;
+	public var downYTxt:InputText;
+	
+	//---private---
 	private var center:Point;
+	private var posXTxt:Label;
+	private var posYTxt:Label;
+	private var upLeftXLabel:Label;
+	private var downLeftXLabel:Label;
+	private var upRightXLabel:Label;
+	private var downRightXLabel:Label;
+	private var upYLabel:Label;
+	private var downYLabel:Label;
 	public function EditUI() 
 	{
 		this.addEventListener(Event.ADDED_TO_STAGE, addToStageHandler);
@@ -110,6 +125,35 @@ public class EditUI extends Sprite
 		this.posXValueTxt.restrict = "0-9\\-";
 		this.posYValueTxt.restrict = "0-9\\-";
 		
+		this.faceAttributeLayout = new HBox(this.attributeLayout);
+		
+		this.upLeftXLabel = new Label(this.faceAttributeLayout, 0, 0, "upleftX");
+		this.upLeftXTxt = new InputText(this.faceAttributeLayout);
+		this.downLeftXLabel = new Label(this.faceAttributeLayout, 0, 0, "downleftX");
+		this.downLeftXTxt = new InputText(this.faceAttributeLayout);
+		this.upRightXLabel = new Label(this.faceAttributeLayout, 0, 0, "upRightX");
+		this.upRightXTxt = new InputText(this.faceAttributeLayout);
+		this.downRightXLabel = new Label(this.faceAttributeLayout, 0, 0, "downRightX");
+		this.downRightXTxt = new InputText(this.faceAttributeLayout);
+		this.upYLabel = new Label(this.faceAttributeLayout, 0, 0, "upY");
+		this.upYTxt = new InputText(this.faceAttributeLayout);
+		this.downYLabel = new Label(this.faceAttributeLayout, 0, 0, "downY");
+		this.downYTxt = new InputText(this.faceAttributeLayout);
+		
+		this.upLeftXTxt.setSize(30, 20);
+		this.downLeftXTxt.setSize(30, 20);
+		this.upRightXTxt.setSize(30, 20);
+		this.downRightXTxt.setSize(30, 20);
+		this.upYTxt.setSize(30, 20);
+		this.downYTxt.setSize(30, 20);
+		
+		this.upLeftXTxt.restrict = "0-9\\-";
+		this.downLeftXTxt.restrict = "0-9\\-";
+		this.upRightXTxt.restrict = "0-9\\-";
+		this.downRightXTxt.restrict = "0-9\\-";
+		this.upYTxt.restrict = "0-9\\-";
+		this.downYTxt.restrict = "0-9\\-";
+		
 		var vBox:VBox = new VBox(this.componentsPanel);
 		this.faceComponetsPanel = new SurfaceComponetsPanel(vBox);
 	}
@@ -164,6 +208,23 @@ public class EditUI extends Sprite
 			pos = this.stagePanel.globalToLocal(pos);
 			this.posXValueTxt.text = pos.x.toString();
 			this.posYValueTxt.text = pos.y.toString();
+			
+			if (spt is SurfaceComponet)
+			{
+				var face:SurfaceComponet = spt as SurfaceComponet;
+				this.attributeLayout.addChild(this.faceAttributeLayout);
+				this.upLeftXTxt.text = face.upLeftPoint.x.toString();
+				this.downLeftXTxt.text = face.downLeftPoint.x.toString();
+				this.upRightXTxt.text = face.upRightPoint.x.toString();
+				this.downRightXTxt.text = face.downRightPoint.x.toString();
+				this.upYTxt.text = face.upLeftPoint.y.toString();
+				this.downYTxt.text = face.downLeftPoint.y.toString();
+			}
+			else
+			{
+				if (this.faceAttributeLayout.parent)
+					this.faceAttributeLayout.parent.removeChild(this.faceAttributeLayout);
+			}
 		}
 	}
 	

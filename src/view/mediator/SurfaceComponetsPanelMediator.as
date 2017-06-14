@@ -1,7 +1,9 @@
 package view.mediator 
 {
+import com.bit101.components.InputText;
 import flash.display.Sprite;
 import flash.events.Event;
+import flash.events.FocusEvent;
 import flash.events.MouseEvent;
 import flash.geom.Point;
 import message.Message;
@@ -71,11 +73,83 @@ public class SurfaceComponetsPanelMediator extends Mediator
 	
 	private function initEvent():void
 	{
+		this.editUI.upLeftXTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
+		this.editUI.downLeftXTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
+		this.editUI.upRightXTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
+		this.editUI.downRightXTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
+		this.editUI.upYTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
+		this.editUI.downYTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
+		
 		this.faceComponetsPanel.rect.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		this.faceComponetsPanel.quad1.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		this.faceComponetsPanel.quad2.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		this.faceComponetsPanel.trapezoid1.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		this.faceComponetsPanel.trapezoid2.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
+	}
+	
+	private function txtfocusOutHandler(event:FocusEvent):void 
+	{
+		if (this.faceComponet)
+		{
+			var txt:InputText = event.currentTarget as InputText;
+			var gap:int = 10;
+			var upleftX:Number = Number(this.editUI.upLeftXTxt.text);
+			var upRightX:Number = Number(this.editUI.upRightXTxt.text);
+			var downleftX:Number = Number(this.editUI.downLeftXTxt.text);
+			var downRightX:Number = Number(this.editUI.downRightXTxt.text);
+			var upY:Number = Number(this.editUI.upYTxt.text);
+			var downY:Number = Number(this.editUI.downYTxt.text);
+			
+			if (txt == this.editUI.upLeftXTxt)
+			{
+				if (upleftX > upRightX - gap)
+					upleftX = upRightX - gap
+			}
+			else if (txt == this.editUI.upRightXTxt)
+			{
+				if (upRightX < upleftX + gap)
+					upRightX = upleftX + gap
+			}
+			else if (txt == this.editUI.downLeftXTxt)
+			{
+				if (downleftX > downRightX - gap)
+					downleftX = downRightX - gap
+			}
+			else if (txt == this.editUI.downRightXTxt)
+			{
+				if (downRightX < downleftX + gap)
+					downRightX = downleftX + gap
+			}
+			else if (txt == this.editUI.upYTxt)
+			{
+				if (upY > downY - gap)
+					upY = downY - gap
+			}
+			else if (txt == this.editUI.downYTxt)
+			{
+				if (downY < upY + gap)
+					downY = upY + gap
+			}
+			
+			this.editUI.upLeftXTxt.text = upleftX.toString();
+			this.editUI.upRightXTxt.text = upRightX.toString();
+			this.editUI.downLeftXTxt.text = downleftX.toString();
+			this.editUI.downRightXTxt.text = downRightX.toString();
+			this.editUI.upYTxt.text = upY.toString();
+			this.editUI.downYTxt.text = downY.toString();
+			
+			this.faceComponet.upLeftPoint.x = Number(this.editUI.upLeftXTxt.text);
+			this.faceComponet.upLeftPoint.y = Number(this.editUI.upYTxt.text);
+			this.faceComponet.upRightPoint.x = Number(this.editUI.upRightXTxt.text);
+			this.faceComponet.upRightPoint.y = Number(this.editUI.upYTxt.text);
+			
+			this.faceComponet.downLeftPoint.x = Number(this.editUI.downLeftXTxt.text);
+			this.faceComponet.downLeftPoint.y = Number(this.editUI.downYTxt.text);
+			this.faceComponet.downRightPoint.x = Number(this.editUI.downRightXTxt.text);
+			this.faceComponet.downRightPoint.y = Number(this.editUI.downYTxt.text);
+			
+			this.faceComponet.draw();
+		}
 	}
 	
 	private function onMouseDownHandler(event:MouseEvent):void 

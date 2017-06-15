@@ -1,10 +1,12 @@
 package view.ui 
 {
+import com.bit101.components.CheckBox;
 import com.bit101.components.HBox;
 import com.bit101.components.InputText;
 import com.bit101.components.Label;
 import com.bit101.components.Panel;
 import com.bit101.components.PushButton;
+import com.bit101.components.RadioButton;
 import com.bit101.components.Style;
 import com.bit101.components.VBox;
 import com.bit101.components.VUISlider;
@@ -30,8 +32,9 @@ public class EditUI extends Sprite
 	public var posYValueTxt:InputText;
 	public var stageWidth:Number = 1100;
 	public var stageHeight:Number = 600;
-	public var attributeLayout:HBox;
+	public var baseAttributeLayout:HBox;
 	public var faceAttributeLayout:HBox;
+	public var faceChickBoxAttributeLayout:HBox;
 	public var faceComponetsPanel:SurfaceComponetsPanel;
 	public var upLeftXTxt:InputText;
 	public var downLeftXTxt:InputText;
@@ -39,8 +42,14 @@ public class EditUI extends Sprite
 	public var downRightXTxt:InputText;
 	public var upYTxt:InputText;
 	public var downYTxt:InputText;
-	
+	public var leftRestrict:CheckBox;
+	public var rightRestrict:CheckBox;
+	public var leftBlock:CheckBox;
+	public var rightBlock:CheckBox;
+	public var upBlock:CheckBox;
+	public var downBlock:CheckBox;
 	//---private---
+	
 	private var center:Point;
 	private var posXTxt:Label;
 	private var posYTxt:Label;
@@ -50,6 +59,9 @@ public class EditUI extends Sprite
 	private var downRightXLabel:Label;
 	private var upYLabel:Label;
 	private var downYLabel:Label;
+	private var textBox:HBox;
+	private var checkBox:HBox;
+	private var allBox:VBox;
 	public function EditUI() 
 	{
 		this.addEventListener(Event.ADDED_TO_STAGE, addToStageHandler);
@@ -113,39 +125,42 @@ public class EditUI extends Sprite
 		this.vSlider.maximum = 100;
 		this.vSlider.value = 100;
 		
-		this.attributeLayout = new HBox(this.attributePanel);
-		this.posXTxt = new Label(this.attributeLayout, 0, 0, "x:");
-		this.posXValueTxt = new InputText(this.attributeLayout);
-		this.posYTxt = new Label(this.attributeLayout, 0, 0, "y:");
-		this.posYValueTxt = new InputText(this.attributeLayout);
+		this.allBox = new VBox(this.attributePanel);
+		this.textBox = new HBox(this.allBox);
+		this.checkBox = new HBox(this.allBox);
 		
-		this.posXValueTxt.setSize(60, 20);
-		this.posYValueTxt.setSize(60, 20);
+		this.baseAttributeLayout = new HBox(this.textBox);
+		this.posXTxt = new Label(this.baseAttributeLayout, 0, 0, "x:");
+		this.posXValueTxt = new InputText(this.baseAttributeLayout);
+		this.posYTxt = new Label(this.baseAttributeLayout, 0, 0, "y:");
+		this.posYValueTxt = new InputText(this.baseAttributeLayout);
+		
+		this.posXValueTxt.setSize(40, 20);
+		this.posYValueTxt.setSize(40, 20);
 		
 		this.posXValueTxt.restrict = "0-9\\-";
 		this.posYValueTxt.restrict = "0-9\\-";
 		
-		this.faceAttributeLayout = new HBox(this.attributeLayout);
-		
-		this.upLeftXLabel = new Label(this.faceAttributeLayout, 0, 0, "upleftX");
+		this.faceAttributeLayout = new HBox(this.textBox);
+		this.upLeftXLabel = new Label(this.faceAttributeLayout, 0, 0, "upleftX:");
 		this.upLeftXTxt = new InputText(this.faceAttributeLayout);
-		this.downLeftXLabel = new Label(this.faceAttributeLayout, 0, 0, "downleftX");
+		this.downLeftXLabel = new Label(this.faceAttributeLayout, 0, 0, "downleftX:");
 		this.downLeftXTxt = new InputText(this.faceAttributeLayout);
-		this.upRightXLabel = new Label(this.faceAttributeLayout, 0, 0, "upRightX");
+		this.upRightXLabel = new Label(this.faceAttributeLayout, 0, 0, "upRightX:");
 		this.upRightXTxt = new InputText(this.faceAttributeLayout);
-		this.downRightXLabel = new Label(this.faceAttributeLayout, 0, 0, "downRightX");
+		this.downRightXLabel = new Label(this.faceAttributeLayout, 0, 0, "downRightX:");
 		this.downRightXTxt = new InputText(this.faceAttributeLayout);
-		this.upYLabel = new Label(this.faceAttributeLayout, 0, 0, "upY");
+		this.upYLabel = new Label(this.faceAttributeLayout, 0, 0, "upY:");
 		this.upYTxt = new InputText(this.faceAttributeLayout);
-		this.downYLabel = new Label(this.faceAttributeLayout, 0, 0, "downY");
+		this.downYLabel = new Label(this.faceAttributeLayout, 0, 0, "downY:");
 		this.downYTxt = new InputText(this.faceAttributeLayout);
 		
-		this.upLeftXTxt.setSize(30, 20);
-		this.downLeftXTxt.setSize(30, 20);
-		this.upRightXTxt.setSize(30, 20);
-		this.downRightXTxt.setSize(30, 20);
-		this.upYTxt.setSize(30, 20);
-		this.downYTxt.setSize(30, 20);
+		this.upLeftXTxt.setSize(40, 20);
+		this.downLeftXTxt.setSize(40, 20);
+		this.upRightXTxt.setSize(40, 20);
+		this.downRightXTxt.setSize(40, 20);
+		this.upYTxt.setSize(40, 20);
+		this.downYTxt.setSize(40, 20);
 		
 		this.upLeftXTxt.restrict = "0-9\\-";
 		this.downLeftXTxt.restrict = "0-9\\-";
@@ -153,6 +168,17 @@ public class EditUI extends Sprite
 		this.downRightXTxt.restrict = "0-9\\-";
 		this.upYTxt.restrict = "0-9\\-";
 		this.downYTxt.restrict = "0-9\\-";
+		
+		this.faceChickBoxAttributeLayout = new HBox(this.checkBox);
+		this.leftRestrict = new CheckBox(this.faceChickBoxAttributeLayout, 3, 5, "left restrict:");
+		this.rightRestrict = new CheckBox(this.faceChickBoxAttributeLayout, 3, 5, "right restrict:");
+		
+		this.leftBlock = new CheckBox(this.faceChickBoxAttributeLayout, 3, 5, "left block:");
+		this.rightBlock = new CheckBox(this.faceChickBoxAttributeLayout, 3, 5, "right block:");
+		
+		this.upBlock = new CheckBox(this.faceChickBoxAttributeLayout, 3, 5, "up block:");
+		this.downBlock = new CheckBox(this.faceChickBoxAttributeLayout, 3, 5, "down block:");
+		
 		
 		var vBox:VBox = new VBox(this.componentsPanel);
 		this.faceComponetsPanel = new SurfaceComponetsPanel(vBox);
@@ -201,7 +227,7 @@ public class EditUI extends Sprite
 	 */
 	public function selectSpt(spt:Sprite):void
 	{
-		this.attributeLayout.visible = spt != null;
+		this.allBox.visible = spt != null;
 		if (spt)
 		{
 			var pos:Point = spt.parent.localToGlobal(new Point(spt.x, spt.y));
@@ -212,18 +238,31 @@ public class EditUI extends Sprite
 			if (spt is SurfaceComponet)
 			{
 				var face:SurfaceComponet = spt as SurfaceComponet;
-				this.attributeLayout.addChild(this.faceAttributeLayout);
+				this.textBox.addChild(this.faceAttributeLayout);
+				this.checkBox.addChild(this.faceChickBoxAttributeLayout);
 				this.upLeftXTxt.text = face.upLeftPoint.x.toString();
 				this.downLeftXTxt.text = face.downLeftPoint.x.toString();
 				this.upRightXTxt.text = face.upRightPoint.x.toString();
 				this.downRightXTxt.text = face.downRightPoint.x.toString();
 				this.upYTxt.text = face.upLeftPoint.y.toString();
 				this.downYTxt.text = face.downLeftPoint.y.toString();
+				
+				this.leftRestrict.selected = face.leftRestrict;
+				this.rightRestrict.selected = face.rightRestrict;
+			
+				this.leftBlock.selected = face.leftBlock;
+				this.rightBlock.selected = face.rightBlock;
+				
+				this.upBlock.selected = face.upBlock;
+				this.downBlock.selected = face.downBlock;
 			}
 			else
 			{
 				if (this.faceAttributeLayout.parent)
 					this.faceAttributeLayout.parent.removeChild(this.faceAttributeLayout);
+					
+				if (this.faceChickBoxAttributeLayout.parent)
+					this.faceChickBoxAttributeLayout.parent.removeChild(this.faceChickBoxAttributeLayout);
 			}
 		}
 	}
@@ -238,8 +277,5 @@ public class EditUI extends Sprite
 		var y:Number = Number(this.posYValueTxt.text) - this.stageHeight / 2;
 		return new Point(x, y);
 	}
-	
-	
-	
 }
 }

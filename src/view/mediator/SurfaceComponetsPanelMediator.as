@@ -79,12 +79,30 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		this.editUI.downRightXTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
 		this.editUI.upYTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
 		this.editUI.downYTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
+		this.editUI.leftRestrict.addEventListener(MouseEvent.CLICK, checkBoxHandler);
+		this.editUI.rightRestrict.addEventListener(MouseEvent.CLICK, checkBoxHandler);
+		this.editUI.leftBlock.addEventListener(MouseEvent.CLICK, checkBoxHandler);
+		this.editUI.rightBlock.addEventListener(MouseEvent.CLICK, checkBoxHandler);
 		
 		this.faceComponetsPanel.rect.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		this.faceComponetsPanel.quad1.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		this.faceComponetsPanel.quad2.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		this.faceComponetsPanel.trapezoid1.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		this.faceComponetsPanel.trapezoid2.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
+	}
+	
+	private function checkBoxHandler(event:MouseEvent):void 
+	{
+		if (this.faceComponet)
+		{
+			this.faceComponet.leftRestrict = this.editUI.leftRestrict.selected;
+			this.faceComponet.rightRestrict = this.editUI.rightRestrict.selected;
+			this.faceComponet.leftBlock = this.editUI.leftBlock.selected;
+			this.faceComponet.rightBlock = this.editUI.rightBlock.selected;
+			this.faceComponet.upBlock = this.editUI.upBlock.selected;
+			this.faceComponet.downBlock = this.editUI.downBlock.selected;
+			this.faceComponet.draw();
+		}
 	}
 	
 	private function txtfocusOutHandler(event:FocusEvent):void 

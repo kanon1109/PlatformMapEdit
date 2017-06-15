@@ -12,6 +12,17 @@ public class SurfaceComponet extends Sprite
 	public var downLeftPoint:Sprite;
 	public var upRightPoint:Sprite;
 	public var downRightPoint:Sprite;
+	
+	public var leftRestrict:Boolean;
+	public var rightRestrict:Boolean;
+	
+	public var leftBlock:Boolean;
+	public var rightBlock:Boolean;
+	public var upBlock:Boolean;
+	public var downBlock:Boolean;
+	
+	protected var _leftH:Number = 0;
+	protected var _rightH:Number = 0;
 	public function SurfaceComponet() 
 	{
 		this.init();
@@ -155,6 +166,46 @@ public class SurfaceComponet extends Sprite
 		this.graphics.lineTo( 5, 0);
 		this.graphics.moveTo( 0, -5);
 		this.graphics.lineTo( 0, 5);
+		
+		if (this.leftBlock || this._leftH > 0)
+		{	
+			this.graphics.lineStyle(1, 0x0000FF);
+			//左边高度
+			this.graphics.moveTo(this.upLeftPoint.x, 
+								 this.upLeftPoint.y);
+			this.graphics.lineTo(this.upLeftPoint.x,
+								 this.upLeftPoint.y - this._leftH); 
+								 
+			this.graphics.moveTo(this.downLeftPoint.x, 
+								 this.downLeftPoint.y);
+			this.graphics.lineTo(this.downLeftPoint.x,
+								 this.downLeftPoint.y - this._leftH); 
+						
+			this.graphics.moveTo(this.upLeftPoint.x, 
+								 this.upLeftPoint.y);
+			this.graphics.lineTo(this.downLeftPoint.x,
+								 this.downLeftPoint.y - this._leftH); 
+		}
+					
+		//右边高度
+		if (this.rightBlock || this._rightH > 0)
+		{
+			this.graphics.lineStyle(1, 0x0000FF);
+			this.graphics.moveTo(this.upRightPoint.x, 
+								 this.upRightPoint.y);
+			this.graphics.lineTo(this.upRightPoint.x,
+								 this.upRightPoint.y - this._rightH); 
+								 
+			this.graphics.moveTo(this.downRightPoint.x, 
+								 this.downRightPoint.y);
+			this.graphics.lineTo(this.downRightPoint.x,
+								 this.downRightPoint.y - this._rightH); 	
+								 
+			this.graphics.moveTo(this.upRightPoint.x, 
+								 this.upRightPoint.y);
+			this.graphics.lineTo(this.downRightPoint.x,
+								 this.downRightPoint.y - this._rightH); 	
+		}
 	}
 	
 	/**
@@ -172,6 +223,12 @@ public class SurfaceComponet extends Sprite
 		faceComponet.downLeftPoint.y = this.downLeftPoint.y;
 		faceComponet.downRightPoint.x = this.downRightPoint.x;
 		faceComponet.downRightPoint.y = this.downRightPoint.y;
+		faceComponet.leftBlock = this.leftBlock;
+		faceComponet.rightBlock = this.rightBlock;
+		faceComponet.leftRestrict = this.leftRestrict;
+		faceComponet.rightRestrict = this.rightRestrict;
+		faceComponet.leftH = this.leftH;
+		faceComponet.rightH = this.rightH;
 		faceComponet.draw();
 		return faceComponet;
 	}
@@ -202,6 +259,20 @@ public class SurfaceComponet extends Sprite
 	override public function get height():Number 
 	{
 		return this.downLeftPoint.y - this.upLeftPoint.y;
+	}
+	
+	public function get leftH():Number{ return _leftH; }
+	public function set leftH(value:Number):void 
+	{
+		_leftH = value;
+		this.leftBlock = false;
+	}
+	
+	public function get rightH():Number{ return _rightH; }
+	public function set rightH(value:Number):void 
+	{
+		_rightH = value;
+		this.rightBlock = false;
 	}
 }
 }

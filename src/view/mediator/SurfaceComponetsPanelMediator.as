@@ -83,6 +83,11 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		this.editUI.rightRestrict.addEventListener(MouseEvent.CLICK, checkBoxHandler);
 		this.editUI.leftBlock.addEventListener(MouseEvent.CLICK, checkBoxHandler);
 		this.editUI.rightBlock.addEventListener(MouseEvent.CLICK, checkBoxHandler);
+		this.editUI.upBlock.addEventListener(MouseEvent.CLICK, checkBoxHandler);
+		this.editUI.downBlock.addEventListener(MouseEvent.CLICK, checkBoxHandler);
+		
+		this.editUI.leftHeightTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
+		this.editUI.rightHeightTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
 		
 		this.faceComponetsPanel.rect.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		this.faceComponetsPanel.quad1.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
@@ -97,8 +102,14 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		{
 			this.faceComponet.leftRestrict = this.editUI.leftRestrict.selected;
 			this.faceComponet.rightRestrict = this.editUI.rightRestrict.selected;
-			this.faceComponet.leftBlock = this.editUI.leftBlock.selected;
-			this.faceComponet.rightBlock = this.editUI.rightBlock.selected;
+			if (this.faceComponet.leftH <= 0)
+				this.faceComponet.leftBlock = this.editUI.leftBlock.selected;
+			else
+				this.editUI.leftBlock.selected = false;
+			if (this.faceComponet.rightH <= 0)
+				this.faceComponet.rightBlock = this.editUI.rightBlock.selected;
+			else
+				this.editUI.rightBlock.selected = false;
 			this.faceComponet.upBlock = this.editUI.upBlock.selected;
 			this.faceComponet.downBlock = this.editUI.downBlock.selected;
 			this.faceComponet.draw();
@@ -155,7 +166,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 			this.editUI.downRightXTxt.text = downRightX.toString();
 			this.editUI.upYTxt.text = upY.toString();
 			this.editUI.downYTxt.text = downY.toString();
-			
+						
 			this.faceComponet.upLeftPoint.x = Number(this.editUI.upLeftXTxt.text);
 			this.faceComponet.upLeftPoint.y = Number(this.editUI.upYTxt.text);
 			this.faceComponet.upRightPoint.x = Number(this.editUI.upRightXTxt.text);
@@ -166,6 +177,13 @@ public class SurfaceComponetsPanelMediator extends Mediator
 			this.faceComponet.downRightPoint.x = Number(this.editUI.downRightXTxt.text);
 			this.faceComponet.downRightPoint.y = Number(this.editUI.downYTxt.text);
 			
+			this.faceComponet.leftH = Number(this.editUI.leftHeightTxt.text);
+			this.faceComponet.rightH = Number(this.editUI.rightHeightTxt.text);
+			
+			if (this.faceComponet.leftH > 0)
+				this.editUI.leftBlock.selected = false;
+			if (this.faceComponet.rightH > 0)
+				this.editUI.rightBlock.selected = false;
 			this.faceComponet.draw();
 		}
 	}
@@ -286,7 +304,6 @@ public class SurfaceComponetsPanelMediator extends Mediator
 	{
 		this.faceComponet = event.currentTarget as SurfaceComponet;
 		this.faceComponet.startDrag();
-		trace(this.faceComponet.toString());
 		Layer.STAGE.addEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler);
 		this.sendNotification(Message.FACE_MOUSE_DOWN, this.faceComponet);
 	}

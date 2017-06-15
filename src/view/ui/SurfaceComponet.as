@@ -167,6 +167,20 @@ public class SurfaceComponet extends Sprite
 		this.graphics.moveTo( 0, -5);
 		this.graphics.lineTo( 0, 5);
 		
+		if (this.upBlock)
+		{
+			this.graphics.lineStyle(1, 0x0000FF);
+			this.graphics.moveTo(this.upLeftPoint.x, this.upLeftPoint.y);
+			this.graphics.lineTo(this.upRightPoint.x, this.upRightPoint.y);
+		}
+		
+		if (this.downBlock)
+		{
+			this.graphics.lineStyle(1, 0x0000FF);
+			this.graphics.moveTo(this.downLeftPoint.x, this.downLeftPoint.y);
+			this.graphics.lineTo(this.downRightPoint.x, this.downRightPoint.y);
+		}
+		
 		if (this.leftBlock || this._leftH > 0)
 		{	
 			this.graphics.lineStyle(1, 0x0000FF);
@@ -182,7 +196,7 @@ public class SurfaceComponet extends Sprite
 								 this.downLeftPoint.y - this._leftH); 
 						
 			this.graphics.moveTo(this.upLeftPoint.x, 
-								 this.upLeftPoint.y);
+								 this.upLeftPoint.y - this._leftH);
 			this.graphics.lineTo(this.downLeftPoint.x,
 								 this.downLeftPoint.y - this._leftH); 
 		}
@@ -202,7 +216,7 @@ public class SurfaceComponet extends Sprite
 								 this.downRightPoint.y - this._rightH); 	
 								 
 			this.graphics.moveTo(this.upRightPoint.x, 
-								 this.upRightPoint.y);
+								 this.upRightPoint.y - this._rightH);
 			this.graphics.lineTo(this.downRightPoint.x,
 								 this.downRightPoint.y - this._rightH); 	
 		}

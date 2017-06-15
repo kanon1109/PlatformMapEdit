@@ -48,6 +48,8 @@ public class EditUI extends Sprite
 	public var rightBlock:CheckBox;
 	public var upBlock:CheckBox;
 	public var downBlock:CheckBox;
+	public var leftHeightTxt:InputText;
+	public var rightHeightTxt:InputText;
 	//---private---
 	
 	private var center:Point;
@@ -62,6 +64,8 @@ public class EditUI extends Sprite
 	private var textBox:HBox;
 	private var checkBox:HBox;
 	private var allBox:VBox;
+	private var leftHeightLabel:Label;
+	private var rightHeightLabel:Label;
 	public function EditUI() 
 	{
 		this.addEventListener(Event.ADDED_TO_STAGE, addToStageHandler);
@@ -127,7 +131,7 @@ public class EditUI extends Sprite
 		
 		this.allBox = new VBox(this.attributePanel);
 		this.textBox = new HBox(this.allBox);
-		this.checkBox = new HBox(this.allBox);
+		this.checkBox = new HBox(this.allBox, 10);
 		
 		this.baseAttributeLayout = new HBox(this.textBox);
 		this.posXTxt = new Label(this.baseAttributeLayout, 0, 0, "x:");
@@ -169,15 +173,24 @@ public class EditUI extends Sprite
 		this.upYTxt.restrict = "0-9\\-";
 		this.downYTxt.restrict = "0-9\\-";
 		
+		this.leftHeightLabel = new Label(this.faceAttributeLayout, 0, 0, "left height:");
+		this.leftHeightTxt = new InputText(this.faceAttributeLayout);
+		this.rightHeightLabel = new Label(this.faceAttributeLayout, 0, 0, "right height:");
+		this.rightHeightTxt = new InputText(this.faceAttributeLayout);
+		this.leftHeightTxt.setSize(40, 20);
+		this.rightHeightTxt.setSize(40, 20);
+		this.leftHeightTxt.restrict = "0-9\\-";
+		this.rightHeightTxt.restrict = "0-9\\-";
+		
 		this.faceChickBoxAttributeLayout = new HBox(this.checkBox);
-		this.leftRestrict = new CheckBox(this.faceChickBoxAttributeLayout, 3, 5, "left restrict:");
-		this.rightRestrict = new CheckBox(this.faceChickBoxAttributeLayout, 3, 5, "right restrict:");
+		this.leftRestrict = new CheckBox(this.faceChickBoxAttributeLayout, 0, 5, "left restrict:");
+		this.rightRestrict = new CheckBox(this.faceChickBoxAttributeLayout, 0, 5, "right restrict:");
 		
-		this.leftBlock = new CheckBox(this.faceChickBoxAttributeLayout, 3, 5, "left block:");
-		this.rightBlock = new CheckBox(this.faceChickBoxAttributeLayout, 3, 5, "right block:");
+		this.leftBlock = new CheckBox(this.faceChickBoxAttributeLayout, 0, 5, "left block:");
+		this.rightBlock = new CheckBox(this.faceChickBoxAttributeLayout, 0, 5, "right block:");
 		
-		this.upBlock = new CheckBox(this.faceChickBoxAttributeLayout, 3, 5, "up block:");
-		this.downBlock = new CheckBox(this.faceChickBoxAttributeLayout, 3, 5, "down block:");
+		this.upBlock = new CheckBox(this.faceChickBoxAttributeLayout, 0, 5, "up block:");
+		this.downBlock = new CheckBox(this.faceChickBoxAttributeLayout, 0, 5, "down block:");
 		
 		
 		var vBox:VBox = new VBox(this.componentsPanel);
@@ -246,6 +259,8 @@ public class EditUI extends Sprite
 				this.downRightXTxt.text = face.downRightPoint.x.toString();
 				this.upYTxt.text = face.upLeftPoint.y.toString();
 				this.downYTxt.text = face.downLeftPoint.y.toString();
+				this.leftHeightTxt.text = face.leftH.toString();
+				this.rightHeightTxt.text = face.rightH.toString();
 				
 				this.leftRestrict.selected = face.leftRestrict;
 				this.rightRestrict.selected = face.rightRestrict;
@@ -253,6 +268,12 @@ public class EditUI extends Sprite
 				this.leftBlock.selected = face.leftBlock;
 				this.rightBlock.selected = face.rightBlock;
 				
+				if (face.leftH > 0)
+					this.leftBlock.selected = false;
+
+				if (face.rightH <= 0)
+					this.rightBlock.selected = false;
+
 				this.upBlock.selected = face.upBlock;
 				this.downBlock.selected = face.downBlock;
 			}

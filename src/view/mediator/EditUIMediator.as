@@ -78,7 +78,8 @@ public class EditUIMediator extends Mediator
 	private function initEvent():void 
 	{
 		this.editUI.importBtn.addEventListener(MouseEvent.CLICK, importBtnClickHandler);
-		this.editUI.exportBtn.addEventListener(MouseEvent.CLICK, exportBtnClickHandler);
+		this.editUI.saveBtn.addEventListener(MouseEvent.CLICK, saveBtnClickHandler);
+		this.editUI.loadBtn.addEventListener(MouseEvent.CLICK, loadBtnClickHandler);
 		this.editUI.clearBtn.addEventListener(MouseEvent.CLICK, clearBtnClickHandler);
 		this.editUI.vSlider.addEventListener(Event.CHANGE, vSliderChangeHandler);
 		this.editUI.posXValueTxt.addEventListener(FocusEvent.FOCUS_OUT, posXValueTxtfocusOutHandler);
@@ -223,6 +224,36 @@ public class EditUIMediator extends Mediator
 		}
 	}
 	
+	/**
+	 * 保存
+	 */
+	private function save():void
+	{
+		var arr:Array = [];
+		var count:int = Layer.TERRAIN_LAYER.numChildren;
+		for (var i:int = 0; i < count; ++i) 
+		{
+			var sc:SurfaceComponet = Layer.TERRAIN_LAYER.getChildAt(i) as SurfaceComponet;
+			var node:Object = { };
+			node.depth = sc.depth;
+			node.upLeftX = sc.upLeftPoint.x;
+			node.downLeftX = sc.downLeftPoint.x;
+			node.upRightX = sc.upRightPoint.x;
+			node.downRightX = sc.downRightPoint.x;
+			node.upY = sc.upLeftPoint.y;
+			node.downY = sc.downLeftPoint.y;
+			node.leftBlock = sc.leftBlock;
+			node.rightBlock = sc.rightBlock;
+			node.upBlock = sc.upBlock;
+			node.downBlock = sc.downBlock;
+			node.leftH = sc.leftH;
+			node.rightH = sc.rightH;
+			node.leftRestrict = sc.leftRestrict;
+			node.rightRestrict = sc.rightRestrict;
+			arr.push(node);
+		}
+	}
+	
 	//-----------------------------event--------------------------------
 	/////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////
@@ -265,11 +296,6 @@ public class EditUIMediator extends Mediator
 			this.isSpaceKey = false;
 			Mouse.cursor = MouseCursor.ARROW;
 		}
-	}
-	
-	private function exportBtnClickHandler(event:MouseEvent):void 
-	{
-		
 	}
 	
 	private function importBtnClickHandler(event:MouseEvent):void 
@@ -355,6 +381,16 @@ public class EditUIMediator extends Mediator
 	private function posXValueTxtfocusOutHandler(event:FocusEvent):void 
 	{
 		this.setCurSptProp();
+	}
+	
+	private function saveBtnClickHandler(event:MouseEvent):void 
+	{
+		
+	}
+		
+	private function loadBtnClickHandler(event:MouseEvent):void 
+	{
+		
 	}
 	
 	private function enterFrameHandler(event:Event):void 

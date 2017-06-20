@@ -1,6 +1,9 @@
 package view.ui 
 {
+import com.bit101.components.Label;
 import flash.display.Sprite;
+import flash.text.TextField;
+import flash.text.TextFieldAutoSize;
 
 /**
  * ...面组件
@@ -24,6 +27,7 @@ public class SurfaceComponet extends Sprite
 	
 	protected var _leftH:Number = 0;
 	protected var _rightH:Number = 0;
+	private var depthTxt:Label;
 	public function SurfaceComponet() 
 	{
 		this.init();
@@ -62,6 +66,9 @@ public class SurfaceComponet extends Sprite
 		this.downRightPoint.graphics.drawCircle(0, 0, 5);
 		this.downRightPoint.graphics.endFill();
 		
+		this.depthTxt = new Label(this, 0, 0, "d=" + this.depth);
+		this.depthTxt.textField.autoSize = TextFieldAutoSize.CENTER; 
+		this.depthTxt.textField.textColor = 0xff0000;
 		this.addChild(this.upLeftPoint);
 		this.addChild(this.downLeftPoint);
 		this.addChild(this.upRightPoint);
@@ -167,6 +174,10 @@ public class SurfaceComponet extends Sprite
 		this.graphics.lineTo( 5, 0);
 		this.graphics.moveTo( 0, -5);
 		this.graphics.lineTo( 0, 5);
+		this.depthTxt.text = "d=" + this.depth;
+		this.depthTxt.textField.autoSize = TextFieldAutoSize.CENTER; 
+		this.depthTxt.x = this.width / 2 - this.depthTxt.width / 2;
+		this.depthTxt.y = this.height / 2 - this.depthTxt.height / 2;
 		
 		if (this.upBlock)
 		{

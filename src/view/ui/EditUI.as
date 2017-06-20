@@ -25,8 +25,9 @@ public class EditUI extends Sprite
 	public var componentsPanel:Panel;
 	public var attributePanel:Panel;
 	public var importBtn:PushButton;
-	public var exportBtn:PushButton;
 	public var clearBtn:PushButton;
+	public var saveBtn:PushButton;
+	public var loadBtn:PushButton;
 	public var vSlider:VUISlider;
 	public var posXValueTxt:InputText;
 	public var posYValueTxt:InputText;
@@ -115,10 +116,12 @@ public class EditUI extends Sprite
 		//nav
 		var hbox:HBox = new HBox(this.navPanel);
 		this.importBtn = new PushButton(hbox, 0, 5, "import");
-		this.exportBtn = new PushButton(hbox, 0, 5, "export");
+		this.saveBtn = new PushButton(hbox, 0, 5, "save");
+		this.loadBtn = new PushButton(hbox, 0, 5, "load");
 		this.clearBtn = new PushButton(hbox, 0, 5, "clear");
 		this.importBtn.setSize(120, 30);
-		this.exportBtn.setSize(120, 30);
+		this.saveBtn.setSize(120, 30);
+		this.loadBtn.setSize(120, 30);
 		this.clearBtn.setSize(120, 30);
 		
 		this.center = new Point(this.stagePanel.x + this.stagePanel.width / 2, 

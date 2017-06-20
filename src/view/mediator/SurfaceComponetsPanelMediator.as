@@ -4,8 +4,10 @@ import com.bit101.components.InputText;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.FocusEvent;
+import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
 import flash.geom.Point;
+import flash.ui.Keyboard;
 import message.Message;
 import org.puremvc.as3.interfaces.INotification;
 import org.puremvc.as3.patterns.mediator.Mediator;
@@ -22,6 +24,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 	private var faceComponetsPanel:SurfaceComponetsPanel;
 	private var faceComponet:SurfaceComponet;
 	private var curPtSpt:Sprite;
+	private var isOnCtrlKey:Boolean;
 	public function SurfaceComponetsPanelMediator(mediatorName:String=null, viewComponent:Object=null) 
 	{
 		super(mediatorName, viewComponent);
@@ -95,6 +98,20 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		this.faceComponetsPanel.quad2.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		this.faceComponetsPanel.trapezoid1.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		this.faceComponetsPanel.trapezoid2.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
+		Layer.STAGE.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDownHandler);
+		Layer.STAGE.addEventListener(KeyboardEvent.KEY_UP, onKeyUpHandler);
+	}
+	
+	private function onKeyUpHandler(event:KeyboardEvent):void 
+	{
+		if (event.keyCode == Keyboard.CONTROL)
+			this.isOnCtrlKey = false;
+	}
+	
+	private function onKeyDownHandler(event:KeyboardEvent):void 
+	{
+		if (event.keyCode == Keyboard.CONTROL)
+			this.isOnCtrlKey = true;
 	}
 	
 	private function checkBoxHandler(event:MouseEvent):void 
@@ -248,41 +265,76 @@ public class SurfaceComponetsPanelMediator extends Mediator
 			var pos:Point = this.curPtSpt.parent.globalToLocal(new Point(Layer.STAGE.mouseX, 
 																		 Layer.STAGE.mouseY));
 			var sc:SurfaceComponet = this.curPtSpt.parent as SurfaceComponet;
-			this.curPtSpt.x = pos.x;
-			this.curPtSpt.y = pos.y;
 			sc.setChildIndex(this.curPtSpt, 1);
 			var gap:int = 10;
+			var dis:Number;
 			if (this.curPtSpt.name == "upLeft")
 			{
+				dis = sc.downLeftPoint.x - this.curPtSpt.x;
+				this.curPtSpt.x = pos.x;
+				this.curPtSpt.y = pos.y;
 				if (this.curPtSpt.x > sc.upRightPoint.x - gap)
 					this.curPtSpt.x = sc.upRightPoint.x - gap;
 				if (this.curPtSpt.y > sc.downRightPoint.y - gap)
 					this.curPtSpt.y = sc.downRightPoint.y - gap;
 				sc.upRightPoint.y = this.curPtSpt.y;
+				if (this.isOnCtrlKey)
+				{
+					sc.downLeftPoint.x = this.curPtSpt.x + dis;
+					if (sc.downLeftPoint.x > sc.downRightPoint.x - gap)
+						sc.downLeftPoint.x = sc.downRightPoint.x - gap;
+				}
 			}
 			else if (this.curPtSpt.name == "upRight")
 			{
+				dis = sc.downRightPoint.x - this.curPtSpt.x;
+				this.curPtSpt.x = pos.x;
+				this.curPtSpt.y = pos.y;
 				if (this.curPtSpt.x < sc.upLeftPoint.x + gap)
 					this.curPtSpt.x = sc.upLeftPoint.x + gap;
 				if (this.curPtSpt.y > sc.downRightPoint.y - gap)
 					this.curPtSpt.y = sc.downRightPoint.y - gap;
 				sc.upLeftPoint.y = this.curPtSpt.y;
+				if (this.isOnCtrlKey)
+				{
+					sc.downRightPoint.x = this.curPtSpt.x + dis;
+					if (sc.downRightPoint.x < sc.downLeftPoint.x + gap)
+						sc.downRightPoint.x = sc.downLeftPoint.x + gap;
+				}
 			}
 			else if (this.curPtSpt.name == "downLeft")
 			{
+				dis = sc.upLeftPoint.x - this.curPtSpt.x;
+				this.curPtSpt.x = pos.x;
+				this.curPtSpt.y = pos.y;
 				if (this.curPtSpt.x > sc.downRightPoint.x - gap)
 					this.curPtSpt.x = sc.downRightPoint.x - gap;
 				if (this.curPtSpt.y < sc.upLeftPoint.y + gap)
 					this.curPtSpt.y = sc.upLeftPoint.y + gap;
 				sc.downRightPoint.y = this.curPtSpt.y;
+				if (this.isOnCtrlKey)
+				{
+					sc.upLeftPoint.x = this.curPtSpt.x + dis;
+					if (sc.upLeftPoint.x > sc.upRightPoint.x - gap)
+						sc.upLeftPoint.x = sc.upRightPoint.x - gap;
+				}
 			}
 			else if (this.curPtSpt.name == "downRight")
 			{
+				dis = sc.upRightPoint.x - this.curPtSpt.x;
+				this.curPtSpt.x = pos.x;
+				this.curPtSpt.y = pos.y;
 				if (this.curPtSpt.x < sc.downLeftPoint.x + gap)
 					this.curPtSpt.x = sc.downLeftPoint.x + gap;
 				if (this.curPtSpt.y < sc.upRightPoint.y + gap)
 					this.curPtSpt.y = sc.upRightPoint.y + gap;
 				sc.downLeftPoint.y = this.curPtSpt.y;
+				if (this.isOnCtrlKey)
+				{
+					sc.upRightPoint.x = this.curPtSpt.x + dis;
+					if (sc.upRightPoint.x < sc.upLeftPoint.x + gap)
+						sc.upRightPoint.x = sc.upLeftPoint.x + gap;
+				}
 			}
 			sc.draw();
 		}

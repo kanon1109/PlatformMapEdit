@@ -20,6 +20,7 @@ public class SurfaceComponet extends Sprite
 	public var rightBlock:Boolean;
 	public var upBlock:Boolean;
 	public var downBlock:Boolean;
+	public var depth:int;
 	
 	protected var _leftH:Number = 0;
 	protected var _rightH:Number = 0;

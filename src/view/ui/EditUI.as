@@ -52,6 +52,7 @@ public class EditUI extends Sprite
 	public var leftHeightTxt:InputText;
 	public var rightHeightTxt:InputText;
 	public var depthTxt:InputText;
+	public var nameTxt:InputText;
 	//---private---
 	
 	private var center:Point;
@@ -69,6 +70,7 @@ public class EditUI extends Sprite
 	private var leftHeightLabel:Label;
 	private var rightHeightLabel:Label;
 	private var depthLabel:Label;
+	private var nameLabel:Label;
 	public function EditUI() 
 	{
 		this.addEventListener(Event.ADDED_TO_STAGE, addToStageHandler);
@@ -192,6 +194,11 @@ public class EditUI extends Sprite
 		this.depthTxt.setSize(30, 20);
 		this.depthTxt.restrict = "0-9";
 		
+		this.nameLabel = new Label(this.faceAttributeLayout, 0, 0, "name:");
+		this.nameTxt = new InputText(this.faceAttributeLayout);
+		this.nameTxt.setSize(70, 20);
+		this.nameTxt.restrict = "0-9\a-z\A-Z";
+		
 		this.faceChickBoxAttributeLayout = new HBox(this.checkBox);
 		this.leftRestrict = new CheckBox(this.faceChickBoxAttributeLayout, 0, 5, "left restrict:");
 		this.rightRestrict = new CheckBox(this.faceChickBoxAttributeLayout, 0, 5, "right restrict:");
@@ -272,6 +279,7 @@ public class EditUI extends Sprite
 				this.leftHeightTxt.text = face.leftH.toString();
 				this.rightHeightTxt.text = face.rightH.toString();
 				this.depthTxt.text = face.depth.toString();
+				this.nameTxt.text = face.name;
 				
 				this.leftRestrict.selected = face.leftRestrict;
 				this.rightRestrict.selected = face.rightRestrict;

@@ -10,6 +10,8 @@ import flash.events.FocusEvent;
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
 import flash.filesystem.File;
+import flash.filesystem.FileMode;
+import flash.filesystem.FileStream;
 import flash.geom.Point;
 import flash.net.FileFilter;
 import flash.ui.Keyboard;
@@ -30,9 +32,13 @@ public class EditUIMediator extends Mediator
 	public static var NAME:String = "EditUIMediator";
 	private var editUI:EditUI;
 	private var imageFile:File;
+	private var dataFile:File;
+	private var saveFile:File;
 	private var imageFilter:FileFilter;
+	private var dataFilter:FileFilter;
 	private var curSelectedSpt:Sprite;
 	private var isSpaceKey:Boolean;
+	private var saveDataStr:String;
 	public function EditUIMediator() 
 	{
 		super(NAME);
@@ -82,8 +88,8 @@ public class EditUIMediator extends Mediator
 		this.editUI.loadBtn.addEventListener(MouseEvent.CLICK, loadBtnClickHandler);
 		this.editUI.clearBtn.addEventListener(MouseEvent.CLICK, clearBtnClickHandler);
 		this.editUI.vSlider.addEventListener(Event.CHANGE, vSliderChangeHandler);
-		this.editUI.posXValueTxt.addEventListener(FocusEvent.FOCUS_OUT, posXValueTxtfocusOutHandler);
-		this.editUI.posYValueTxt.addEventListener(FocusEvent.FOCUS_OUT, posYValueTxtfocusOutHandler);
+		this.editUI.posXValueTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
+		this.editUI.posYValueTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
 		this.editUI.stagePanel.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		Layer.STAGE.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDownHandler);
 		Layer.STAGE.addEventListener(MouseEvent.MOUSE_DOWN, onStageMouseDownHandler);
@@ -235,6 +241,9 @@ public class EditUIMediator extends Mediator
 		{
 			var sc:SurfaceComponet = Layer.TERRAIN_LAYER.getChildAt(i) as SurfaceComponet;
 			var node:Object = { };
+			node.name = sc.name;
+			node.x = sc.x;
+			node.y = sc.y;
 			node.depth = sc.depth;
 			node.upLeftX = sc.upLeftPoint.x;
 			node.downLeftX = sc.downLeftPoint.x;
@@ -252,6 +261,64 @@ public class EditUIMediator extends Mediator
 			node.rightRestrict = sc.rightRestrict;
 			arr.push(node);
 		}
+		this.saveDataStr = JSON.stringify(arr);
+		if (!this.saveFile)
+		{
+			this.saveFile = File.desktopDirectory;
+			this.saveFile.addEventListener(Event.SELECT, selectSaveFileHandler);
+			this.saveFile.url += ".json"; //确认后缀名
+		}
+		this.saveFile.browseForSave("保存数据");
+	}
+	
+	/**
+	 * 解析
+	 * @param	dataStr		数据
+	 */
+	public function parsing(dataStr:String):void
+	{
+		trace("dataStr", dataStr);
+		var arr:Array = JSON.parse(dataStr) as Array;
+		var num:int = arr.length;
+		//arr.sortOn("depth", Array.NUMERIC);
+		for (var i:int = 0; i < num; i++)
+		{
+			var data:Object = arr[i];
+			var sc:SurfaceComponet = new SurfaceComponet();
+			sc.name = data.name;
+			sc.x = data.x;
+			sc.y = data.y;
+			sc.depth = data.depth;
+			sc.upLeftPoint.x = data.upLeftX;
+			sc.downLeftPoint.x = data.downLeftX;
+			sc.upRightPoint.x = data.upRightX;
+			sc.downRightPoint.x = data.downRightX;
+			sc.upLeftPoint.y = data.upY;
+			sc.downLeftPoint.y = data.downY;
+			sc.leftBlock = data.leftBlock;
+			sc.rightBlock = data.rightBlock;
+			sc.upBlock = data.upBlock;
+			sc.downBlock = data.downBlock;
+			sc.leftH = data.leftH;
+			sc.rightH = data.rightH;
+			sc.leftRestrict = data.leftRestrict;
+			sc.rightRestrict = data.rightRestrict;
+			sc.draw();
+			Layer.TERRAIN_LAYER.addChild(sc);
+			this.sendNotification(Message.COPY, sc);
+		}
+	}
+	
+		
+	private function selectData():void
+	{
+		if (!this.dataFile)
+		{
+			this.dataFilter = new FileFilter("data", "*.json");
+			this.dataFile = new File();
+			this.dataFile.addEventListener(Event.SELECT, selectDataFileHandler);
+		}
+		this.dataFile.browse([this.dataFilter]);
 	}
 	
 	//-----------------------------event--------------------------------
@@ -373,24 +440,42 @@ public class EditUIMediator extends Mediator
 			this.editUI.scaleStage(this.editUI.vSlider.value / 100);
 	}
 	
-	private function posYValueTxtfocusOutHandler(event:FocusEvent):void 
-	{
-		this.setCurSptProp();
-	}
-	
-	private function posXValueTxtfocusOutHandler(event:FocusEvent):void 
+	private function txtFocusOutHandler(event:FocusEvent):void 
 	{
 		this.setCurSptProp();
 	}
 	
 	private function saveBtnClickHandler(event:MouseEvent):void 
 	{
+		this.save();
+	}
 		
+	private function selectDataFileHandler(event:Event):void
+	{
+		this.dataFile.addEventListener(Event.COMPLETE, dataFileLoadComplete);
+		this.dataFile.load();
+	}
+	
+	private function dataFileLoadComplete(event:Event):void
+	{
+		var fileStream:FileStream = new FileStream();
+		fileStream.open(this.dataFile, FileMode.READ);
+		var dataStr:String = fileStream.readUTFBytes(fileStream.bytesAvailable);
+		this.parsing(dataStr);
 	}
 		
 	private function loadBtnClickHandler(event:MouseEvent):void 
 	{
-		
+		this.selectData();
+	}
+	
+	private function selectSaveFileHandler(event:Event):void
+	{
+		var file:File = event.currentTarget as File;
+		var stream:FileStream = new FileStream();
+		stream.open(file, FileMode.WRITE);
+		stream.writeUTFBytes(this.saveDataStr);
+		stream.close();
 	}
 	
 	private function enterFrameHandler(event:Event):void 

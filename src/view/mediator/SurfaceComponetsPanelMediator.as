@@ -76,12 +76,12 @@ public class SurfaceComponetsPanelMediator extends Mediator
 	
 	private function initEvent():void
 	{
-		this.editUI.upLeftXTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
-		this.editUI.downLeftXTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
-		this.editUI.upRightXTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
-		this.editUI.downRightXTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
-		this.editUI.upYTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
-		this.editUI.downYTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
+		this.editUI.upLeftXTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
+		this.editUI.downLeftXTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
+		this.editUI.upRightXTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
+		this.editUI.downRightXTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
+		this.editUI.upYTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
+		this.editUI.downYTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
 		this.editUI.leftRestrict.addEventListener(MouseEvent.CLICK, checkBoxHandler);
 		this.editUI.rightRestrict.addEventListener(MouseEvent.CLICK, checkBoxHandler);
 		this.editUI.leftBlock.addEventListener(MouseEvent.CLICK, checkBoxHandler);
@@ -89,10 +89,11 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		this.editUI.upBlock.addEventListener(MouseEvent.CLICK, checkBoxHandler);
 		this.editUI.downBlock.addEventListener(MouseEvent.CLICK, checkBoxHandler);
 		
-		this.editUI.leftHeightTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
-		this.editUI.rightHeightTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
-		this.editUI.depthTxt.addEventListener(FocusEvent.FOCUS_OUT, txtfocusOutHandler);
-		
+		this.editUI.leftHeightTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
+		this.editUI.rightHeightTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
+		this.editUI.depthTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
+		this.editUI.nameTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
+
 		this.faceComponetsPanel.rect.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		this.faceComponetsPanel.quad1.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		this.faceComponetsPanel.quad2.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
@@ -134,7 +135,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		}
 	}
 	
-	private function txtfocusOutHandler(event:FocusEvent):void 
+	private function txtFocusOutHandler(event:FocusEvent):void 
 	{
 		if (this.faceComponet)
 		{
@@ -198,7 +199,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 			this.faceComponet.leftH = Number(this.editUI.leftHeightTxt.text);
 			this.faceComponet.rightH = Number(this.editUI.rightHeightTxt.text);
 			this.faceComponet.depth = Number(this.editUI.depthTxt.text);
-			
+			this.faceComponet.name = this.editUI.nameTxt.text;
 			if (this.faceComponet.leftH > 0)
 				this.editUI.leftBlock.selected = false;
 			if (this.faceComponet.rightH > 0)

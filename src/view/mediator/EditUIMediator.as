@@ -294,7 +294,9 @@ public class EditUIMediator extends Mediator
 			sc.upRightPoint.x = data.upRightX;
 			sc.downRightPoint.x = data.downRightX;
 			sc.upLeftPoint.y = data.upY;
+			sc.upRightPoint.y = data.upY;
 			sc.downLeftPoint.y = data.downY;
+			sc.downRightPoint.y = data.downY;
 			sc.leftBlock = data.leftBlock;
 			sc.rightBlock = data.rightBlock;
 			sc.upBlock = data.upBlock;

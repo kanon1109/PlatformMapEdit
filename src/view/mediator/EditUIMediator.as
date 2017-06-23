@@ -242,8 +242,10 @@ public class EditUIMediator extends Mediator
 			var sc:SurfaceComponet = Layer.TERRAIN_LAYER.getChildAt(i) as SurfaceComponet;
 			var node:Object = { };
 			node.name = sc.name;
-			node.x = sc.x;
-			node.y = sc.y;
+			var pos:Point = sc.parent.localToGlobal(new Point(sc.x, sc.y));
+			pos = this.editUI.stagePanel.globalToLocal(pos);
+			node.x = pos.x;
+			node.y = pos.y;
 			node.depth = sc.depth;
 			node.upLeftX = sc.upLeftPoint.x;
 			node.downLeftX = sc.downLeftPoint.x;
@@ -286,8 +288,8 @@ public class EditUIMediator extends Mediator
 			var data:Object = arr[i];
 			var sc:SurfaceComponet = new SurfaceComponet();
 			sc.name = data.name;
-			sc.x = data.x;
-			sc.y = data.y;
+			sc.x = data.x - this.editUI.stageWidth / 2;
+			sc.y = data.y - this.editUI.stageHeight / 2;
 			sc.depth = data.depth;
 			sc.upLeftPoint.x = data.upLeftX;
 			sc.downLeftPoint.x = data.downLeftX;

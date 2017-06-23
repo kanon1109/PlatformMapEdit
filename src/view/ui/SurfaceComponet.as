@@ -28,6 +28,8 @@ public class SurfaceComponet extends Sprite
 	protected var _leftH:Number = 0;
 	protected var _rightH:Number = 0;
 	private var depthTxt:Label;
+	private var _leftX:Number;
+	private var _rightX:Number;
 	public function SurfaceComponet() 
 	{
 		this.init();
@@ -176,8 +178,8 @@ public class SurfaceComponet extends Sprite
 		this.graphics.lineTo( 0, 5);
 		this.depthTxt.text = "d=" + this.depth;
 		this.depthTxt.textField.autoSize = TextFieldAutoSize.CENTER; 
-		this.depthTxt.x = this.width / 2 - this.depthTxt.width / 2;
-		this.depthTxt.y = this.height / 2 - this.depthTxt.height / 2;
+		this.depthTxt.x = this.leftX + this.width / 2 - this.depthTxt.width / 2;
+		this.depthTxt.y = this.upLeftPoint.y + this.height / 2 - this.depthTxt.height / 2;
 		
 		if (this.upBlock)
 		{
@@ -299,6 +301,22 @@ public class SurfaceComponet extends Sprite
 	{
 		_rightH = value;
 		this.rightBlock = false;
+	}
+	
+	public function get leftX():Number
+	{
+		if (this.downLeftPoint.x < this.upLeftPoint.x )
+			return this.downLeftPoint.x;
+		else
+			return this.upLeftPoint.x;
+	}
+	
+	public function get rightX():Number 
+	{
+		if (this.downRightPoint.x > this.upRightPoint.x)
+			return this.downRightPoint.x 
+		else
+			return this.upRightPoint.x;
 	}
 }
 }

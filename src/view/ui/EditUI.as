@@ -53,6 +53,7 @@ public class EditUI extends Sprite
 	public var rightHeightTxt:InputText;
 	public var depthTxt:InputText;
 	public var nameTxt:InputText;
+	public var runBtn:PushButton;
 	//---private---
 	
 	private var center:Point;
@@ -121,10 +122,12 @@ public class EditUI extends Sprite
 		this.saveBtn = new PushButton(hbox, 0, 5, "save");
 		this.loadBtn = new PushButton(hbox, 0, 5, "load");
 		this.clearBtn = new PushButton(hbox, 0, 5, "clear");
+		this.runBtn = new PushButton(hbox, 0, 5, "run");
 		this.importBtn.setSize(120, 30);
 		this.saveBtn.setSize(120, 30);
 		this.loadBtn.setSize(120, 30);
 		this.clearBtn.setSize(120, 30);
+		this.runBtn.setSize(120, 30);
 		
 		this.center = new Point(this.stagePanel.x + this.stagePanel.width / 2, 
 								this.stagePanel.y + this.stagePanel.height / 2);

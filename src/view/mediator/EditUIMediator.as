@@ -87,6 +87,7 @@ public class EditUIMediator extends Mediator
 		this.editUI.saveBtn.addEventListener(MouseEvent.CLICK, saveBtnClickHandler);
 		this.editUI.loadBtn.addEventListener(MouseEvent.CLICK, loadBtnClickHandler);
 		this.editUI.clearBtn.addEventListener(MouseEvent.CLICK, clearBtnClickHandler);
+		this.editUI.runBtn.addEventListener(MouseEvent.CLICK, runBtnClickHandler);
 		this.editUI.vSlider.addEventListener(Event.CHANGE, vSliderChangeHandler);
 		this.editUI.posXValueTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
 		this.editUI.posYValueTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
@@ -480,6 +481,11 @@ public class EditUIMediator extends Mediator
 		stream.open(file, FileMode.WRITE);
 		stream.writeUTFBytes(this.saveDataStr);
 		stream.close();
+	}
+	
+	private function runBtnClickHandler(event:MouseEvent):void 
+	{
+		//运行
 	}
 	
 	private function enterFrameHandler(event:Event):void 

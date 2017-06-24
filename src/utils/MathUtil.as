@@ -446,5 +446,18 @@ public class MathUtil
 		if (angle >= 180 && angle < 270) return 3;
 		return 4;
 	}
+	
+	/**
+	 * 计算两点间的夹角
+	 * @param	x0		点1x
+	 * @param	y0		点1y
+	 * @param	x1		点2x
+	 * @param	y1		点2y
+	 * @return
+	 */
+	public static function getRotation(x0:Number, y0:Number, x1:Number, y1:Number):Number
+	{
+		return Math.atan2(y1 - y0, x1 - x0) / Math.PI * 180;
+	}
 }
 }

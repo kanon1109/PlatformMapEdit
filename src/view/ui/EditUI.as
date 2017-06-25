@@ -360,8 +360,9 @@ public class EditUI extends Sprite
 		this.checkBox.visible = !flag;
 		
 		this.faceComponetsPanel.visible = !flag;
-		Layer.STAGE_LAYER.visible = !flag;
-		Layer.EDIT_LAYER.visible = !flag;
+		Layer.STAGE_BG_LAYER.visible = !flag;
+		Layer.TERRAIN_LAYER.visible = !flag;
+		Layer.STAGE_FG_LAYER.visible = !flag;
 	}
 }
 }

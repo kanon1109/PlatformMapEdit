@@ -342,6 +342,7 @@ public class Body
 		this.jumpVy = 0;
 		this.vx = 0;
 		this.vy = 0;
+		this.updateFacePosState(this.face);
 	}
 	
 	/**

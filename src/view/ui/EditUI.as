@@ -232,8 +232,16 @@ public class EditUI extends Sprite
 		Layer.STAGE_LAYER.x = this.center.x;
 		Layer.STAGE_LAYER.y = this.center.y;
 		Layer.STAGE_LAYER.mask = sp;
+		
+		sp = new Shape();
+		sp.graphics.beginFill(0xff0000);
+		sp.graphics.drawRect(0, 0, this.stageWidth, this.stageHeight);
+		sp.graphics.endFill();
+		sp.x = this.stagePanel.x;
+		sp.y = this.stagePanel.y;
 		Layer.RUN_LAYER.x = this.center.x;
 		Layer.RUN_LAYER.y = this.center.y;
+		Layer.RUN_LAYER.mask = sp;
 	}
 	
 	/**
@@ -255,6 +263,8 @@ public class EditUI extends Sprite
 	{
 		Layer.STAGE_LAYER.scaleX = scale;
 		Layer.STAGE_LAYER.scaleY = scale;
+		Layer.RUN_LAYER.scaleX = scale;
+		Layer.RUN_LAYER.scaleY = scale;
 	}
 	
 	/**

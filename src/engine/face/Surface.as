@@ -1,4 +1,4 @@
-package face 
+package engine.face 
 {
 import flash.display.Graphics;
 import flash.geom.Point;
@@ -285,9 +285,9 @@ public class Surface
 	 * @param	lineColor	线条颜色
 	 * @param	pointColor	锚点颜色
 	 */
-	public function debugDraw(g:Graphics, lineColor:String = "#FF0000", 
-											pointColor:String = "#FFFF00", 
-											heighColor:String = "#0000FF"):void
+	public function debugDraw(g:Graphics, lineColor:uint = 0xFF0000, 
+											pointColor:uint = 0xFFFF00, 
+											heighColor:uint = 0x0000FF):void
 	{
 		if (!g) return;
 		g.lineStyle(1, lineColor);

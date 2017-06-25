@@ -486,6 +486,14 @@ public class EditUIMediator extends Mediator
 	private function runBtnClickHandler(event:MouseEvent):void 
 	{
 		//运行
+		if (this.editUI)
+		{
+			if (!this.editUI.isRunMode)
+				this.editUI.setRunMode(true);
+			else
+				this.editUI.setRunMode(false);
+			this.sendNotification(Message.RUN, this.editUI.isRunMode);
+		}
 	}
 	
 	private function enterFrameHandler(event:Event):void 

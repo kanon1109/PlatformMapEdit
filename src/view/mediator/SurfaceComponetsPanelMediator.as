@@ -20,6 +20,7 @@ import view.ui.SurfaceComponetsPanel;
  */
 public class SurfaceComponetsPanelMediator extends Mediator 
 {
+	public static var NAME:String = "SurfaceComponetsPanelMediator";
 	private var editUI:EditUI;
 	private var faceComponetsPanel:SurfaceComponetsPanel;
 	private var faceComponet:SurfaceComponet;
@@ -27,7 +28,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 	private var isOnCtrlKey:Boolean;
 	public function SurfaceComponetsPanelMediator(mediatorName:String=null, viewComponent:Object=null) 
 	{
-		super(mediatorName, viewComponent);
+		super(NAME);
 	}
 	
 	override public function listNotificationInterests():Array 

@@ -1,8 +1,8 @@
-package body 
+package engine.body 
 {
-import face.Surface;
+import engine.face.Surface;
+import engine.manager.FaceMangager;
 import flash.display.DisplayObject;
-import manager.FaceMangager;
 /**
  * ...物体
  * TODO 
@@ -31,8 +31,6 @@ public class Body
 	private var isJump:Boolean;
 	//body在face上的纵向位置
 	private var positionVerticalState:int;
-	//下落之前的y坐标
-	private var prevFaceY:Number;
 	//---public---
 	//速度
 	public var vx:Number = 0;
@@ -40,6 +38,8 @@ public class Body
 	public var vy:Number = 0;
 	public var jumpVx:Number = 0;
 	public var jumpVy:Number = 0;
+	//下落之前的y坐标
+	public var prevFaceY:Number;
 	//当前帧的坐标
 	public var x:Number = 0;
 	public var y:Number = 0;
@@ -123,6 +123,14 @@ public class Body
 		{
 			if (!this.isJump)
 			{
+				var count:int;
+				var posY:Number;
+				var faceAry:Array;
+				var i:int;
+				var face:Surface;
+				var nextFace:Surface;
+				var height:Number;
+				var curPosY:Number;
 				if (!this.prevFace || this.jumpVy == 0)
 				{
 					//非跳跃时的face链接
@@ -131,19 +139,19 @@ public class Body
 				else
 				{
 					//非跳跃时的下落face搜索
-					var count:int = FaceMangager.faceAry.length;
-					var posY:Number = this.prevFaceY;
-					for (var i:int = 0; i < count; ++i)
+					count = FaceMangager.faceAry.length;
+					posY = this.prevFaceY;
+					for (i = 0; i < count; ++i)
 					{
-						var face:Surface = FaceMangager.faceAry[i];
-						var nextFace:Surface;
+						face = FaceMangager.faceAry[i];
+						nextFace = null;
 						if (this.prevFace != face)
 						{
 							if (this.prevZ == face.z)
 							{
 								//同一层的face
-								var height:Number = face.downPosY - this.prevFace.downPosY;
-								var curPosY:Number = this.prevFaceY + height;
+								height = face.downPosY - this.prevFace.downPosY;
+								curPosY = this.prevFaceY + height;
 								if (face.inFaceRage(this.x, curPosY, this.thick))
 								{
 									posY = curPosY;
@@ -176,12 +184,12 @@ public class Body
 					//trace("positionState", this.positionState);
 					if (this.positionVerticalState == UP)
 					{
-						var faceAry:Array = FaceMangager.seachTopJumpFaceRange(this.x, this.prevZ, this.thick);
-						var count:int = faceAry.length; 
-						var posY:Number = Infinity;
-						for (var i:int = 0; i < count; i++)
+						faceAry = FaceMangager.seachTopJumpFaceRange(this.x, this.prevZ, this.thick);
+						count = faceAry.length; 
+						posY = Infinity;
+						for (i = 0; i < count; i++)
 						{
-							var face:Surface = faceAry[i];
+							face = faceAry[i];
 							if (this.prevZ + 1 == face.z)
 							{
 								//上一层
@@ -212,17 +220,17 @@ public class Body
 						else
 						{
 							//左右跳跃
-							var count:int = FaceMangager.faceAry.length;
-							var posY:Number = this.prevFaceY;
-							for (var i:int = 0; i < count; ++i)
+							count = FaceMangager.faceAry.length;
+							posY = this.prevFaceY;
+							for (i = 0; i < count; ++i)
 							{
-								var face:Surface = FaceMangager.faceAry[i];
-								var nextFace:Surface;
+								face = FaceMangager.faceAry[i];
+								nextFace = null;
 								if (this.prevZ == face.z)
 								{
 									//同一层的face
-									var height:Number = face.downPosY - this.prevFace.downPosY;
-									var curPosY:Number = this.prevFaceY + height;
+									height = face.downPosY - this.prevFace.downPosY;
+									curPosY = this.prevFaceY + height;
 									if (face.inFaceRage(this.x, curPosY, this.thick))
 									{
 										posY = curPosY;
@@ -251,13 +259,13 @@ public class Body
 						else
 						{
 							//左右跳跃
-							var faceAry:Array = FaceMangager.seachBottomJumpFaceRange(this.x, this.prevZ, this.thick);
-							var count:int = faceAry.length;
-							var posY:Number = this.prevFaceY;
-							for (var i:int = 0; i < count; i++)
+							faceAry = FaceMangager.seachBottomJumpFaceRange(this.x, this.prevZ, this.thick);
+							count = faceAry.length;
+							posY = this.prevFaceY;
+							for (i = 0; i < count; i++)
 							{
-								var face:Surface = faceAry[i];
-								var nextFace:Surface;
+								face = faceAry[i];
+								nextFace = null;
 								if (this.prevZ - 1 == face.z)
 								{
 									//下层

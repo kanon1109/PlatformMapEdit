@@ -19,6 +19,7 @@ public class Layer
 	public static var EDIT_LAYER:Sprite;
 	public static var SYSTEM_LAYER:Sprite;
 	public static var TOP_LAYER:Sprite;
+	public static var RUN_LAYER:Sprite;
 	
 	public static function initLayer(root:DisplayObjectContainer):void
 	{
@@ -53,6 +54,9 @@ public class Layer
 		//顶层
 		TOP_LAYER = new Sprite();
 		root.addChild(TOP_LAYER);
+		
+		RUN_LAYER = new Sprite();
+		root.addChild(RUN_LAYER);
 	}
 }
 }

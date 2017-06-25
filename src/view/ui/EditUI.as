@@ -6,7 +6,6 @@ import com.bit101.components.InputText;
 import com.bit101.components.Label;
 import com.bit101.components.Panel;
 import com.bit101.components.PushButton;
-import com.bit101.components.RadioButton;
 import com.bit101.components.Style;
 import com.bit101.components.VBox;
 import com.bit101.components.VUISlider;
@@ -54,6 +53,8 @@ public class EditUI extends Sprite
 	public var depthTxt:InputText;
 	public var nameTxt:InputText;
 	public var runBtn:PushButton;
+	//是否是运行模式
+	public var isRunMode:Boolean;
 	//---private---
 	
 	private var center:Point;
@@ -231,6 +232,8 @@ public class EditUI extends Sprite
 		Layer.STAGE_LAYER.x = this.center.x;
 		Layer.STAGE_LAYER.y = this.center.y;
 		Layer.STAGE_LAYER.mask = sp;
+		Layer.RUN_LAYER.x = this.center.x;
+		Layer.RUN_LAYER.y = this.center.y;
 	}
 	
 	/**
@@ -319,6 +322,36 @@ public class EditUI extends Sprite
 		var x:Number = Number(this.posXValueTxt.text) - this.stageWidth / 2;
 		var y:Number = Number(this.posYValueTxt.text) - this.stageHeight / 2;
 		return new Point(x, y);
+	}
+	
+	/**
+	 * 运行模式
+	 * @param	flag	是否运行模式
+	 */
+	public function setRunMode(flag:Boolean):void
+	{
+		this.isRunMode = flag;
+		this.importBtn.mouseEnabled = !flag;
+		this.importBtn.enabled = !flag;
+		
+		this.clearBtn.mouseEnabled = !flag;
+		this.clearBtn.enabled = !flag;
+		
+		this.loadBtn.mouseEnabled = !flag;
+		this.loadBtn.enabled = !flag;
+		
+		this.saveBtn.mouseEnabled = !flag;
+		this.saveBtn.enabled = !flag;
+		
+		if (flag) this.runBtn.label = "stop";
+		else this.runBtn.label = "run"; 
+		
+		this.textBox.visible = !flag;
+		this.checkBox.visible = !flag;
+		
+		this.faceComponetsPanel.visible = !flag;
+		Layer.STAGE_LAYER.visible = !flag;
+		Layer.EDIT_LAYER.visible = !flag;
 	}
 }
 }

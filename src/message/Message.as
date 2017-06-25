@@ -12,6 +12,7 @@ public class Message
 	public static var FACE_MOUSE_DOWN:String = "face_mouse_down";
 	public static var DELETE:String = "delete";
 	public static var COPY:String = "copy";
+	public static var RUN:String = "run";
 
 }
 }

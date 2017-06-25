@@ -1,7 +1,7 @@
-package manager 
+package engine.manager 
 {
-import body.Body;
-import face.Surface;
+import engine.body.Body;
+import engine.face.Surface;
 import flash.display.Graphics;
 /**
  * ...面管理
@@ -65,6 +65,7 @@ public class FaceMangager
 		for (var i:int = 0; i < count; i++) 
 		{
 			var face:Surface = faceAry[i];
+			var curFace:Surface;
 			if (face.z == body.prevZ)
 			{
 				//计算 body.prevY  高度
@@ -211,9 +212,9 @@ public class FaceMangager
 	 * @param	lineColor	线条颜色
 	 * @param	pointColor	锚点颜色
 	 */
-	public static function debugFace(g:Graphics, lineColor:String = "#FF0000", 
-												 pointColor:String = "#FFFF00", 
-												 heighColor:String = "#0000FF"):void
+	public static function debugFace(g:Graphics, lineColor:uint = 0xFF0000, 
+												 pointColor:uint = 0xFFFF00, 
+												 heighColor:uint = 0x0000FF):void
 	{
 		if (!g) return;
 		g.clear();

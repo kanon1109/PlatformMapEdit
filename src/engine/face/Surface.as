@@ -62,7 +62,7 @@ public class Surface
 	public function set leftH(value:Number):void 
 	{
 		_leftH = value;
-		this.leftBlock = false;
+		if(value > 0) this.leftBlock = false;
 	}
 	
 	/**
@@ -72,7 +72,7 @@ public class Surface
 	public function set rightH(value:Number):void 
 	{
 		_rightH = value;
-		this.rightBlock = false;
+		if(value > 0) this.rightBlock = false;
 	}
 
 	/**

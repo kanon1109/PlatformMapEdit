@@ -176,7 +176,7 @@ public class SurfaceComponet extends Sprite
 		this.graphics.lineTo( 5, 0);
 		this.graphics.moveTo( 0, -5);
 		this.graphics.lineTo( 0, 5);
-		this.depthTxt.text = "d=" + this.depth;
+  		this.depthTxt.text = "d=" + this.depth;
 		this.depthTxt.textField.autoSize = TextFieldAutoSize.CENTER; 
 		this.depthTxt.x = this.leftX + this.width / 2 - this.depthTxt.width / 2;
 		this.depthTxt.y = this.upLeftPoint.y + this.height / 2 - this.depthTxt.height / 2;
@@ -293,14 +293,14 @@ public class SurfaceComponet extends Sprite
 	public function set leftH(value:Number):void 
 	{
 		_leftH = value;
-		this.leftBlock = false;
+		if(value > 0) this.leftBlock = false;
 	}
 	
 	public function get rightH():Number{ return _rightH; }
 	public function set rightH(value:Number):void 
 	{
 		_rightH = value;
-		this.rightBlock = false;
+		if(value > 0) this.rightBlock = false;
 	}
 	
 	public function get leftX():Number

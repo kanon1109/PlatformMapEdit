@@ -306,7 +306,7 @@ public class EditUI extends Sprite
 				if (face.leftH > 0)
 					this.leftBlock.selected = false;
 
-				if (face.rightH <= 0)
+				if (face.rightH > 0)
 					this.rightBlock.selected = false;
 
 				this.upBlock.selected = face.upBlock;

@@ -27,8 +27,8 @@ import view.ui.SurfaceComponet;
  * ...编辑器中介
  * 增加 [快捷保存 ctrl + s]
  * 增加 [点击左右按钮移动]
+ * 增加 [放大功能]
  * 增加 高度和宽度设置
- * 增加 放大功能
  * 增加 左右跳跃 向下depth搜索
  * 修改 点击face 出现4个点
  * 修改 最小高度
@@ -167,7 +167,7 @@ public class EditUIMediator extends Mediator
 	private function drawSelectedBound(spt:Sprite):void
 	{
 		if (this.curSelectedSpt) this.curSelectedSpt.transform.colorTransform = AdvanceColorUtil.setColorInitialize();
-		if (spt) spt.transform.colorTransform = AdvanceColorUtil.setRGBMixTransform(0x00, 0xCC, 0xFF, 40);
+		if (spt) spt.transform.colorTransform = AdvanceColorUtil.setRGBMixTransform(0xFF, 0xCC, 0xFF, 40);
 	}
 	
 	/**
@@ -215,9 +215,12 @@ public class EditUIMediator extends Mediator
 	 */
 	private function select(spt:Sprite):void
 	{
+		if (this.curSelectedSpt && this.curSelectedSpt is SurfaceComponet)
+			SurfaceComponet(this.curSelectedSpt).showPoint(false);
 		this.drawSelectedBound(spt);
 		this.curSelectedSpt = spt;
-		trace("this.curSelectedSpt", this.curSelectedSpt);
+		if (this.curSelectedSpt && this.curSelectedSpt is SurfaceComponet)
+			SurfaceComponet(this.curSelectedSpt).showPoint(true);
 		if (this.editUI) 
 			this.editUI.selectSpt(spt);
 	}

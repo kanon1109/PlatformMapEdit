@@ -52,19 +52,19 @@ public class SurfaceComponet extends Sprite
 		this.upRightPoint.name = "upRight";
 		this.downRightPoint.name = "downRight";
 		
-		this.upLeftPoint.graphics.beginFill(0xff0000, .5);
+		this.upLeftPoint.graphics.beginFill(0xff0000, .65);
 		this.upLeftPoint.graphics.drawCircle(0, 0, 5);
 		this.upLeftPoint.graphics.endFill();
 		
-		this.downLeftPoint.graphics.beginFill(0xff0000, .5);
+		this.downLeftPoint.graphics.beginFill(0xff0000, .65);
 		this.downLeftPoint.graphics.drawCircle(0, 0, 5);
 		this.downLeftPoint.graphics.endFill();
 		
-		this.upRightPoint.graphics.beginFill(0xff0000, .5);
+		this.upRightPoint.graphics.beginFill(0xff0000, .65);
 		this.upRightPoint.graphics.drawCircle(0, 0, 5);
 		this.upRightPoint.graphics.endFill();
 		
-		this.downRightPoint.graphics.beginFill(0xff0000, .5);
+		this.downRightPoint.graphics.beginFill(0xff0000, .65);
 		this.downRightPoint.graphics.drawCircle(0, 0, 5);
 		this.downRightPoint.graphics.endFill();
 		
@@ -77,6 +77,7 @@ public class SurfaceComponet extends Sprite
 		this.addChild(this.downRightPoint);
 		
 		this.setShape(1);
+		this.showPoint(false);
 	}
 	
 	/**
@@ -165,7 +166,7 @@ public class SurfaceComponet extends Sprite
 	{
 		this.graphics.clear();
 		this.graphics.lineStyle(1, 0x000000);
-		this.graphics.beginFill(0x388AE4, .5);
+		this.graphics.beginFill(0x388AE4, .65);
 		this.graphics.moveTo(this.upLeftPoint.x, this.upLeftPoint.y);
 		this.graphics.lineTo(this.upRightPoint.x, this.upRightPoint.y);
 		this.graphics.lineTo(this.downRightPoint.x, this.downRightPoint.y);
@@ -260,6 +261,18 @@ public class SurfaceComponet extends Sprite
 		faceComponet.depth = this.depth;
 		faceComponet.draw();
 		return faceComponet;
+	}
+	
+	/**
+	 * 显示点
+	 * @param	flag	是否显示
+	 */
+	public function showPoint(flag:Boolean):void
+	{
+		this.upLeftPoint.visible = flag;
+		this.upRightPoint.visible = flag;
+		this.downLeftPoint.visible = flag;
+		this.downRightPoint.visible = flag;
 	}
 	
 	/**

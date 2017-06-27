@@ -28,9 +28,9 @@ import view.ui.SurfaceComponet;
  * 增加 [快捷保存 ctrl + s]
  * 增加 [点击左右按钮移动]
  * 增加 [放大功能]
+ * 修改 [点击face 出现4个点]
  * 增加 高度和宽度设置
  * 增加 左右跳跃 向下depth搜索
- * 修改 点击face 出现4个点
  * 修改 最小高度
  * @author Kanon
  */

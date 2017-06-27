@@ -268,7 +268,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 																		 Layer.STAGE.mouseY));
 			var sc:SurfaceComponet = this.curPtSpt.parent as SurfaceComponet;
 			sc.setChildIndex(this.curPtSpt, 1);
-			var gap:int = 10;
+			var gap:int = 1;
 			var dis:Number;
 			if (this.curPtSpt.name == "upLeft")
 			{

@@ -290,11 +290,13 @@ public class Surface
 											heighColor:uint = 0x0000FF):void
 	{
 		if (!g) return;
-		g.lineStyle(1, lineColor);
+		if (this.upBlock) g.lineStyle(1, heighColor);
+		else g.lineStyle(1, lineColor);
 		g.moveTo(this.x + this.upLeftPoint.x, this.y + this.upLeftPoint.y)
 		g.lineTo(this.x + this.upRightPoint.x, this.y + this.upRightPoint.y)
 		
-		g.lineStyle(1, lineColor);
+		if (this.downBlock) g.lineStyle(1, heighColor);
+		else g.lineStyle(1, lineColor);
 		g.moveTo(this.x + this.upLeftPoint.x, this.y + this.upLeftPoint.y)
 		g.lineTo(this.x + this.downleftPoint.x, this.y + this.downleftPoint.y)
 

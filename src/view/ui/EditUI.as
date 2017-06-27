@@ -138,7 +138,7 @@ public class EditUI extends Sprite
 		this.vSlider.y = this.stagePanel.y ;
 		this.vSlider.minimum = 0;
 		this.vSlider.maximum = 100;
-		this.vSlider.value = 100;
+		this.vSlider.value = 50;
 		
 		this.allBox = new VBox(this.attributePanel);
 		this.textBox = new HBox(this.allBox);

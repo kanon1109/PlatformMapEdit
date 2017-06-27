@@ -25,6 +25,13 @@ import view.ui.EditUI;
 import view.ui.SurfaceComponet;
 /**
  * ...编辑器中介
+ * 增加 [快捷保存 ctrl + s]
+ * 增加 [点击左右按钮移动]
+ * 增加 高度和宽度设置
+ * 增加 放大功能
+ * 增加 左右跳跃 向下depth搜索
+ * 修改 点击face 出现4个点
+ * 修改 最小高度
  * @author Kanon
  */
 public class EditUIMediator extends Mediator 
@@ -59,6 +66,7 @@ public class EditUIMediator extends Mediator
 			case Message.START:
 				this.initEditUI();
 				this.initEvent();
+				this.initFile();
 				break;
 			case Message.FACE_MOUSE_DOWN:
 					this.select(notification.getBody() as Sprite);	
@@ -100,16 +108,28 @@ public class EditUIMediator extends Mediator
 	}
 	
 	/**
+	 * 初始化file
+	 */
+	private function initFile():void 
+	{
+		this.saveFile = File.desktopDirectory;
+		this.saveFile.addEventListener(Event.SELECT, selectSaveFileHandler);
+		this.saveFile.url += ".json"; //确认后缀名
+		
+		this.imageFilter = new FileFilter("Image", "*.jpg;*.png");
+		this.imageFile = new File();
+		this.imageFile.addEventListener(Event.SELECT, selectImageFileHandler);
+		
+		this.dataFilter = new FileFilter("data", "*.json");
+		this.dataFile = new File();
+		this.dataFile.addEventListener(Event.SELECT, selectDataFileHandler);
+	}
+	
+	/**
 	 * 选择图片
 	 */
 	private function selectImage():void
 	{
-		if (!this.imageFile)
-		{
-			this.imageFilter = new FileFilter("Image", "*.jpg;*.png");
-			this.imageFile = new File();
-			this.imageFile.addEventListener(Event.SELECT, selectImageFileHandler);
-		}
 		this.imageFile.browse([this.imageFilter]);
 	}
 	
@@ -197,6 +217,7 @@ public class EditUIMediator extends Mediator
 	{
 		this.drawSelectedBound(spt);
 		this.curSelectedSpt = spt;
+		trace("this.curSelectedSpt", this.curSelectedSpt);
 		if (this.editUI) 
 			this.editUI.selectSpt(spt);
 	}
@@ -265,13 +286,6 @@ public class EditUIMediator extends Mediator
 			arr.push(node);
 		}
 		this.saveDataStr = JSON.stringify(arr);
-		if (!this.saveFile)
-		{
-			this.saveFile = File.desktopDirectory;
-			this.saveFile.addEventListener(Event.SELECT, selectSaveFileHandler);
-			this.saveFile.url += ".json"; //确认后缀名
-		}
-		this.saveFile.browseForSave("保存数据");
 	}
 	
 	/**
@@ -317,12 +331,6 @@ public class EditUIMediator extends Mediator
 		
 	private function selectData():void
 	{
-		if (!this.dataFile)
-		{
-			this.dataFilter = new FileFilter("data", "*.json");
-			this.dataFile = new File();
-			this.dataFile.addEventListener(Event.SELECT, selectDataFileHandler);
-		}
 		this.dataFile.browse([this.dataFilter]);
 	}
 	
@@ -346,10 +354,64 @@ public class EditUIMediator extends Mediator
 		{
 			this.setSptDepth(this.curSelectedSpt, false);
 		}
+		else if (event.keyCode == Keyboard.LEFT)
+		{
+			if (this.curSelectedSpt) 
+			{
+				trace("this.curSelectedSpt.x", this.curSelectedSpt.x);
+				if (event.shiftKey)
+					this.curSelectedSpt.x -= 10;
+				else
+					this.curSelectedSpt.x--;
+				if (this.editUI)
+					this.editUI.selectSpt(this.curSelectedSpt);
+			}
+		}
+		else if (event.keyCode == Keyboard.RIGHT)
+		{
+			if (this.curSelectedSpt) 
+			{
+				if (event.shiftKey)
+					this.curSelectedSpt.x += 10;
+				else
+					this.curSelectedSpt.x++;
+				if (this.editUI)
+					this.editUI.selectSpt(this.curSelectedSpt);
+			}
+		}
+		else if (event.keyCode == Keyboard.UP)
+		{
+			if (this.curSelectedSpt) 
+			{
+				if (event.shiftKey)
+					this.curSelectedSpt.y -= 10;
+				else
+					this.curSelectedSpt.y--;
+				if (this.editUI)
+					this.editUI.selectSpt(this.curSelectedSpt);
+			}		
+		}
+		else if (event.keyCode == Keyboard.DOWN)
+		{
+			if (this.curSelectedSpt) 
+			{
+				if (event.shiftKey)
+					this.curSelectedSpt.y += 10;
+				else
+					this.curSelectedSpt.y++;
+				if (this.editUI)
+					this.editUI.selectSpt(this.curSelectedSpt);
+			}			
+		}
 		else if (event.keyCode == Keyboard.SPACE)
 		{
 			this.isSpaceKey = true;
 			Mouse.cursor = MouseCursor.HAND;
+		}
+		if (event.ctrlKey && event.keyCode == Keyboard.S)
+		{
+			this.save();
+			this.saveFile.save(this.saveDataStr);
 		}
 	}
 	
@@ -442,7 +504,7 @@ public class EditUIMediator extends Mediator
 	private function vSliderChangeHandler(event:Event):void 
 	{
 		if (this.editUI)
-			this.editUI.scaleStage(this.editUI.vSlider.value / 100);
+			this.editUI.scaleStage(this.editUI.vSlider.value / 50);
 	}
 	
 	private function txtFocusOutHandler(event:FocusEvent):void 
@@ -453,6 +515,7 @@ public class EditUIMediator extends Mediator
 	private function saveBtnClickHandler(event:MouseEvent):void 
 	{
 		this.save();
+		this.saveFile.browseForSave("保存数据");
 	}
 		
 	private function selectDataFileHandler(event:Event):void

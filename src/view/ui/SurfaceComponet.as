@@ -257,6 +257,7 @@ public class SurfaceComponet extends Sprite
 		faceComponet.rightRestrict = this.rightRestrict;
 		faceComponet.leftH = this.leftH;
 		faceComponet.rightH = this.rightH;
+		faceComponet.depth = this.depth;
 		faceComponet.draw();
 		return faceComponet;
 	}

@@ -7,7 +7,7 @@ import view.mediator.EditUIMediator;
 import view.mediator.RunModeMediator;
 import view.mediator.SurfaceComponetsPanelMediator;
 /**
- * ...
+ * ...显示交互
  * @author Kanon
  */
 public class ViewCommand extends SimpleCommand 

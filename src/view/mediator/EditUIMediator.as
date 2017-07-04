@@ -18,6 +18,8 @@ import flash.ui.Keyboard;
 import flash.ui.Mouse;
 import flash.ui.MouseCursor;
 import message.Message;
+import model.proxy.HistoryProxy;
+import model.vo.HistoryVo;
 import org.puremvc.as3.interfaces.INotification;
 import org.puremvc.as3.patterns.mediator.Mediator;
 import utils.AdvanceColorUtil;
@@ -49,9 +51,11 @@ public class EditUIMediator extends Mediator
 	private var curSelectedSpt:Sprite;
 	private var isSpaceKey:Boolean;
 	private var saveDataStr:String;
+	private var historyProxy:HistoryProxy;
 	public function EditUIMediator() 
 	{
 		super(NAME);
+		this.historyProxy = this.facade.retrieveProxy(HistoryProxy.NAME) as HistoryProxy;
 	}
 	
 	override public function listNotificationInterests():Array 
@@ -229,6 +233,38 @@ public class EditUIMediator extends Mediator
 	}
 	
 	/**
+	 * 上一步
+	 */
+	private function prevHistory():void
+	{
+		var hVo:HistoryVo = this.historyProxy.prevHistory();
+		if (hVo)
+		{
+			trace("hVo.type", hVo.type);
+			if (hVo.type == HistoryVo.DELETE)
+			{
+				//上一步删除
+				if (hVo.target is SurfaceComponet)
+				{
+					var faceComponet:SurfaceComponet = hVo.target as SurfaceComponet;
+					Layer.TERRAIN_LAYER.addChild(faceComponet);
+					this.sendNotification(Message.COPY, faceComponet);
+				}
+				else if (hVo.target is Image)
+				{
+					trace("图")
+				}
+			}
+			else if (hVo.type == HistoryVo.COPY)
+			{
+				var spt:Sprite = hVo.target as Sprite;
+				if (this.curSelectedSpt == spt) this.curSelectedSpt = null;
+				this.removeSpt(spt);
+			}
+		}
+	}
+	
+	/**
 	 * 删除所有
 	 */
 	private function removeAll():void
@@ -333,7 +369,6 @@ public class EditUIMediator extends Mediator
 			this.sendNotification(Message.COPY, sc);
 		}
 	}
-	
 		
 	private function selectData():void
 	{
@@ -351,6 +386,11 @@ public class EditUIMediator extends Mediator
 		{
 			//copy
 			this.copy(this.curSelectedSpt);
+			
+			var hVo:HistoryVo = new HistoryVo();
+			hVo.target = this.curSelectedSpt;
+			hVo.type = HistoryVo.COPY;
+			this.historyProxy.addHistory(hVo);
 		}
 		else if (event.ctrlKey && event.keyCode == Keyboard.UP)
 		{
@@ -414,10 +454,14 @@ public class EditUIMediator extends Mediator
 			this.isSpaceKey = true;
 			Mouse.cursor = MouseCursor.HAND;
 		}
-		if (event.ctrlKey && event.keyCode == Keyboard.S)
+		else if (event.ctrlKey && event.keyCode == Keyboard.S)
 		{
 			this.save();
 			this.saveFile.save(this.saveDataStr);
+		}
+		else if (event.ctrlKey && event.keyCode == Keyboard.Z)
+		{
+			this.prevHistory();
 		}
 	}
 	
@@ -425,6 +469,11 @@ public class EditUIMediator extends Mediator
 	{
 		if (event.keyCode == Keyboard.DELETE)
 		{
+			var hVo:HistoryVo = new HistoryVo();
+			hVo.type = HistoryVo.DELETE;
+			hVo.target = this.curSelectedSpt;
+			this.historyProxy.addHistory(hVo);
+			
 			if (this.curSelectedSpt is SurfaceComponet)
 				this.sendNotification(Message.DELETE);
 			if (this.editUI) this.editUI.selectSpt(null);

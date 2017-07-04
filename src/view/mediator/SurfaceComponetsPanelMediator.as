@@ -9,6 +9,7 @@ import flash.events.MouseEvent;
 import flash.geom.Point;
 import flash.ui.Keyboard;
 import message.Message;
+import model.proxy.HistoryProxy;
 import org.puremvc.as3.interfaces.INotification;
 import org.puremvc.as3.patterns.mediator.Mediator;
 import view.ui.EditUI;
@@ -26,9 +27,11 @@ public class SurfaceComponetsPanelMediator extends Mediator
 	private var faceComponet:SurfaceComponet;
 	private var curPtSpt:Sprite;
 	private var isOnCtrlKey:Boolean;
+	private var historyProxy:HistoryProxy;
 	public function SurfaceComponetsPanelMediator(mediatorName:String=null, viewComponent:Object=null) 
 	{
 		super(NAME);
+		this.historyProxy = this.facade.retrieveProxy(HistoryProxy.NAME) as HistoryProxy;
 	}
 	
 	override public function listNotificationInterests():Array 

@@ -252,7 +252,9 @@ public class EditUIMediator extends Mediator
 				}
 				else if (hVo.target is Image)
 				{
-					trace("图")
+					var image:Image = hVo.target as Image;
+					image.addEventListener(MouseEvent.MOUSE_DOWN, sptOnMouseDownHandler);
+					Layer.STAGE_BG_LAYER.addChild(image);
 				}
 			}
 			else if (hVo.type == HistoryVo.COPY)
@@ -261,6 +263,16 @@ public class EditUIMediator extends Mediator
 				if (this.curSelectedSpt == spt) this.curSelectedSpt = null;
 				this.removeSpt(spt);
 			}
+		}
+	}
+	
+	
+	private function nextHistory():void
+	{
+		var hVo:HistoryVo = this.historyProxy.nextHistory();
+		if (hVo)
+		{
+			
 		}
 	}
 	

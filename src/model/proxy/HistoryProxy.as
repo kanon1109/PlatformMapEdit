@@ -12,7 +12,7 @@ public class HistoryProxy extends Proxy
 	public static const NAME:String = "HistoryProxy";
 	private var historyAry:Array = [];
 	//当前记录索引
-	private var curIndex:int = 0;
+	private var curIndex:int = -1;
 	public function HistoryProxy(proxyName:String=null, data:Object=null) 
 	{
 		super(NAME, data);
@@ -41,11 +41,11 @@ public class HistoryProxy extends Proxy
 	{
 		trace("prevHistory this.historyAry.length", this.historyAry.length);
 		if (this.historyAry.length == 0) return null;
-		if (this.historyAry.length > 1 && this.curIndex == 0) return null;
+		if (this.curIndex == -1) return null;
 		trace("now this.curIndex", this.curIndex);
 		var index:int = this.curIndex;
 		this.curIndex--;
-		if (this.curIndex < 0) this.curIndex = 0; 
+		if (this.curIndex < 0) this.curIndex = -1; 
 		trace("prevHistory this.curIndex", this.curIndex);
 		return this.historyAry[index];
 	}
@@ -56,7 +56,8 @@ public class HistoryProxy extends Proxy
 	 */
 	public function nextHistory():HistoryVo
 	{
-		if (this.curIndex == this.historyAry.length - 1 || this.historyAry.length == 0) return null;
+		if (this.curIndex == this.historyAry.length - 1 || 
+			this.historyAry.length == 0) return null;
 		this.curIndex++;
 		return this.historyAry[this.curIndex];
 	}

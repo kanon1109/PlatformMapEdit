@@ -34,7 +34,7 @@ public class HistoryProxy extends Proxy
 	}
 	
 	/**
-	 * 上一步历史记录
+	 * 撤销
 	 * @return	记录数据
 	 */
 	public function prevHistory():HistoryVo
@@ -51,7 +51,7 @@ public class HistoryProxy extends Proxy
 	}
 	
 	/**
-	 * 下一个历史记录
+	 * 恢复撤销
 	 * @return	记录数据
 	 */
 	public function nextHistory():HistoryVo

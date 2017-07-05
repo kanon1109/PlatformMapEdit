@@ -169,12 +169,21 @@ public class EditUIMediator extends Mediator
 	
 	/**
 	 * 绘制选中的显示对象
-	 * @param	spt
+	 * @param	spt	显示对象
 	 */
 	private function drawSelectedBound(spt:Sprite):void
 	{
-		if (this.curSelectedSpt) this.curSelectedSpt.transform.colorTransform = AdvanceColorUtil.setColorInitialize();
+		this.resetColor(this.curSelectedSpt)
 		if (spt) spt.transform.colorTransform = AdvanceColorUtil.setRGBMixTransform(0xFF, 0xCC, 0xFF, 40);
+	}
+	
+	/**
+	 * 重置颜色
+	 * @param	spt	显示对象
+	 */
+	private function resetColor(spt:Sprite):void
+	{
+		if (spt) spt.transform.colorTransform = AdvanceColorUtil.setColorInitialize();
 	}
 	
 	/**
@@ -241,38 +250,88 @@ public class EditUIMediator extends Mediator
 		if (hVo)
 		{
 			trace("hVo.type", hVo.type);
+			var faceComponet:SurfaceComponet;
+			var image:Image;
 			if (hVo.type == HistoryVo.DELETE)
 			{
 				//上一步删除
 				if (hVo.target is SurfaceComponet)
 				{
-					var faceComponet:SurfaceComponet = hVo.target as SurfaceComponet;
+					faceComponet = hVo.target as SurfaceComponet;
+					faceComponet.showPoint(false);
+					this.resetColor(faceComponet);
 					Layer.TERRAIN_LAYER.addChild(faceComponet);
 					this.sendNotification(Message.COPY, faceComponet);
 				}
 				else if (hVo.target is Image)
 				{
-					var image:Image = hVo.target as Image;
+					image = hVo.target as Image;
+					this.resetColor(image);
 					image.addEventListener(MouseEvent.MOUSE_DOWN, sptOnMouseDownHandler);
 					Layer.STAGE_BG_LAYER.addChild(image);
 				}
 			}
 			else if (hVo.type == HistoryVo.COPY)
-			{
+			{	
+				if (hVo.target is SurfaceComponet)
+				{
+					faceComponet = hVo.target as SurfaceComponet;
+					this.sendNotification(Message.DELETE, faceComponet);
+					this.removeSpt(faceComponet);
+				}
+				else if (hVo.target is Image)
+				{
+					image = hVo.target as Image;
+					this.removeSpt(image);
+				}
 				var spt:Sprite = hVo.target as Sprite;
-				if (this.curSelectedSpt == spt) this.curSelectedSpt = null;
-				this.removeSpt(spt);
+				if (this.curSelectedSpt == spt)
+				{
+					this.select(null);
+					this.curSelectedSpt = null;
+				}
 			}
 		}
 	}
 	
-	
+	/**
+	 * 恢复撤销
+	 */
 	private function nextHistory():void
 	{
 		var hVo:HistoryVo = this.historyProxy.nextHistory();
 		if (hVo)
 		{
-			
+			trace("nextHistory hVo", hVo.type);
+			if (hVo.type == HistoryVo.DELETE)
+			{
+				if (hVo.target is SurfaceComponet)
+				{
+					var faceComponet:SurfaceComponet = hVo.target as SurfaceComponet;
+					this.sendNotification(Message.DELETE, faceComponet);
+					this.removeSpt(faceComponet);
+				}
+				else if (hVo.target is Image)
+				{
+					var image:Image = hVo.target as Image;
+					this.removeSpt(image);
+				}
+			}
+			else if (hVo.type == HistoryVo.COPY)
+			{
+				var spt:Sprite = hVo.target as Sprite;
+				this.resetColor(spt);
+				if (hVo.target is SurfaceComponet)
+				{
+					this.sendNotification(Message.COPY, spt);
+					Layer.TERRAIN_LAYER.addChild(spt);
+				}
+				else if (hVo.target is Image)
+				{
+					spt.addEventListener(MouseEvent.MOUSE_DOWN, sptOnMouseDownHandler);
+					Layer.STAGE_BG_LAYER.addChild(spt); 
+				}
+			}
 		}
 	}
 	
@@ -398,11 +457,13 @@ public class EditUIMediator extends Mediator
 		{
 			//copy
 			this.copy(this.curSelectedSpt);
-			
-			var hVo:HistoryVo = new HistoryVo();
-			hVo.target = this.curSelectedSpt;
-			hVo.type = HistoryVo.COPY;
-			this.historyProxy.addHistory(hVo);
+			if (this.curSelectedSpt)
+			{
+				var hVo:HistoryVo = new HistoryVo();
+				hVo.target = this.curSelectedSpt;
+				hVo.type = HistoryVo.COPY;
+				this.historyProxy.addHistory(hVo);
+			}
 		}
 		else if (event.ctrlKey && event.keyCode == Keyboard.UP)
 		{
@@ -475,19 +536,26 @@ public class EditUIMediator extends Mediator
 		{
 			this.prevHistory();
 		}
+		else if (event.ctrlKey && event.keyCode == Keyboard.Y)
+		{
+			this.nextHistory();
+		}
 	}
 	
 	private function onKeyUpHandler(event:KeyboardEvent):void 
 	{
 		if (event.keyCode == Keyboard.DELETE)
 		{
-			var hVo:HistoryVo = new HistoryVo();
-			hVo.type = HistoryVo.DELETE;
-			hVo.target = this.curSelectedSpt;
-			this.historyProxy.addHistory(hVo);
+			if (this.curSelectedSpt)
+			{
+				var hVo:HistoryVo = new HistoryVo();
+				hVo.type = HistoryVo.DELETE;
+				hVo.target = this.curSelectedSpt;
+				this.historyProxy.addHistory(hVo);
+			}
 			
 			if (this.curSelectedSpt is SurfaceComponet)
-				this.sendNotification(Message.DELETE);
+				this.sendNotification(Message.DELETE, this.curSelectedSpt);
 			if (this.editUI) this.editUI.selectSpt(null);
 			this.removeSpt(this.curSelectedSpt);
 			this.curSelectedSpt = null;

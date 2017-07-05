@@ -52,7 +52,8 @@ public class SurfaceComponetsPanelMediator extends Mediator
 				this.faceComponetsPanel = this.editUI.faceComponetsPanel;
 				this.initEvent();
 			break;
-			case Message.DELETE:
+		case Message.DELETE:
+				this.faceComponet = notification.getBody() as SurfaceComponet;
 				if (this.faceComponet)
 				{
 					this.faceComponet.upLeftPoint.removeEventListener(MouseEvent.MOUSE_DOWN, ptMouseDownHandler);

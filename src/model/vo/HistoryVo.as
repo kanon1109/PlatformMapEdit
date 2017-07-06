@@ -12,6 +12,13 @@ public class HistoryVo
 	public var type:int;
 	//操作对象
 	public var target:Object;
+	//深度
+	public var depth:int;
+	//坐标
+	public var x:Number;
+	public var y:Number;
+	//名字
+	public var name:String;
 	public function HistoryVo() 
 	{
 		

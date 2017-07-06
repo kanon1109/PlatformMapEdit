@@ -260,15 +260,21 @@ public class EditUIMediator extends Mediator
 					faceComponet = hVo.target as SurfaceComponet;
 					faceComponet.showPoint(false);
 					this.resetColor(faceComponet);
-					Layer.TERRAIN_LAYER.addChild(faceComponet);
+					faceComponet.x = hVo.x;
+					faceComponet.y = hVo.y;
+					faceComponet.name = hVo.name;
+					Layer.TERRAIN_LAYER.addChildAt(faceComponet, hVo.depth);
 					this.sendNotification(Message.COPY, faceComponet);
 				}
 				else if (hVo.target is Image)
 				{
 					image = hVo.target as Image;
+					image.x = hVo.x;
+					image.y = hVo.y;
+					image.name = hVo.name;
 					this.resetColor(image);
 					image.addEventListener(MouseEvent.MOUSE_DOWN, sptOnMouseDownHandler);
-					Layer.STAGE_BG_LAYER.addChild(image);
+					Layer.STAGE_BG_LAYER.addChildAt(image, hVo.depth);
 				}
 			}
 			else if (hVo.type == HistoryVo.COPY)
@@ -462,6 +468,10 @@ public class EditUIMediator extends Mediator
 				var hVo:HistoryVo = new HistoryVo();
 				hVo.target = this.curSelectedSpt;
 				hVo.type = HistoryVo.COPY;
+				hVo.x = this.curSelectedSpt.x;
+				hVo.y = this.curSelectedSpt.y;
+				hVo.depth = this.curSelectedSpt.parent.getChildIndex(this.curSelectedSpt);
+				hVo.name = this.curSelectedSpt.name;
 				this.historyProxy.addHistory(hVo);
 			}
 		}
@@ -551,6 +561,10 @@ public class EditUIMediator extends Mediator
 				var hVo:HistoryVo = new HistoryVo();
 				hVo.type = HistoryVo.DELETE;
 				hVo.target = this.curSelectedSpt;
+				hVo.x = this.curSelectedSpt.x;
+				hVo.y = this.curSelectedSpt.y;
+				hVo.depth = this.curSelectedSpt.parent.getChildIndex(this.curSelectedSpt);
+				hVo.name = this.curSelectedSpt.name;
 				this.historyProxy.addHistory(hVo);
 			}
 			

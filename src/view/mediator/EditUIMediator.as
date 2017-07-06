@@ -513,7 +513,6 @@ public class EditUIMediator extends Mediator
 			this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
 			if (this.curSelectedSpt) 
 			{
-				trace("this.curSelectedSpt.x", this.curSelectedSpt.x);
 				if (event.shiftKey)
 					this.curSelectedSpt.x -= 10;
 				else

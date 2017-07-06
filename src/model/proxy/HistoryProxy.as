@@ -25,13 +25,10 @@ public class HistoryProxy extends Proxy
 	 */
 	public function addHistory(vo:HistoryVo):void
 	{
-		trace("this.curIndex", this.curIndex);
-		trace("this.historyAry.length", this.historyAry.length);
 		if (this.curIndex < this.historyAry.length - 1)
 			this.historyAry.splice(this.curIndex + 1);
 		this.historyAry.push(vo);
 		this.curIndex = this.historyAry.length - 1;
-		trace("now this.curIndex", this.curIndex);
 	}
 	
 	/**
@@ -40,14 +37,11 @@ public class HistoryProxy extends Proxy
 	 */
 	public function prevHistory():HistoryVo
 	{
-		trace("prevHistory this.historyAry.length", this.historyAry.length);
 		if (this.historyAry.length == 0) return null;
 		if (this.curIndex == -1) return null;
-		trace("now this.curIndex", this.curIndex);
 		var index:int = this.curIndex;
 		this.curIndex--;
 		if (this.curIndex < 0) this.curIndex = -1; 
-		trace("prevHistory this.curIndex", this.curIndex);
 		return this.historyAry[index];
 	}
 	
@@ -81,6 +75,7 @@ public class HistoryProxy extends Proxy
 	{
 		if (spt)
 		{
+			trace("----------------save-------------")
 			var hVo:HistoryVo = new HistoryVo();
 			hVo.target = spt;
 			hVo.type = type;

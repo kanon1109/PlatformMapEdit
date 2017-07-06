@@ -365,6 +365,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 	private function faceMouseDownHandler(event:MouseEvent):void 
 	{
 		this.faceComponet = event.currentTarget as SurfaceComponet;
+		this.historyProxy.saveHistory(this.faceComponet, HistoryVo.PROP);
 		this.faceComponet.startDrag();
 		Layer.STAGE.addEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler);
 		this.sendNotification(Message.FACE_MOUSE_DOWN, this.faceComponet);

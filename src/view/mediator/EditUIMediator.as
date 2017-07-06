@@ -470,10 +470,12 @@ public class EditUIMediator extends Mediator
 		else if (event.ctrlKey && event.keyCode == Keyboard.UP)
 		{
 			this.setSptDepth(this.curSelectedSpt, true);
+			this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
 		}
 		else if (event.ctrlKey && event.keyCode == Keyboard.DOWN)
 		{
 			this.setSptDepth(this.curSelectedSpt, false);
+			this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
 		}
 		else if (event.keyCode == Keyboard.LEFT)
 		{
@@ -487,6 +489,7 @@ public class EditUIMediator extends Mediator
 				if (this.editUI)
 					this.editUI.selectSpt(this.curSelectedSpt);
 			}
+			this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
 		}
 		else if (event.keyCode == Keyboard.RIGHT)
 		{
@@ -499,6 +502,7 @@ public class EditUIMediator extends Mediator
 				if (this.editUI)
 					this.editUI.selectSpt(this.curSelectedSpt);
 			}
+			this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
 		}
 		else if (event.keyCode == Keyboard.UP)
 		{
@@ -511,6 +515,7 @@ public class EditUIMediator extends Mediator
 				if (this.editUI)
 					this.editUI.selectSpt(this.curSelectedSpt);
 			}		
+			this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
 		}
 		else if (event.keyCode == Keyboard.DOWN)
 		{
@@ -523,6 +528,7 @@ public class EditUIMediator extends Mediator
 				if (this.editUI)
 					this.editUI.selectSpt(this.curSelectedSpt);
 			}			
+			this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
 		}
 		else if (event.keyCode == Keyboard.SPACE)
 		{

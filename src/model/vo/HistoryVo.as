@@ -6,9 +6,10 @@ package model.vo
  */
 public class HistoryVo 
 {
-	public static const DELETE:int = 0;
-	public static const COPY:int = 1;
-	public static const CREATE:int = 2;
+	public static const DELETE:int = 0;//删除
+	public static const COPY:int = 1;//复制
+	public static const CREATE:int = 2;//创建
+	public static const PROP:int = 3;//属性更新
 	//操作类型
 	public var type:int;
 	//操作对象

@@ -8,6 +8,7 @@ public class HistoryVo
 {
 	public static const DELETE:int = 0;
 	public static const COPY:int = 1;
+	public static const CREATE:int = 2;
 	//操作类型
 	public var type:int;
 	//操作对象

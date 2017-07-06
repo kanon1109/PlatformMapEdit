@@ -277,7 +277,8 @@ public class EditUIMediator extends Mediator
 					Layer.STAGE_BG_LAYER.addChildAt(image, hVo.depth);
 				}
 			}
-			else if (hVo.type == HistoryVo.COPY)
+			else if (hVo.type == HistoryVo.COPY || 
+					 hVo.type == HistoryVo.CREATE)
 			{	
 				if (hVo.target is SurfaceComponet)
 				{
@@ -323,7 +324,8 @@ public class EditUIMediator extends Mediator
 					this.removeSpt(image);
 				}
 			}
-			else if (hVo.type == HistoryVo.COPY)
+			else if (hVo.type == HistoryVo.COPY || 
+					 hVo.type == HistoryVo.CREATE)
 			{
 				var spt:Sprite = hVo.target as Sprite;
 				this.resetColor(spt);
@@ -463,17 +465,7 @@ public class EditUIMediator extends Mediator
 		{
 			//copy
 			this.copy(this.curSelectedSpt);
-			if (this.curSelectedSpt)
-			{
-				var hVo:HistoryVo = new HistoryVo();
-				hVo.target = this.curSelectedSpt;
-				hVo.type = HistoryVo.COPY;
-				hVo.x = this.curSelectedSpt.x;
-				hVo.y = this.curSelectedSpt.y;
-				hVo.depth = this.curSelectedSpt.parent.getChildIndex(this.curSelectedSpt);
-				hVo.name = this.curSelectedSpt.name;
-				this.historyProxy.addHistory(hVo);
-			}
+			this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.COPY);
 		}
 		else if (event.ctrlKey && event.keyCode == Keyboard.UP)
 		{
@@ -556,18 +548,7 @@ public class EditUIMediator extends Mediator
 	{
 		if (event.keyCode == Keyboard.DELETE)
 		{
-			if (this.curSelectedSpt)
-			{
-				var hVo:HistoryVo = new HistoryVo();
-				hVo.type = HistoryVo.DELETE;
-				hVo.target = this.curSelectedSpt;
-				hVo.x = this.curSelectedSpt.x;
-				hVo.y = this.curSelectedSpt.y;
-				hVo.depth = this.curSelectedSpt.parent.getChildIndex(this.curSelectedSpt);
-				hVo.name = this.curSelectedSpt.name;
-				this.historyProxy.addHistory(hVo);
-			}
-			
+			this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.DELETE);
 			if (this.curSelectedSpt is SurfaceComponet)
 				this.sendNotification(Message.DELETE, this.curSelectedSpt);
 			if (this.editUI) this.editUI.selectSpt(null);
@@ -610,6 +591,8 @@ public class EditUIMediator extends Mediator
 		image.resName = this.imageFile.name;
 		image.pathName = this.imageFile.nativePath;
 		Layer.STAGE_BG_LAYER.addChild(image);
+		
+		this.historyProxy.saveHistory(image, HistoryVo.CREATE);
 	}
 	
 	private function loadImageErrorHandler(event:ErrorEvent):void

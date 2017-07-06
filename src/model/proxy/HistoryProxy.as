@@ -1,5 +1,6 @@
 package model.proxy 
 {
+import flash.display.Sprite;
 import model.vo.HistoryVo;
 import org.puremvc.as3.patterns.proxy.Proxy;
 /**
@@ -68,6 +69,27 @@ public class HistoryProxy extends Proxy
 	public function clear():void
 	{
 		this.historyAry = [];
+	}
+	
+	
+	/**
+	 * 保存记录
+	 * @param	spt		显示对象
+	 * @param	type	保存类型
+	 */
+	public function saveHistory(spt:Sprite, type:int):void
+	{
+		if (spt)
+		{
+			var hVo:HistoryVo = new HistoryVo();
+			hVo.target = spt;
+			hVo.type = type;
+			hVo.x = spt.x;
+			hVo.y = spt.y;
+			hVo.depth = spt.parent.getChildIndex(spt);
+			hVo.name = spt.name;
+			this.addHistory(hVo);
+		}
 	}
 }
 }

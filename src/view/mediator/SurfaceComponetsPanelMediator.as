@@ -10,6 +10,7 @@ import flash.geom.Point;
 import flash.ui.Keyboard;
 import message.Message;
 import model.proxy.HistoryProxy;
+import model.vo.HistoryVo;
 import org.puremvc.as3.interfaces.INotification;
 import org.puremvc.as3.patterns.mediator.Mediator;
 import view.ui.EditUI;
@@ -357,6 +358,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 			this.faceComponet.y = pos.y - this.faceComponet.height / 2;
 			Layer.TERRAIN_LAYER.addChild(this.faceComponet);
 			this.sendNotification(Message.FACE_MOUSE_DOWN, this.faceComponet);
+			this.historyProxy.saveHistory(this.faceComponet, HistoryVo.CREATE);
 		}
 	}
 

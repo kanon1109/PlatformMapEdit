@@ -1,7 +1,9 @@
 package view.mediator 
 {
+import engine.body.Body;
 import engine.face.Surface;
 import engine.manager.FaceMangager;
+import flash.display.Sprite;
 import flash.events.Event;
 import message.Message;
 import org.puremvc.as3.interfaces.INotification;
@@ -14,6 +16,8 @@ import view.ui.SurfaceComponet;
 public class RunModeMediator extends Mediator 
 {
 	public static var NAME:String = "RunModeMediator";
+	//物体
+	private var body:Body;
 	public function RunModeMediator(mediatorName:String=null, viewComponent:Object=null) 
 	{
 		super(NAME);
@@ -30,11 +34,17 @@ public class RunModeMediator extends Mediator
 		switch (notification.getName()) 
 		{
 			case Message.RUN:
-				if(Boolean(notification.getBody()))
+				if (Boolean(notification.getBody()))
+				{
+					this.createBody();
 					this.createSurfaceMap();
+					Layer.STAGE.addEventListener(Event.ENTER_FRAME, loop);
+				}
 				else
+				{
 					FaceMangager.clear();
-				Layer.STAGE.addEventListener(Event.ENTER_FRAME, loop);
+					Layer.STAGE.removeEventListener(Event.ENTER_FRAME, loop);
+				}
 			break;
 		}
 	}
@@ -67,8 +77,29 @@ public class RunModeMediator extends Mediator
 		}
 	}
 	
+	/**
+	 * 创建物体
+	 */
+	private function createBody():void
+	{
+		this.body = new Body();
+		this.body.x = 100;
+		this.body.y = 200;
+		this.body.thick = 10;
+		this.body.g = 0.7;
+		var rect:Sprite = new Sprite();
+		rect.graphics.beginFill(0x6633ff);
+		rect.graphics.drawRect(0, 0, 10, 30);
+		rect.graphics.endFill();
+		Layer.RUN_LAYER.addChild(rect);
+		this.body.display = rect;
+	}
+	
 	private function loop(event:Event):void 
 	{
+		this.body.update();
+		if (this.body.face)
+			this.body.face.debugDraw(Layer.RUN_LAYER.graphics, 0x00FF80);
 		FaceMangager.debugFace(Layer.RUN_LAYER.graphics);
 	}
 }

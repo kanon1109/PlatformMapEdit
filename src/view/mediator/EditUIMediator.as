@@ -678,6 +678,7 @@ public class EditUIMediator extends Mediator
 		this.sendNotification(Message.DELETE);
 		if (this.editUI) this.editUI.selectSpt(null);
 		this.curSelectedSpt = null;
+		this.historyProxy.clear();
 	}
 	
 	private function selectImageFileHandler(event:Event):void

@@ -1,8 +1,10 @@
 package model.proxy 
 {
 import flash.display.Sprite;
+import flash.geom.Point;
 import model.vo.HistoryVo;
 import org.puremvc.as3.patterns.proxy.Proxy;
+import view.ui.SurfaceComponet;
 /**
  * ...历史记录数据管理
  * @author ...	Kanon
@@ -81,6 +83,22 @@ public class HistoryProxy extends Proxy
 			hVo.type = type;
 			hVo.x = spt.x;
 			hVo.y = spt.y;
+			if (spt is SurfaceComponet)
+			{
+				var face:SurfaceComponet = spt as SurfaceComponet;
+				hVo.leftBlock = face.leftBlock;
+				hVo.rightBlock = face.rightBlock;
+				hVo.upBlock = face.upBlock;
+				hVo.downBlock = face.downBlock;
+				hVo.leftH = face.leftH;
+				hVo.rightH = face.rightH;
+				hVo.leftRestrict = face.leftRestrict;
+				hVo.rightRestrict = face.rightRestrict;
+				hVo.upLeftPoint = new Point(face.upLeftPoint.x, face.upLeftPoint.y);
+				hVo.upRightPoint = new Point(face.upRightPoint.x, face.upRightPoint.y);
+				hVo.downLeftPoint = new Point(face.downLeftPoint.x, face.downLeftPoint.y);
+				hVo.downRightPoint = new Point(face.downRightPoint.x, face.downRightPoint.y);
+			}
 			hVo.depth = spt.parent.getChildIndex(spt);
 			hVo.name = spt.name;
 			this.addHistory(hVo);

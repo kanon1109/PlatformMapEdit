@@ -257,6 +257,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		Layer.STAGE.addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		Layer.STAGE.addEventListener(MouseEvent.MOUSE_UP, ptMouseUpHandler);
 		this.sendNotification(Message.FACE_MOUSE_DOWN, this.faceComponet);
+		this.historyProxy.saveHistory(this.faceComponet, HistoryVo.PROP);
 	}
 	
 	private function ptMouseUpHandler(event:MouseEvent):void 

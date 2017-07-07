@@ -52,6 +52,7 @@ public class EditUIMediator extends Mediator
 	private var isSpaceKey:Boolean;
 	private var saveDataStr:String;
 	private var historyProxy:HistoryProxy;
+	private var isMouseDown:Boolean;
 	public function EditUIMediator() 
 	{
 		super(NAME);
@@ -76,7 +77,9 @@ public class EditUIMediator extends Mediator
 				this.initFile();
 				break;
 			case Message.FACE_MOUSE_DOWN:
+					//拖动face
 					this.select(notification.getBody() as Sprite);	
+					this.isMouseDown = true;
 					Layer.STAGE.addEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler);
 					Layer.STAGE.addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 				break;
@@ -308,8 +311,29 @@ public class EditUIMediator extends Mediator
 				spt.y = hVo.y;
 				if (hVo.target is SurfaceComponet)
 				{
-					SurfaceComponet(spt).depth = hVo.depth;
-					SurfaceComponet(spt).showPoint(false);
+					var face:SurfaceComponet = hVo.target as SurfaceComponet;
+					face.depth = hVo.depth;
+					face.upBlock = hVo.upBlock;
+					face.downBlock = hVo.downBlock;
+					face.leftBlock = hVo.leftBlock;
+					face.rightBlock = hVo.rightBlock;
+					face.leftH = hVo.leftH;
+					face.rightH = hVo.rightH;
+					face.upLeftPoint.x = hVo.upLeftPoint.x;
+					face.upLeftPoint.y = hVo.upLeftPoint.y;
+					
+					face.upRightPoint.x = hVo.upRightPoint.x;
+					face.upRightPoint.y = hVo.upRightPoint.y;
+					
+					face.downLeftPoint.x = hVo.downLeftPoint.x;
+					face.downLeftPoint.y = hVo.downLeftPoint.y;
+					
+					face.downRightPoint.x = hVo.downRightPoint.x;
+					face.downRightPoint.y = hVo.downRightPoint.y;
+					
+					face.showPoint(false);
+					
+					face.draw();
 				}
 				spt.name = hVo.name;
 				this.select(spt);
@@ -492,6 +516,7 @@ public class EditUIMediator extends Mediator
 	
 	private function onKeyDownHandler(event:KeyboardEvent):void 
 	{
+		if (this.isMouseDown) return;
 		if (event.ctrlKey && event.keyCode == Keyboard.D)
 		{
 			//copy
@@ -582,6 +607,7 @@ public class EditUIMediator extends Mediator
 	
 	private function onKeyUpHandler(event:KeyboardEvent):void 
 	{
+		if (this.isMouseDown) return;
 		if (event.keyCode == Keyboard.DELETE)
 		{
 			this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.DELETE);
@@ -643,11 +669,11 @@ public class EditUIMediator extends Mediator
 		this.select(event.currentTarget as Image);
 		this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
 		this.curSelectedSpt.startDrag();
+		this.isMouseDown = true;
 	}
 	
 	private function onMouseDownHandler(event:MouseEvent):void 
 	{
-		trace("onMouseDownHandler");
 		this.select(null);
 	}
 		
@@ -668,6 +694,7 @@ public class EditUIMediator extends Mediator
 		Layer.STAGE.removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		if (this.curSelectedSpt)
 			this.curSelectedSpt.stopDrag();
+		this.isMouseDown = false;
 	}
 	
 	private function vSliderChangeHandler(event:Event):void 

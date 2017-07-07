@@ -17,6 +17,8 @@ public class HistoryVo
 	public var target:Object;
 	//深度
 	public var depth:int;
+	//显示对象的深度
+	public var childIndex:int;
 	//坐标
 	public var x:Number;
 	public var y:Number;
@@ -39,6 +41,8 @@ public class HistoryVo
 	public var downRightPoint:Point;
 	public var leftH:Number;
 	public var rightH:Number;
+	
+	public var nextVo:HistoryVo;
 	public function HistoryVo() 
 	{
 		

@@ -73,7 +73,7 @@ public class HistoryProxy extends Proxy
 	 * @param	spt		显示对象
 	 * @param	type	保存类型
 	 */
-	public function saveHistory(spt:Sprite, type:int):void
+	public function saveHistory(spt:Sprite, type:int):HistoryVo
 	{
 		if (spt)
 		{
@@ -98,11 +98,53 @@ public class HistoryProxy extends Proxy
 				hVo.upRightPoint = new Point(face.upRightPoint.x, face.upRightPoint.y);
 				hVo.downLeftPoint = new Point(face.downLeftPoint.x, face.downLeftPoint.y);
 				hVo.downRightPoint = new Point(face.downRightPoint.x, face.downRightPoint.y);
+				hVo.depth = face.depth;
+				trace("save ", face.depth);
 			}
-			hVo.depth = spt.parent.getChildIndex(spt);
+			hVo.childIndex = spt.parent.getChildIndex(spt);
 			hVo.name = spt.name;
 			this.addHistory(hVo);
+			return hVo;
 		}
+		return null;
+	}
+	
+	/**
+	 * 保存属性操作的下一步
+	 * @param	spt		显示对象
+	 * @return
+	 */
+	public function saveNextHistory(spt:Sprite):HistoryVo
+	{
+		if (spt)
+		{
+			var hVo:HistoryVo = new HistoryVo();
+			hVo.target = spt;
+			hVo.type = HistoryVo.PROP;
+			hVo.x = spt.x;
+			hVo.y = spt.y;
+			if (spt is SurfaceComponet)
+			{
+				var face:SurfaceComponet = spt as SurfaceComponet;
+				hVo.leftBlock = face.leftBlock;
+				hVo.rightBlock = face.rightBlock;
+				hVo.upBlock = face.upBlock;
+				hVo.downBlock = face.downBlock;
+				hVo.leftH = face.leftH;
+				hVo.rightH = face.rightH;
+				hVo.leftRestrict = face.leftRestrict;
+				hVo.rightRestrict = face.rightRestrict;
+				hVo.upLeftPoint = new Point(face.upLeftPoint.x, face.upLeftPoint.y);
+				hVo.upRightPoint = new Point(face.upRightPoint.x, face.upRightPoint.y);
+				hVo.downLeftPoint = new Point(face.downLeftPoint.x, face.downLeftPoint.y);
+				hVo.downRightPoint = new Point(face.downRightPoint.x, face.downRightPoint.y);
+				hVo.depth = face.depth;
+			}
+			hVo.childIndex = spt.parent.getChildIndex(spt);
+			hVo.name = spt.name;
+			return hVo;
+		}
+		return null;
 	}
 }
 }

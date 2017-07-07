@@ -29,6 +29,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 	private var curPtSpt:Sprite;
 	private var isOnCtrlKey:Boolean;
 	private var historyProxy:HistoryProxy;
+	private var curHistoryVo:HistoryVo;
 	public function SurfaceComponetsPanelMediator(mediatorName:String=null, viewComponent:Object=null) 
 	{
 		super(NAME);
@@ -145,6 +146,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 	{
 		if (this.faceComponet)
 		{
+			var hVo:HistoryVo = this.historyProxy.saveHistory(this.faceComponet, HistoryVo.PROP);
 			var txt:InputText = event.currentTarget as InputText;
 			var gap:int = 10;
 			var upleftX:Number = Number(this.editUI.upLeftXTxt.text);
@@ -211,6 +213,8 @@ public class SurfaceComponetsPanelMediator extends Mediator
 			if (this.faceComponet.rightH > 0)
 				this.editUI.rightBlock.selected = false;
 			this.faceComponet.draw();
+			if (hVo)
+				hVo.nextVo = this.historyProxy.saveNextHistory(this.faceComponet);
 		}
 	}
 	
@@ -257,13 +261,15 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		Layer.STAGE.addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		Layer.STAGE.addEventListener(MouseEvent.MOUSE_UP, ptMouseUpHandler);
 		this.sendNotification(Message.FACE_MOUSE_DOWN, this.faceComponet);
-		this.historyProxy.saveHistory(this.faceComponet, HistoryVo.PROP);
+		this.curHistoryVo = this.historyProxy.saveHistory(this.faceComponet, HistoryVo.PROP);
 	}
 	
 	private function ptMouseUpHandler(event:MouseEvent):void 
 	{
 		Layer.STAGE.removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		Layer.STAGE.removeEventListener(MouseEvent.MOUSE_UP, ptMouseUpHandler);
+		if (this.curHistoryVo)
+			this.curHistoryVo.nextVo = this.historyProxy.saveNextHistory(this.faceComponet);
 	}
 	
 	private function enterFrameHandler(event:Event):void 

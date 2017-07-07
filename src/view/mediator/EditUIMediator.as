@@ -53,6 +53,7 @@ public class EditUIMediator extends Mediator
 	private var saveDataStr:String;
 	private var historyProxy:HistoryProxy;
 	private var isMouseDown:Boolean;
+	private var curHistoryVo:HistoryVo;
 	public function EditUIMediator() 
 	{
 		super(NAME);
@@ -222,10 +223,12 @@ public class EditUIMediator extends Mediator
 	{
 		if (this.editUI && this.curSelectedSpt)
 		{
-			this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
+			var hVo:HistoryVo = this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
 			var pos:Point = this.editUI.getPosTxtValue();
 			this.curSelectedSpt.x = pos.x;
 			this.curSelectedSpt.y = pos.y;
+			if (hVo)
+				hVo.nextVo = this.historyProxy.saveNextHistory(this.curSelectedSpt);
 		}
 	}
 	
@@ -268,7 +271,7 @@ public class EditUIMediator extends Mediator
 					faceComponet.x = hVo.x;
 					faceComponet.y = hVo.y;
 					faceComponet.name = hVo.name;
-					Layer.TERRAIN_LAYER.addChildAt(faceComponet, hVo.depth);
+					Layer.TERRAIN_LAYER.addChildAt(faceComponet, hVo.childIndex);
 					this.sendNotification(Message.COPY, faceComponet);
 				}
 				else if (hVo.target is Image)
@@ -279,7 +282,7 @@ public class EditUIMediator extends Mediator
 					image.name = hVo.name;
 					this.resetColor(image);
 					image.addEventListener(MouseEvent.MOUSE_DOWN, sptOnMouseDownHandler);
-					Layer.STAGE_BG_LAYER.addChildAt(image, hVo.depth);
+					Layer.STAGE_BG_LAYER.addChildAt(image, hVo.childIndex);
 				}
 			}
 			else if (hVo.type == HistoryVo.COPY || 
@@ -306,7 +309,7 @@ public class EditUIMediator extends Mediator
 			else if (hVo.type == HistoryVo.PROP)
 			{
 				spt = hVo.target as Sprite;
-				spt.parent.setChildIndex(spt, hVo.depth);
+				spt.parent.setChildIndex(spt, hVo.childIndex);
 				spt.x = hVo.x;
 				spt.y = hVo.y;
 				if (hVo.target is SurfaceComponet)
@@ -350,12 +353,13 @@ public class EditUIMediator extends Mediator
 		if (hVo)
 		{
 			trace("nextHistory hVo", hVo.type);
+			var faceComponet:SurfaceComponet;
 			var spt:Sprite;
 			if (hVo.type == HistoryVo.DELETE)
 			{
 				if (hVo.target is SurfaceComponet)
 				{
-					var faceComponet:SurfaceComponet = hVo.target as SurfaceComponet;
+					faceComponet = hVo.target as SurfaceComponet;
 					this.sendNotification(Message.DELETE, faceComponet);
 					this.removeSpt(faceComponet);
 				}
@@ -383,16 +387,37 @@ public class EditUIMediator extends Mediator
 			}
 			else if (hVo.type == HistoryVo.PROP)
 			{
-				spt = hVo.target as Sprite;
-				spt.parent.setChildIndex(spt, hVo.depth);
-				spt.x = hVo.x;
-				spt.y = hVo.y;
-				if (hVo.target is SurfaceComponet)
+				var nextVo:HistoryVo = hVo.nextVo;
+				if (!nextVo) return;
+				spt = nextVo.target as Sprite;
+				spt.parent.setChildIndex(spt, nextVo.childIndex);
+				spt.x = nextVo.x;
+				spt.y = nextVo.y;
+				spt.name = nextVo.name;
+				if (nextVo.target is SurfaceComponet)
 				{
-					SurfaceComponet(spt).depth = hVo.depth;
-					SurfaceComponet(spt).showPoint(false);
+					faceComponet = nextVo.target as SurfaceComponet;
+					faceComponet.depth = nextVo.depth;
+					faceComponet.showPoint(false);
+					faceComponet.leftBlock = nextVo.leftBlock;
+					faceComponet.rightBlock = nextVo.rightBlock;
+					faceComponet.upBlock = nextVo.upBlock;
+					faceComponet.downBlock = nextVo.downBlock;
+					faceComponet.upLeftPoint.x = nextVo.upLeftPoint.x;
+					faceComponet.upLeftPoint.y = nextVo.upLeftPoint.y;
+					faceComponet.downLeftPoint.x = nextVo.downLeftPoint.x;
+					faceComponet.downLeftPoint.y = nextVo.downLeftPoint.y;
+					faceComponet.downRightPoint.x = nextVo.downRightPoint.x;
+					faceComponet.downRightPoint.y = nextVo.downRightPoint.y;
+					faceComponet.upRightPoint.x = nextVo.upRightPoint.x;
+					faceComponet.upRightPoint.y = nextVo.upRightPoint.y;
+					faceComponet.leftH = nextVo.leftH;
+					faceComponet.rightH = nextVo.rightH;
+					faceComponet.leftRestrict = nextVo.leftRestrict;
+					faceComponet.rightRestrict = nextVo.rightRestrict;
+					faceComponet.draw();
 				}
-				spt.name = hVo.name;
+				spt.name = nextVo.name;
 				this.select(spt);
 			}
 		}
@@ -517,6 +542,7 @@ public class EditUIMediator extends Mediator
 	private function onKeyDownHandler(event:KeyboardEvent):void 
 	{
 		if (this.isMouseDown) return;
+		var hVo:HistoryVo;
 		if (event.ctrlKey && event.keyCode == Keyboard.D)
 		{
 			//copy
@@ -525,17 +551,21 @@ public class EditUIMediator extends Mediator
 		}
 		else if (event.ctrlKey && event.keyCode == Keyboard.UP)
 		{
-			this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
+			hVo = this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
 			this.setSptDepth(this.curSelectedSpt, true);
+			if (hVo)
+				hVo.nextVo = this.historyProxy.saveNextHistory(this.curSelectedSpt);
 		}
 		else if (event.ctrlKey && event.keyCode == Keyboard.DOWN)
 		{
-			this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
+			hVo = this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
 			this.setSptDepth(this.curSelectedSpt, false);
+			if (hVo)
+				hVo.nextVo = this.historyProxy.saveNextHistory(this.curSelectedSpt);
 		}
 		else if (event.keyCode == Keyboard.LEFT)
 		{
-			this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
+			hVo = this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
 			if (this.curSelectedSpt) 
 			{
 				if (event.shiftKey)
@@ -545,10 +575,12 @@ public class EditUIMediator extends Mediator
 				if (this.editUI)
 					this.editUI.selectSpt(this.curSelectedSpt);
 			}
+			if (hVo)
+				hVo.nextVo = this.historyProxy.saveNextHistory(this.curSelectedSpt);
 		}
 		else if (event.keyCode == Keyboard.RIGHT)
 		{
-			this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
+			hVo = this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
 			if (this.curSelectedSpt) 
 			{
 				if (event.shiftKey)
@@ -558,10 +590,12 @@ public class EditUIMediator extends Mediator
 				if (this.editUI)
 					this.editUI.selectSpt(this.curSelectedSpt);
 			}
+			if (hVo)
+				hVo.nextVo = this.historyProxy.saveNextHistory(this.curSelectedSpt);
 		}
 		else if (event.keyCode == Keyboard.UP)
 		{
-			this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
+			hVo = this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
 			if (this.curSelectedSpt) 
 			{
 				if (event.shiftKey)
@@ -570,11 +604,13 @@ public class EditUIMediator extends Mediator
 					this.curSelectedSpt.y--;
 				if (this.editUI)
 					this.editUI.selectSpt(this.curSelectedSpt);
-			}		
+			}	
+			if (hVo)
+				hVo.nextVo = this.historyProxy.saveNextHistory(this.curSelectedSpt);
 		}
 		else if (event.keyCode == Keyboard.DOWN)
 		{
-			this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
+			hVo = this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
 			if (this.curSelectedSpt) 
 			{
 				if (event.shiftKey)
@@ -583,7 +619,9 @@ public class EditUIMediator extends Mediator
 					this.curSelectedSpt.y++;
 				if (this.editUI)
 					this.editUI.selectSpt(this.curSelectedSpt);
-			}			
+			}
+			if (hVo)
+				hVo.nextVo = this.historyProxy.saveNextHistory(this.curSelectedSpt);
 		}
 		else if (event.keyCode == Keyboard.SPACE)
 		{
@@ -667,7 +705,7 @@ public class EditUIMediator extends Mediator
 		Layer.STAGE.addEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler);
 		Layer.STAGE.addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		this.select(event.currentTarget as Image);
-		this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
+		this.curHistoryVo = this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
 		this.curSelectedSpt.startDrag();
 		this.isMouseDown = true;
 	}
@@ -695,6 +733,8 @@ public class EditUIMediator extends Mediator
 		if (this.curSelectedSpt)
 			this.curSelectedSpt.stopDrag();
 		this.isMouseDown = false;
+		if (this.curHistoryVo)
+			this.curHistoryVo.nextVo = this.historyProxy.saveNextHistory(this.curSelectedSpt);
 	}
 	
 	private function vSliderChangeHandler(event:Event):void 

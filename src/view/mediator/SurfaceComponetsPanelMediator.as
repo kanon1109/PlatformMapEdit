@@ -365,6 +365,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 			this.faceComponet.y = pos.y - this.faceComponet.height / 2;
 			Layer.TERRAIN_LAYER.addChild(this.faceComponet);
 			this.sendNotification(Message.FACE_MOUSE_DOWN, this.faceComponet);
+			this.sendNotification(Message.FACE_MOUSE_UP);
 			this.historyProxy.saveHistory(this.faceComponet, HistoryVo.CREATE);
 		}
 	}

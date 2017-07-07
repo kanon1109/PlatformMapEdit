@@ -65,6 +65,7 @@ public class EditUIMediator extends Mediator
 		var arr:Array = [];
 		arr.push(Message.START);
 		arr.push(Message.FACE_MOUSE_DOWN);
+		arr.push(Message.FACE_MOUSE_UP);
 		return arr;
 	}
 	
@@ -83,6 +84,9 @@ public class EditUIMediator extends Mediator
 					this.isMouseDown = true;
 					Layer.STAGE.addEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler);
 					Layer.STAGE.addEventListener(Event.ENTER_FRAME, enterFrameHandler);
+				break;
+			case Message.FACE_MOUSE_UP:
+					this.isMouseDown = false;
 				break;
 			default:
 		}
@@ -541,6 +545,7 @@ public class EditUIMediator extends Mediator
 	
 	private function onKeyDownHandler(event:KeyboardEvent):void 
 	{
+		trace("this.isMouseDown", this.isMouseDown);
 		if (this.isMouseDown) return;
 		var hVo:HistoryVo;
 		if (event.ctrlKey && event.keyCode == Keyboard.D)

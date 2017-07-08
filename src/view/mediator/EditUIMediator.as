@@ -685,8 +685,11 @@ public class EditUIMediator extends Mediator
 		}
 		else if (event.keyCode == Keyboard.SPACE)
 		{
-			this.isSpaceKey = true;
-			Mouse.cursor = MouseCursor.HAND;
+			if (!this.editUI.isRunMode)
+			{
+				this.isSpaceKey = true;
+				Mouse.cursor = MouseCursor.HAND;
+			}
 		}
 		else if (event.ctrlKey && event.keyCode == Keyboard.S)
 		{
@@ -717,8 +720,11 @@ public class EditUIMediator extends Mediator
 		}
 		else if (event.keyCode == Keyboard.SPACE)
 		{
-			this.isSpaceKey = false;
-			Mouse.cursor = MouseCursor.ARROW;
+			if (!this.editUI.isRunMode)
+			{
+				this.isSpaceKey = false;
+				Mouse.cursor = MouseCursor.ARROW;
+			}
 		}
 	}
 	
@@ -779,12 +785,16 @@ public class EditUIMediator extends Mediator
 	private function onStageMouseDownHandler(event:MouseEvent):void 
 	{
 		if (this.isSpaceKey)
-			Layer.STAGE_LAYER.startDrag();
+		{
+			if(!this.editUI.isRunMode)
+				Layer.STAGE_LAYER.startDrag();
+		}
 	}
 		
 	private function onStageMouseUpHandler(event:MouseEvent):void 
 	{
-		Layer.STAGE_LAYER.stopDrag();
+		if(!this.editUI.isRunMode)
+			Layer.STAGE_LAYER.stopDrag();
 	}
 	
 	private function stageMouseUpHandler(event:MouseEvent):void 
@@ -848,6 +858,8 @@ public class EditUIMediator extends Mediator
 		//运行
 		if (this.editUI)
 		{
+			Layer.RUN_LAYER.x = Layer.STAGE_LAYER.x;
+			Layer.RUN_LAYER.y = Layer.STAGE_LAYER.y;
 			if (!this.editUI.isRunMode)
 				this.editUI.setRunMode(true);
 			else

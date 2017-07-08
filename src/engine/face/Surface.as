@@ -305,12 +305,12 @@ public class Surface
 		g.moveTo(this.x + this.upLeftPoint.x, this.y + this.upLeftPoint.y)
 		g.lineTo(this.x + this.upRightPoint.x, this.y + this.upRightPoint.y)
 		
-		if (this.downBlock) g.lineStyle(1, heighColor);
-		else g.lineStyle(1, lineColor);
+		g.lineStyle(1, lineColor); 
 		g.moveTo(this.x + this.upLeftPoint.x, this.y + this.upLeftPoint.y)
 		g.lineTo(this.x + this.downLeftPoint.x, this.y + this.downLeftPoint.y)
 
-		g.lineStyle(1, lineColor);
+		if (this.downBlock) g.lineStyle(1, heighColor);
+		else g.lineStyle(1, lineColor);
 		g.moveTo(this.x + this.downLeftPoint.x, this.y + this.downLeftPoint.y)
 		g.lineTo(this.x + this.downRightPoint.x, this.y + this.downRightPoint.y)
 
@@ -320,7 +320,6 @@ public class Surface
 		
 		if (this.leftBlock || this._leftH > 0)
 		{	
-			
 			g.lineStyle(1, heighColor);
 			g.moveTo(this.x + this.upLeftPoint.x, this.y + this.upLeftPoint.y)
 			g.lineTo(this.x + this.upLeftPoint.x, this.y + this.upLeftPoint.y - this._leftH)

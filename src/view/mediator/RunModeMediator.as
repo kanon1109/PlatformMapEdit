@@ -5,6 +5,8 @@ import engine.face.Surface;
 import engine.manager.FaceMangager;
 import flash.display.Sprite;
 import flash.events.Event;
+import flash.events.KeyboardEvent;
+import flash.ui.Keyboard;
 import message.Message;
 import org.puremvc.as3.interfaces.INotification;
 import org.puremvc.as3.patterns.mediator.Mediator;
@@ -39,6 +41,8 @@ public class RunModeMediator extends Mediator
 					this.createBody();
 					this.createSurfaceMap();
 					Layer.STAGE.addEventListener(Event.ENTER_FRAME, loop);
+					Layer.STAGE.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDownHandler);
+					Layer.STAGE.addEventListener(KeyboardEvent.KEY_UP, onKeyUpHandler);
 				}
 				else
 				{
@@ -47,11 +51,13 @@ public class RunModeMediator extends Mediator
 					Layer.RUN_LAYER.graphics.clear();
 					FaceMangager.clear();
 					Layer.STAGE.removeEventListener(Event.ENTER_FRAME, loop);
+					Layer.STAGE.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDownHandler);
+					Layer.STAGE.removeEventListener(KeyboardEvent.KEY_UP, onKeyUpHandler);
 				}
 			break;
 		}
 	}
-	
+
 	/**
 	 * 创建面地图
 	 */
@@ -90,13 +96,13 @@ public class RunModeMediator extends Mediator
 	 */
 	private function createBody():void
 	{
-		this.body = new Body();
-		this.body.thick = 10;
-		this.body.g = 0.7;
-		var width:Number = 10;
+		var width:Number = 18;
 		var height:Number = 30;
+		this.body = new Body();
+		this.body.thick = width / 2;
+		this.body.g = 0.7;
 		var rect:Sprite = new Sprite();
-		rect.graphics.beginFill(0x6633ff);
+		rect.graphics.beginFill(0xFF0080, .5);
 		rect.graphics.drawRect(-width / 2, -height, width, height);
 		rect.graphics.endFill();
 		Layer.RUN_LAYER.addChild(rect);
@@ -109,6 +115,31 @@ public class RunModeMediator extends Mediator
 		if (this.body.face)
 			this.body.face.debugDraw(Layer.RUN_LAYER.graphics, 0x00FF80);
 		FaceMangager.debugFace(Layer.RUN_LAYER.graphics);
+	}
+	
+	//-----------------------event handler----------------------------
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	private function onKeyUpHandler(event:KeyboardEvent):void 
+	{
+		if (event.keyCode == Keyboard.A || event.keyCode == Keyboard.D) this.body.moveH(0);
+		if (event.keyCode == Keyboard.W || event.keyCode == Keyboard.S) this.body.moveV(0);
+	}
+	
+	private function onKeyDownHandler(event:KeyboardEvent):void 
+	{
+		if (event.keyCode == Keyboard.D)
+			this.body.moveH(2);
+		else if (event.keyCode == Keyboard.A)
+			this.body.moveH(-2);
+		
+		if (event.keyCode == Keyboard.W)
+			this.body.moveV(-2);
+		else if (event.keyCode == Keyboard.S)
+			this.body.moveV(2);
+		
+		if (event.keyCode == Keyboard.SPACE)
+			this.body.jump(12);
 	}
 }
 }

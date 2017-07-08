@@ -153,8 +153,8 @@ public class EditUI extends Sprite
 		this.posXValueTxt.setSize(40, 20);
 		this.posYValueTxt.setSize(40, 20);
 		
-		this.posXValueTxt.restrict = "0-9\\-";
-		this.posYValueTxt.restrict = "0-9\\-";
+		this.posXValueTxt.restrict = "0-9\\-.";
+		this.posYValueTxt.restrict = "0-9\\-.";
 		
 		this.faceAttributeLayout = new HBox(this.textBox);
 		this.upLeftXLabel = new Label(this.faceAttributeLayout, 0, 0, "upleftX:");
@@ -177,12 +177,12 @@ public class EditUI extends Sprite
 		this.upYTxt.setSize(40, 20);
 		this.downYTxt.setSize(40, 20);
 		
-		this.upLeftXTxt.restrict = "0-9\\-";
-		this.downLeftXTxt.restrict = "0-9\\-";
-		this.upRightXTxt.restrict = "0-9\\-";
-		this.downRightXTxt.restrict = "0-9\\-";
-		this.upYTxt.restrict = "0-9\\-";
-		this.downYTxt.restrict = "0-9\\-";
+		this.upLeftXTxt.restrict = "0-9\\-.";
+		this.downLeftXTxt.restrict = "0-9\\-.";
+		this.upRightXTxt.restrict = "0-9\\-.";
+		this.downRightXTxt.restrict = "0-9\\-.";
+		this.upYTxt.restrict = "0-9\\-.";
+		this.downYTxt.restrict = "0-9\\-.";
 		
 		this.leftHeightLabel = new Label(this.faceAttributeLayout, 0, 0, "left height:");
 		this.leftHeightTxt = new InputText(this.faceAttributeLayout);
@@ -196,7 +196,7 @@ public class EditUI extends Sprite
 		this.depthLabel = new Label(this.faceAttributeLayout, 0, 0, "depth:");
 		this.depthTxt = new InputText(this.faceAttributeLayout);
 		this.depthTxt.setSize(30, 20);
-		this.depthTxt.restrict = "0-9";
+		this.depthTxt.restrict = "0-9\\-";
 		
 		this.nameLabel = new Label(this.faceAttributeLayout, 0, 0, "name:");
 		this.nameTxt = new InputText(this.faceAttributeLayout);

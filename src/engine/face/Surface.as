@@ -139,7 +139,7 @@ public class Surface
 	public function get width():Number
 	{
 		var leftX:Number = this.upLeftPoint.x < this.downLeftPoint.x ? this.upLeftPoint.x : this.downLeftPoint.x;
-		var rightX:Number = this.upRightPoint.x < this.downRightPoint.x ? this.downLeftPoint.x : this.upLeftPoint.x;
+		var rightX:Number = this.upRightPoint.x < this.downRightPoint.x ? this.downRightPoint.x : this.upRightPoint.x;
 		return rightX - leftX;
 	}
 	

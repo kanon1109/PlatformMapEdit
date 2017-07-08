@@ -79,8 +79,9 @@ public class RunModeMediator extends Mediator
 			FaceMangager.add(face);
 			
 			this.body.face = face;
-			this.body.x = face.x;
+			this.body.x = face.x + face.width / 2;
 			this.body.y = face.y + face.height / 2;
+			trace( face.width,  face.height);
 		}
 	}
 	
@@ -92,9 +93,11 @@ public class RunModeMediator extends Mediator
 		this.body = new Body();
 		this.body.thick = 10;
 		this.body.g = 0.7;
+		var width:Number = 10;
+		var height:Number = 30;
 		var rect:Sprite = new Sprite();
 		rect.graphics.beginFill(0x6633ff);
-		rect.graphics.drawRect(0, 0, 10, 30);
+		rect.graphics.drawRect(-width / 2, -height, width, height);
 		rect.graphics.endFill();
 		Layer.RUN_LAYER.addChild(rect);
 		this.body.display = rect;

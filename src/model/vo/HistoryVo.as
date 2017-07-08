@@ -11,6 +11,7 @@ public class HistoryVo
 	public static const COPY:int = 1;//复制
 	public static const CREATE:int = 2;//创建
 	public static const PROP:int = 3;//属性更新
+	public static const CLEAR:int = 4;//舞台清空
 	//操作类型
 	public var type:int;
 	//操作对象
@@ -41,8 +42,10 @@ public class HistoryVo
 	public var downRightPoint:Point;
 	public var leftH:Number;
 	public var rightH:Number;
-	
+	//保存下一次数据 用于操作属性
 	public var nextVo:HistoryVo;
+	//用于保存清空舞台后的数据列表
+	public var displayList:Array;
 	public function HistoryVo() 
 	{
 		

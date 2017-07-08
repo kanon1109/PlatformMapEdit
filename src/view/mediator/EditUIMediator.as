@@ -211,6 +211,20 @@ public class EditUIMediator extends Mediator
 	}
 	
 	/**
+	 * 设置最高或最低深度
+	 * @param	spt		显示对象
+	 * @param	flag	最高或最低深度
+	 */
+	private function setSptMaxDepth(spt:Sprite, flag:Boolean):void
+	{
+		if (!spt || !spt.parent) return;
+		var index:int = spt.parent.getChildIndex(spt);
+		if (flag) index = spt.parent.numChildren - 1;
+		else index = 0;
+		spt.parent.setChildIndex(spt, index);
+	}
+	
+	/**
 	 * 删除某个显示对象
 	 * @param	spt	显示对象
 	 */
@@ -345,6 +359,29 @@ public class EditUIMediator extends Mediator
 				spt.name = hVo.name;
 				this.select(spt);
 			}
+			else if (hVo.type == HistoryVo.CLEAR)
+			{
+				var count:int =	hVo.displayList[0].length;
+				for (var i:int = 0; i < count; i++) 
+				{
+					spt = hVo.displayList[0][i];
+					Layer.STAGE_BG_LAYER.addChild(spt);
+				}
+		
+				count =	hVo.displayList[1].length;
+				for (i = 0; i < count; i++) 
+				{
+					spt = hVo.displayList[1][i];
+					Layer.TERRAIN_LAYER.addChild(spt);
+				}
+				
+				count =	hVo.displayList[2].length;
+				for (i = 0; i < count; i++) 
+				{
+					spt = hVo.displayList[2][i];
+					Layer.STAGE_FG_LAYER.addChild(spt);
+				}
+			}
 		}
 	}
 	
@@ -423,6 +460,10 @@ public class EditUIMediator extends Mediator
 				}
 				spt.name = nextVo.name;
 				this.select(spt);
+			}
+			else if (hVo.type == HistoryVo.CLEAR)
+			{
+				this.removeAll();
 			}
 		}
 	}
@@ -554,17 +595,31 @@ public class EditUIMediator extends Mediator
 			this.copy(this.curSelectedSpt);
 			this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.COPY);
 		}
-		else if (event.ctrlKey && event.keyCode == Keyboard.UP)
+		else if (event.ctrlKey && !event.shiftKey && event.keyCode == Keyboard.UP)
 		{
 			hVo = this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
 			this.setSptDepth(this.curSelectedSpt, true);
 			if (hVo)
 				hVo.nextVo = this.historyProxy.saveNextHistory(this.curSelectedSpt);
 		}
-		else if (event.ctrlKey && event.keyCode == Keyboard.DOWN)
+		else if (event.ctrlKey && !event.shiftKey && event.keyCode == Keyboard.DOWN)
 		{
 			hVo = this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
 			this.setSptDepth(this.curSelectedSpt, false);
+			if (hVo)
+				hVo.nextVo = this.historyProxy.saveNextHistory(this.curSelectedSpt);
+		}
+		else if (event.ctrlKey && event.shiftKey && event.keyCode == Keyboard.UP)
+		{
+			hVo = this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
+			this.setSptMaxDepth(this.curSelectedSpt, true);
+			if (hVo)
+				hVo.nextVo = this.historyProxy.saveNextHistory(this.curSelectedSpt);
+		}
+		else if (event.ctrlKey && event.shiftKey && event.keyCode == Keyboard.DOWN)
+		{
+			hVo = this.historyProxy.saveHistory(this.curSelectedSpt, HistoryVo.PROP);
+			this.setSptMaxDepth(this.curSelectedSpt, false);
 			if (hVo)
 				hVo.nextVo = this.historyProxy.saveNextHistory(this.curSelectedSpt);
 		}
@@ -674,11 +729,11 @@ public class EditUIMediator extends Mediator
 	
 	private function clearBtnClickHandler(event:MouseEvent):void 
 	{
+		this.historyProxy.saveAllDisplayHistory();
 		this.removeAll();
 		this.sendNotification(Message.DELETE);
 		if (this.editUI) this.editUI.selectSpt(null);
 		this.curSelectedSpt = null;
-		this.historyProxy.clear();
 	}
 	
 	private function selectImageFileHandler(event:Event):void

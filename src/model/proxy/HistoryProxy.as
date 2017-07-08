@@ -13,6 +13,7 @@ public class HistoryProxy extends Proxy
 {
 	//保存历史列表
 	public static const NAME:String = "HistoryProxy";
+	private var historyMaxCount:int = 100;
 	private var historyAry:Array = [];
 	//当前记录索引
 	private var curIndex:int = -1;
@@ -30,6 +31,8 @@ public class HistoryProxy extends Proxy
 		if (this.curIndex < this.historyAry.length - 1)
 			this.historyAry.splice(this.curIndex + 1);
 		this.historyAry.push(vo);
+		if (this.historyAry.length > this.historyMaxCount)
+			this.historyAry.splice(0, 1);
 		this.curIndex = this.historyAry.length - 1;
 	}
 	
@@ -145,6 +148,32 @@ public class HistoryProxy extends Proxy
 			return hVo;
 		}
 		return null;
+	}
+	
+	/**
+	 * 保存清空舞台历史记录（用于清空舞台）
+	 */
+	public function saveAllDisplayHistory():void
+	{
+		var hVo:HistoryVo = new HistoryVo();
+		hVo.type = HistoryVo.CLEAR;
+		hVo.displayList = [[],[],[]];
+		var count:int = Layer.STAGE_BG_LAYER.numChildren;
+		for (var i:int = 0; i < count; i++) 
+		{
+			hVo.displayList[0].push(Layer.STAGE_BG_LAYER.getChildAt(i));
+		}
+		count = Layer.TERRAIN_LAYER.numChildren;
+		for (i = 0; i < count; i++) 
+		{
+			hVo.displayList[1].push(Layer.TERRAIN_LAYER.getChildAt(i));
+		}
+		count = Layer.STAGE_FG_LAYER.numChildren;
+		for (i = 0; i < count; i++) 
+		{
+			hVo.displayList[2].push(Layer.STAGE_FG_LAYER.getChildAt(i));
+		}
+		this.addHistory(hVo);
 	}
 }
 }

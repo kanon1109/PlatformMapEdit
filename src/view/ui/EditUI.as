@@ -55,6 +55,8 @@ public class EditUI extends Sprite
 	public var runBtn:PushButton;
 	//是否是运行模式
 	public var isRunMode:Boolean;
+	public var widthTxt:InputText;
+	public var heightTxt:InputText;
 	//---private---
 	
 	private var center:Point;
@@ -73,6 +75,8 @@ public class EditUI extends Sprite
 	private var rightHeightLabel:Label;
 	private var depthLabel:Label;
 	private var nameLabel:Label;
+	private var widthLabel:Label;
+	private var heightLabel:Label;
 	public function EditUI() 
 	{
 		this.addEventListener(Event.ADDED_TO_STAGE, addToStageHandler);
@@ -190,8 +194,8 @@ public class EditUI extends Sprite
 		this.rightHeightTxt = new InputText(this.faceAttributeLayout);
 		this.leftHeightTxt.setSize(40, 20);
 		this.rightHeightTxt.setSize(40, 20);
-		this.leftHeightTxt.restrict = "0-9";
-		this.rightHeightTxt.restrict = "0-9";
+		this.leftHeightTxt.restrict = "0-9.";
+		this.rightHeightTxt.restrict = "0-9.";
 		
 		this.depthLabel = new Label(this.faceAttributeLayout, 0, 0, "depth:");
 		this.depthTxt = new InputText(this.faceAttributeLayout);
@@ -213,6 +217,15 @@ public class EditUI extends Sprite
 		this.upBlock = new CheckBox(this.faceChickBoxAttributeLayout, 0, 5, "up block:");
 		this.downBlock = new CheckBox(this.faceChickBoxAttributeLayout, 0, 5, "down block:");
 		
+		this.widthLabel = new Label(this.faceChickBoxAttributeLayout, 0, 0, "width");
+		this.widthTxt = new InputText(this.faceChickBoxAttributeLayout);
+		this.widthTxt.setSize(30, 20);
+		this.widthTxt.restrict = "0-9.";
+		
+		this.heightLabel = new Label(this.faceChickBoxAttributeLayout, 0, 0, "height");
+		this.heightTxt = new InputText(this.faceChickBoxAttributeLayout);
+		this.heightTxt.setSize(30, 20);
+		this.heightTxt.restrict = "0-9.";
 		
 		var vBox:VBox = new VBox(this.componentsPanel);
 		this.faceComponetsPanel = new SurfaceComponetsPanel(vBox);
@@ -296,6 +309,8 @@ public class EditUI extends Sprite
 				this.rightHeightTxt.text = face.rightH.toString();
 				this.depthTxt.text = face.depth.toString();
 				this.nameTxt.text = face.name;
+				this.widthTxt.text = face.width.toString();
+				this.heightTxt.text = face.height.toString();
 				
 				this.leftRestrict.selected = face.leftRestrict;
 				this.rightRestrict.selected = face.rightRestrict;

@@ -100,6 +100,8 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		this.editUI.rightHeightTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
 		this.editUI.depthTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
 		this.editUI.nameTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
+		this.editUI.widthTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
+		this.editUI.heightTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
 
 		this.faceComponetsPanel.rect.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		this.faceComponetsPanel.quad1.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
@@ -155,6 +157,8 @@ public class SurfaceComponetsPanelMediator extends Mediator
 			var downRightX:Number = Number(this.editUI.downRightXTxt.text);
 			var upY:Number = Number(this.editUI.upYTxt.text);
 			var downY:Number = Number(this.editUI.downYTxt.text);
+			var width:Number = Number(this.editUI.widthTxt.text);
+			var height:Number = Number(this.editUI.heightTxt.text);
 			
 			if (txt == this.editUI.upLeftXTxt)
 			{
@@ -208,6 +212,24 @@ public class SurfaceComponetsPanelMediator extends Mediator
 			this.faceComponet.rightH = Number(this.editUI.rightHeightTxt.text);
 			this.faceComponet.depth = Number(this.editUI.depthTxt.text);
 			this.faceComponet.name = this.editUI.nameTxt.text;
+			
+			var dis:Number = this.faceComponet.upRightPoint.x - this.faceComponet.downRightPoint.x;
+			var leftX:Number = this.faceComponet.downLeftPoint.x;
+			if (this.faceComponet.upLeftPoint.x < this.faceComponet.downLeftPoint.x)
+				leftX = this.faceComponet.upLeftPoint.x;
+				
+			if (this.faceComponet.upRightPoint.x > this.faceComponet.downRightPoint.x)
+			{
+				this.faceComponet.upRightPoint.x = leftX + width;
+				this.faceComponet.downRightPoint.x = this.faceComponet.upRightPoint.x + dis;
+			}
+			else
+			{
+				this.faceComponet.downRightPoint.x = leftX + width;
+				this.faceComponet.upRightPoint.x = this.faceComponet.downRightPoint.x + dis;
+			}
+			
+			
 			if (this.faceComponet.leftH > 0)
 				this.editUI.leftBlock.selected = false;
 			if (this.faceComponet.rightH > 0)

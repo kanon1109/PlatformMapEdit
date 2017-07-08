@@ -42,6 +42,9 @@ public class RunModeMediator extends Mediator
 				}
 				else
 				{
+					if (this.body && this.body.display && this.body.display.parent)
+						this.body.display.parent.removeChild(this.body.display);
+					Layer.RUN_LAYER.graphics.clear();
 					FaceMangager.clear();
 					Layer.STAGE.removeEventListener(Event.ENTER_FRAME, loop);
 				}
@@ -74,6 +77,10 @@ public class RunModeMediator extends Mediator
 			face.leftRestrict = sc.leftRestrict;
 			face.rightRestrict = sc.rightRestrict;
 			FaceMangager.add(face);
+			
+			this.body.face = face;
+			this.body.x = face.x;
+			this.body.y = face.y + face.height / 2;
 		}
 	}
 	
@@ -83,8 +90,6 @@ public class RunModeMediator extends Mediator
 	private function createBody():void
 	{
 		this.body = new Body();
-		this.body.x = 100;
-		this.body.y = 200;
 		this.body.thick = 10;
 		this.body.g = 0.7;
 		var rect:Sprite = new Sprite();

@@ -102,6 +102,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		this.editUI.nameTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
 		this.editUI.widthTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
 		this.editUI.heightTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
+		this.editUI.resetBtn.addEventListener(MouseEvent.CLICK, resetBtnClickHandler);
 
 		this.faceComponetsPanel.rect.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		this.faceComponetsPanel.quad1.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
@@ -110,6 +111,15 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		this.faceComponetsPanel.trapezoid2.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		Layer.STAGE.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDownHandler);
 		Layer.STAGE.addEventListener(KeyboardEvent.KEY_UP, onKeyUpHandler);
+	}
+	
+	private function resetBtnClickHandler(event:MouseEvent):void 
+	{
+		var hVo:HistoryVo = this.historyProxy.saveHistory(this.faceComponet, HistoryVo.PROP);
+		if (this.faceComponet)
+			this.faceComponet.reset();
+		if (hVo)
+			hVo.nextVo = this.historyProxy.saveNextHistory(this.faceComponet);
 	}
 	
 	private function onKeyUpHandler(event:KeyboardEvent):void 
@@ -213,21 +223,41 @@ public class SurfaceComponetsPanelMediator extends Mediator
 			this.faceComponet.depth = Number(this.editUI.depthTxt.text);
 			this.faceComponet.name = this.editUI.nameTxt.text;
 			
+			var newUpRightX:Number;
+			var newDownRightX:Number;
 			var dis:Number = this.faceComponet.upRightPoint.x - this.faceComponet.downRightPoint.x;
 			var leftX:Number = this.faceComponet.downLeftPoint.x;
+			this.faceComponet.downLeftPoint.y = this.faceComponet.upLeftPoint.y + height;
+			this.faceComponet.downRightPoint.y = this.faceComponet.downLeftPoint.y;
 			if (this.faceComponet.upLeftPoint.x < this.faceComponet.downLeftPoint.x)
 				leftX = this.faceComponet.upLeftPoint.x;
 				
 			if (this.faceComponet.upRightPoint.x > this.faceComponet.downRightPoint.x)
 			{
-				this.faceComponet.upRightPoint.x = leftX + width;
-				this.faceComponet.downRightPoint.x = this.faceComponet.upRightPoint.x + dis;
+				newUpRightX = leftX + width;
+				newDownRightX = newUpRightX - dis;
+				if (newDownRightX < this.faceComponet.downLeftPoint.x + 1)
+				{
+					newDownRightX = this.faceComponet.downLeftPoint.x + 1;
+					newUpRightX += newDownRightX - (newUpRightX - dis);
+				}
+				this.faceComponet.upRightPoint.x = newUpRightX;
+				this.faceComponet.downRightPoint.x = newDownRightX;
 			}
 			else
 			{
-				this.faceComponet.downRightPoint.x = leftX + width;
-				this.faceComponet.upRightPoint.x = this.faceComponet.downRightPoint.x + dis;
+				newDownRightX = leftX + width;
+				newUpRightX = newDownRightX + dis;
+				if (newUpRightX < this.faceComponet.upLeftPoint.x + 1)
+				{
+					newUpRightX = this.faceComponet.upLeftPoint.x + 1;
+					newDownRightX += newUpRightX - (newDownRightX + dis);
+				}
+				
+				this.faceComponet.downRightPoint.x = newDownRightX;
+				this.faceComponet.upRightPoint.x = newUpRightX;
 			}
+			
 			
 			
 			if (this.faceComponet.leftH > 0)

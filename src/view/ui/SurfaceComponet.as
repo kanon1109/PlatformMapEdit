@@ -30,6 +30,7 @@ public class SurfaceComponet extends Sprite
 	private var depthTxt:Label;
 	private var _leftX:Number;
 	private var _rightX:Number;
+	private var type:int;
 	public function SurfaceComponet() 
 	{
 		this.init();
@@ -86,6 +87,7 @@ public class SurfaceComponet extends Sprite
 	 */
 	public function setShape(type:int):void
 	{
+		this.type = type;
 		if (type == 1)
 		{
 			this.upLeftPoint.x = 0;
@@ -157,6 +159,14 @@ public class SurfaceComponet extends Sprite
 			this.downLeftPoint.y = 70;
 		}
 		this.draw();
+	}
+	
+	/**
+	 * 重置
+	 */
+	public function reset():void
+	{
+		this.setShape(this.type);
 	}
 	
 	/**

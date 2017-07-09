@@ -53,6 +53,7 @@ public class EditUI extends Sprite
 	public var depthTxt:InputText;
 	public var nameTxt:InputText;
 	public var runBtn:PushButton;
+	public var resetBtn:PushButton;
 	//是否是运行模式
 	public var isRunMode:Boolean;
 	public var widthTxt:InputText;
@@ -207,6 +208,9 @@ public class EditUI extends Sprite
 		this.nameTxt.setSize(70, 20);
 		this.nameTxt.restrict = "0-9\a-z\A-Z";
 		
+		this.resetBtn = new PushButton(this.faceAttributeLayout, 0, 0, "reset");
+		this.resetBtn.setSize(40, 20);
+		
 		this.faceChickBoxAttributeLayout = new HBox(this.checkBox);
 		this.leftRestrict = new CheckBox(this.faceChickBoxAttributeLayout, 0, 5, "left restrict:");
 		this.rightRestrict = new CheckBox(this.faceChickBoxAttributeLayout, 0, 5, "right restrict:");
@@ -226,6 +230,7 @@ public class EditUI extends Sprite
 		this.heightTxt = new InputText(this.faceChickBoxAttributeLayout);
 		this.heightTxt.setSize(30, 20);
 		this.heightTxt.restrict = "0-9.";
+
 		
 		var vBox:VBox = new VBox(this.componentsPanel);
 		this.faceComponetsPanel = new SurfaceComponetsPanel(vBox);

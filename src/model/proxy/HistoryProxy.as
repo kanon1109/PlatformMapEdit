@@ -28,6 +28,7 @@ public class HistoryProxy extends Proxy
 	 */
 	public function addHistory(vo:HistoryVo):void
 	{
+		if (!vo) return;
 		if (this.curIndex < this.historyAry.length - 1)
 			this.historyAry.splice(this.curIndex + 1);
 		this.historyAry.push(vo);
@@ -78,14 +79,9 @@ public class HistoryProxy extends Proxy
 	 */
 	public function saveHistory(spt:Sprite, type:int):HistoryVo
 	{
-		if (spt)
-		{
-			trace("----------------save-------------")
-			var hVo:HistoryVo = this.createHistoryVo(spt, type);
-			this.addHistory(hVo);
-			return hVo;
-		}
-		return null;
+		var hVo:HistoryVo = this.createHistoryVo(spt, type);
+		this.addHistory(hVo);
+		return hVo;
 	}
 	
 	
@@ -118,7 +114,6 @@ public class HistoryProxy extends Proxy
 			hVo.downLeftPoint = new Point(face.downLeftPoint.x, face.downLeftPoint.y);
 			hVo.downRightPoint = new Point(face.downRightPoint.x, face.downRightPoint.y);
 			hVo.depth = face.depth;
-			trace("save ", face.depth);
 		}
 		hVo.childIndex = spt.parent.getChildIndex(spt);
 		hVo.name = spt.name;
@@ -132,35 +127,7 @@ public class HistoryProxy extends Proxy
 	 */
 	public function saveNextHistory(spt:Sprite):HistoryVo
 	{
-		if (spt)
-		{
-			var hVo:HistoryVo = new HistoryVo();
-			hVo.target = spt;
-			hVo.type = HistoryVo.PROP;
-			hVo.x = spt.x;
-			hVo.y = spt.y;
-			if (spt is SurfaceComponet)
-			{
-				var face:SurfaceComponet = spt as SurfaceComponet;
-				hVo.leftBlock = face.leftBlock;
-				hVo.rightBlock = face.rightBlock;
-				hVo.upBlock = face.upBlock;
-				hVo.downBlock = face.downBlock;
-				hVo.leftH = face.leftH;
-				hVo.rightH = face.rightH;
-				hVo.leftRestrict = face.leftRestrict;
-				hVo.rightRestrict = face.rightRestrict;
-				hVo.upLeftPoint = new Point(face.upLeftPoint.x, face.upLeftPoint.y);
-				hVo.upRightPoint = new Point(face.upRightPoint.x, face.upRightPoint.y);
-				hVo.downLeftPoint = new Point(face.downLeftPoint.x, face.downLeftPoint.y);
-				hVo.downRightPoint = new Point(face.downRightPoint.x, face.downRightPoint.y);
-				hVo.depth = face.depth;
-			}
-			hVo.childIndex = spt.parent.getChildIndex(spt);
-			hVo.name = spt.name;
-			return hVo;
-		}
-		return null;
+		return this.createHistoryVo(spt, HistoryVo.PROP);
 	}
 	
 	/**
@@ -192,31 +159,34 @@ public class HistoryProxy extends Proxy
 	/**
 	 * 保存所有显示对象的属性
 	 */
-	public function saveAllDisplayProp():void
+	public function saveAllDisplayProp(isNext:Boolean):void
 	{
 		var hVo:HistoryVo = new HistoryVo();
-		hVo.type = HistoryVo.CLEAR;
-		hVo.historyVoList = [[], [], []];
+		hVo.type = HistoryVo.ALL_PROP;
+		var historyVoList:Array = [[], [], []];
 		var spt:Sprite;
 		var count:int = Layer.STAGE_BG_LAYER.numChildren;
 		for (var i:int = 0; i < count; i++) 
 		{
 			spt = Layer.STAGE_BG_LAYER.getChildAt(i) as Sprite;
-			hVo.displayList[0].push(this.createHistoryVo(spt, HistoryVo.PROP));
+			historyVoList[0].push(this.createHistoryVo(spt, HistoryVo.PROP));
 		}
 		count = Layer.TERRAIN_LAYER.numChildren;
 		for (i = 0; i < count; i++) 
 		{
 			spt = Layer.TERRAIN_LAYER.getChildAt(i) as Sprite;
-			hVo.displayList[1].push(this.createHistoryVo(spt, HistoryVo.PROP));
+			historyVoList[1].push(this.createHistoryVo(spt, HistoryVo.PROP));
 		}
 		count = Layer.STAGE_FG_LAYER.numChildren;
 		for (i = 0; i < count; i++) 
 		{
 			spt = Layer.STAGE_FG_LAYER.getChildAt(i) as Sprite;
-			hVo.displayList[2].push(this.createHistoryVo(spt, HistoryVo.PROP));
+			historyVoList[2].push(this.createHistoryVo(spt, HistoryVo.PROP));
 		}
+		if (!isNext) hVo.historyVoList = historyVoList;
+		else hVo.nextHistoryVoList = historyVoList;
 		this.addHistory(hVo);
 	}
+
 }
 }

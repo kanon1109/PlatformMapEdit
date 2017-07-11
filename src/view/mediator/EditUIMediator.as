@@ -281,6 +281,8 @@ public class EditUIMediator extends Mediator
 			var faceComponet:SurfaceComponet;
 			var image:Image;
 			var spt:Sprite;
+			var count:int;
+			var i:int;
 			if (hVo.type == HistoryVo.DELETE)
 			{
 				//上一步删除
@@ -329,43 +331,12 @@ public class EditUIMediator extends Mediator
 			}
 			else if (hVo.type == HistoryVo.PROP)
 			{
-				spt = hVo.target as Sprite;
-				spt.parent.setChildIndex(spt, hVo.childIndex);
-				spt.x = hVo.x;
-				spt.y = hVo.y;
-				if (hVo.target is SurfaceComponet)
-				{
-					var face:SurfaceComponet = hVo.target as SurfaceComponet;
-					face.depth = hVo.depth;
-					face.upBlock = hVo.upBlock;
-					face.downBlock = hVo.downBlock;
-					face.leftBlock = hVo.leftBlock;
-					face.rightBlock = hVo.rightBlock;
-					face.leftH = hVo.leftH;
-					face.rightH = hVo.rightH;
-					face.upLeftPoint.x = hVo.upLeftPoint.x;
-					face.upLeftPoint.y = hVo.upLeftPoint.y;
-					
-					face.upRightPoint.x = hVo.upRightPoint.x;
-					face.upRightPoint.y = hVo.upRightPoint.y;
-					
-					face.downLeftPoint.x = hVo.downLeftPoint.x;
-					face.downLeftPoint.y = hVo.downLeftPoint.y;
-					
-					face.downRightPoint.x = hVo.downRightPoint.x;
-					face.downRightPoint.y = hVo.downRightPoint.y;
-					
-					face.showPoint(false);
-					
-					face.draw();
-				}
-				spt.name = hVo.name;
-				this.select(spt);
+				this.select(this.setHistoryVo(hVo));
 			}
 			else if (hVo.type == HistoryVo.CLEAR)
 			{
-				var count:int =	hVo.displayList[0].length;
-				for (var i:int = 0; i < count; i++) 
+				count =	hVo.displayList[0].length;
+				for (i = 0; i < count; i++) 
 				{
 					spt = hVo.displayList[0][i];
 					Layer.STAGE_BG_LAYER.addChild(spt);
@@ -383,6 +354,30 @@ public class EditUIMediator extends Mediator
 				{
 					spt = hVo.displayList[2][i];
 					Layer.STAGE_FG_LAYER.addChild(spt);
+				}
+			}
+			else if (hVo.type == HistoryVo.ALL_PROP)
+			{
+				var historyVo:HistoryVo;
+				count =	hVo.historyVoList[0].length;
+				for (i = 0; i < count; i++) 
+				{
+					historyVo = hVo.historyVoList[0][i];
+					this.setHistoryVo(historyVo);
+				}
+		
+				count =	hVo.historyVoList[1].length;
+				for (i = 0; i < count; i++) 
+				{
+					historyVo = hVo.historyVoList[1][i];
+					this.setHistoryVo(historyVo);
+				}
+				
+				count =	hVo.historyVoList[2].length;
+				for (i = 0; i < count; i++) 
+				{
+					historyVo = hVo.historyVoList[2][i];
+					this.setHistoryVo(historyVo);
 				}
 			}
 		}
@@ -432,43 +427,51 @@ public class EditUIMediator extends Mediator
 			else if (hVo.type == HistoryVo.PROP)
 			{
 				var nextVo:HistoryVo = hVo.nextVo;
-				if (!nextVo) return;
-				spt = nextVo.target as Sprite;
-				spt.parent.setChildIndex(spt, nextVo.childIndex);
-				spt.x = nextVo.x;
-				spt.y = nextVo.y;
-				spt.name = nextVo.name;
-				if (nextVo.target is SurfaceComponet)
-				{
-					faceComponet = nextVo.target as SurfaceComponet;
-					faceComponet.depth = nextVo.depth;
-					faceComponet.showPoint(false);
-					faceComponet.leftBlock = nextVo.leftBlock;
-					faceComponet.rightBlock = nextVo.rightBlock;
-					faceComponet.upBlock = nextVo.upBlock;
-					faceComponet.downBlock = nextVo.downBlock;
-					faceComponet.upLeftPoint.x = nextVo.upLeftPoint.x;
-					faceComponet.upLeftPoint.y = nextVo.upLeftPoint.y;
-					faceComponet.downLeftPoint.x = nextVo.downLeftPoint.x;
-					faceComponet.downLeftPoint.y = nextVo.downLeftPoint.y;
-					faceComponet.downRightPoint.x = nextVo.downRightPoint.x;
-					faceComponet.downRightPoint.y = nextVo.downRightPoint.y;
-					faceComponet.upRightPoint.x = nextVo.upRightPoint.x;
-					faceComponet.upRightPoint.y = nextVo.upRightPoint.y;
-					faceComponet.leftH = nextVo.leftH;
-					faceComponet.rightH = nextVo.rightH;
-					faceComponet.leftRestrict = nextVo.leftRestrict;
-					faceComponet.rightRestrict = nextVo.rightRestrict;
-					faceComponet.draw();
-				}
-				spt.name = nextVo.name;
-				this.select(spt);
+				this.select(this.setHistoryVo(nextVo));
 			}
 			else if (hVo.type == HistoryVo.CLEAR)
 			{
 				this.removeAll();
 			}
 		}
+	}
+	
+	
+	private function setHistoryVo(hVo:HistoryVo):Sprite
+	{
+		if (!hVo) return null;
+		var spt:Sprite = hVo.target as Sprite;
+		spt.parent.setChildIndex(spt, hVo.childIndex);
+		spt.x = hVo.x;
+		spt.y = hVo.y;
+		if (hVo.target is SurfaceComponet)
+		{
+			var face:SurfaceComponet = hVo.target as SurfaceComponet;
+			face.depth = hVo.depth;
+			face.upBlock = hVo.upBlock;
+			face.downBlock = hVo.downBlock;
+			face.leftBlock = hVo.leftBlock;
+			face.rightBlock = hVo.rightBlock;
+			face.leftH = hVo.leftH;
+			face.rightH = hVo.rightH;
+			face.upLeftPoint.x = hVo.upLeftPoint.x;
+			face.upLeftPoint.y = hVo.upLeftPoint.y;
+			
+			face.upRightPoint.x = hVo.upRightPoint.x;
+			face.upRightPoint.y = hVo.upRightPoint.y;
+			
+			face.downLeftPoint.x = hVo.downLeftPoint.x;
+			face.downLeftPoint.y = hVo.downLeftPoint.y;
+			
+			face.downRightPoint.x = hVo.downRightPoint.x;
+			face.downRightPoint.y = hVo.downRightPoint.y;
+			
+			face.showPoint(false);
+			
+			face.draw();
+		}
+		spt.name = hVo.name;
+		return spt;
 	}
 	
 	/**
@@ -873,13 +876,14 @@ public class EditUIMediator extends Mediator
 	
 	private function allAnchorResetBtnClickHandler(e:MouseEvent):void 
 	{
-		this.historyProxy.saveAllDisplayHistory();
+		this.historyProxy.saveAllDisplayProp(false);
 		var count:int = Layer.TERRAIN_LAYER.numChildren;
 		for (var i:int = 0; i < count; ++i) 
 		{
 			var face:SurfaceComponet = Layer.TERRAIN_LAYER.getChildAt(i) as SurfaceComponet;
 			face.anchorReset();
 		}
+		this.historyProxy.saveAllDisplayProp(true);
 	}
 	
 	private function enterFrameHandler(event:Event):void 

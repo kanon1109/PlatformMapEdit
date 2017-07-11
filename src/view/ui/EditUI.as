@@ -54,6 +54,8 @@ public class EditUI extends Sprite
 	public var nameTxt:InputText;
 	public var runBtn:PushButton;
 	public var resetBtn:PushButton;
+	public var anchorResetBtn:PushButton;
+	public var allAnchorResetBtn:PushButton;
 	//是否是运行模式
 	public var isRunMode:Boolean;
 	public var widthTxt:InputText;
@@ -129,11 +131,14 @@ public class EditUI extends Sprite
 		this.loadBtn = new PushButton(hbox, 0, 5, "load");
 		this.clearBtn = new PushButton(hbox, 0, 5, "clear");
 		this.runBtn = new PushButton(hbox, 0, 5, "run");
+		this.allAnchorResetBtn = new PushButton(hbox, 0, 5, "all anchor reset");
 		this.importBtn.setSize(120, 30);
 		this.saveBtn.setSize(120, 30);
 		this.loadBtn.setSize(120, 30);
 		this.clearBtn.setSize(120, 30);
 		this.runBtn.setSize(120, 30);
+		this.allAnchorResetBtn.setSize(120, 30);
+		
 		
 		this.center = new Point(this.stagePanel.x + this.stagePanel.width / 2, 
 								this.stagePanel.y + this.stagePanel.height / 2);
@@ -210,6 +215,9 @@ public class EditUI extends Sprite
 		
 		this.resetBtn = new PushButton(this.faceAttributeLayout, 0, 0, "reset");
 		this.resetBtn.setSize(40, 20);
+		
+		this.anchorResetBtn = new PushButton(this.faceAttributeLayout, 0, 0, "reset anchor");
+		this.anchorResetBtn.setSize(70, 20);
 		
 		this.faceChickBoxAttributeLayout = new HBox(this.checkBox);
 		this.leftRestrict = new CheckBox(this.faceChickBoxAttributeLayout, 0, 5, "left restrict:");

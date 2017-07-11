@@ -103,6 +103,8 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		this.editUI.widthTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
 		this.editUI.heightTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
 		this.editUI.resetBtn.addEventListener(MouseEvent.CLICK, resetBtnClickHandler);
+		this.editUI.anchorResetBtn.addEventListener(MouseEvent.CLICK, anchorResetBtnClickHandler);
+		
 
 		this.faceComponetsPanel.rect.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		this.faceComponetsPanel.quad1.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
@@ -113,11 +115,20 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		Layer.STAGE.addEventListener(KeyboardEvent.KEY_UP, onKeyUpHandler);
 	}
 	
+	private function anchorResetBtnClickHandler(event:MouseEvent):void 
+	{
+		var hVo:HistoryVo = this.historyProxy.saveHistory(this.faceComponet, HistoryVo.PROP);
+		if (this.faceComponet) this.faceComponet.anchorReset();
+		this.editUI.selectSpt(this.faceComponet);
+		if (hVo)
+			hVo.nextVo = this.historyProxy.saveNextHistory(this.faceComponet);
+	}
+	
 	private function resetBtnClickHandler(event:MouseEvent):void 
 	{
 		var hVo:HistoryVo = this.historyProxy.saveHistory(this.faceComponet, HistoryVo.PROP);
-		if (this.faceComponet)
-			this.faceComponet.reset();
+		if (this.faceComponet) this.faceComponet.reset();
+		this.editUI.selectSpt(this.faceComponet);
 		if (hVo)
 			hVo.nextVo = this.historyProxy.saveNextHistory(this.faceComponet);
 	}
@@ -257,7 +268,6 @@ public class SurfaceComponetsPanelMediator extends Mediator
 				this.faceComponet.downRightPoint.x = newDownRightX;
 				this.faceComponet.upRightPoint.x = newUpRightX;
 			}
-			
 			
 			
 			if (this.faceComponet.leftH > 0)

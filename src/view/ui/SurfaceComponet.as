@@ -170,6 +170,32 @@ public class SurfaceComponet extends Sprite
 	}
 	
 	/**
+	 * 锚点归零
+	 */
+	public function anchorReset():void
+	{
+		var gapH:Number = -this.upLeftPoint.x;
+		var gapV:Number = -this.upLeftPoint.y;
+		
+		this.upLeftPoint.x += gapH;
+		this.upLeftPoint.y += gapV;
+		
+		this.downLeftPoint.x += gapH;
+		this.downLeftPoint.y += gapV;
+		
+		this.upRightPoint.x += gapH;
+		this.upRightPoint.y += gapV;
+		
+		this.downRightPoint.x += gapH;
+		this.downRightPoint.y += gapV;
+		
+		this.x -= gapH;
+		this.y -= gapV;
+		
+		this.draw();
+	}
+	
+	/**
 	 * 绘制
 	 */
 	public function draw():void

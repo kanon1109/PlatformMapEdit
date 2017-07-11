@@ -113,6 +113,7 @@ public class EditUIMediator extends Mediator
 		this.editUI.loadBtn.addEventListener(MouseEvent.CLICK, loadBtnClickHandler);
 		this.editUI.clearBtn.addEventListener(MouseEvent.CLICK, clearBtnClickHandler);
 		this.editUI.runBtn.addEventListener(MouseEvent.CLICK, runBtnClickHandler);
+		this.editUI.allAnchorResetBtn.addEventListener(MouseEvent.CLICK, allAnchorResetBtnClickHandler);
 		this.editUI.vSlider.addEventListener(Event.CHANGE, vSliderChangeHandler);
 		this.editUI.posXValueTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
 		this.editUI.posYValueTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
@@ -867,6 +868,17 @@ public class EditUIMediator extends Mediator
 			else
 				this.editUI.setRunMode(false);
 			this.sendNotification(Message.RUN, this.editUI.isRunMode);
+		}
+	}
+	
+	private function allAnchorResetBtnClickHandler(e:MouseEvent):void 
+	{
+		this.historyProxy.saveAllDisplayHistory();
+		var count:int = Layer.TERRAIN_LAYER.numChildren;
+		for (var i:int = 0; i < count; ++i) 
+		{
+			var face:SurfaceComponet = Layer.TERRAIN_LAYER.getChildAt(i) as SurfaceComponet;
+			face.anchorReset();
 		}
 	}
 	

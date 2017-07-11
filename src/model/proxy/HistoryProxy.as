@@ -175,5 +175,31 @@ public class HistoryProxy extends Proxy
 		}
 		this.addHistory(hVo);
 	}
+	
+	/**
+	 * 保存所有显示对象的属性
+	 */
+	public function saveAllDisplayProp():void
+	{
+		var hVo:HistoryVo = new HistoryVo();
+		hVo.type = HistoryVo.CLEAR;
+		hVo.displayList = [[],[],[]];
+		var count:int = Layer.STAGE_BG_LAYER.numChildren;
+		for (var i:int = 0; i < count; i++) 
+		{
+			hVo.displayList[0].push(Layer.STAGE_BG_LAYER.getChildAt(i));
+		}
+		count = Layer.TERRAIN_LAYER.numChildren;
+		for (i = 0; i < count; i++) 
+		{
+			hVo.displayList[1].push(Layer.TERRAIN_LAYER.getChildAt(i));
+		}
+		count = Layer.STAGE_FG_LAYER.numChildren;
+		for (i = 0; i < count; i++) 
+		{
+			hVo.displayList[2].push(Layer.STAGE_FG_LAYER.getChildAt(i));
+		}
+		this.addHistory(hVo);
+	}
 }
 }

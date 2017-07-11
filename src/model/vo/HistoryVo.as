@@ -12,6 +12,7 @@ public class HistoryVo
 	public static const CREATE:int = 2;//创建
 	public static const PROP:int = 3;//属性更新
 	public static const CLEAR:int = 4;//舞台清空
+	public static const ALL_PROP:int = 5;//整体属性操作
 	//操作类型
 	public var type:int;
 	//操作对象
@@ -46,6 +47,9 @@ public class HistoryVo
 	public var nextVo:HistoryVo;
 	//用于保存清空舞台后的数据列表
 	public var displayList:Array;
+	//保存所有物体的属性操作记录的列表
+	public var historyVoList:Array;
+	public var nextHistoryVoList:Array;
 	public function HistoryVo() 
 	{
 		

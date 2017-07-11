@@ -876,14 +876,14 @@ public class EditUIMediator extends Mediator
 	
 	private function allAnchorResetBtnClickHandler(e:MouseEvent):void 
 	{
-		this.historyProxy.saveAllDisplayProp(false);
+		var hVo:HistoryVo = this.historyProxy.saveAllDisplayProp(false);
 		var count:int = Layer.TERRAIN_LAYER.numChildren;
 		for (var i:int = 0; i < count; ++i) 
 		{
 			var face:SurfaceComponet = Layer.TERRAIN_LAYER.getChildAt(i) as SurfaceComponet;
 			face.anchorReset();
 		}
-		this.historyProxy.saveAllDisplayProp(true);
+		hVo.nextVo = this.historyProxy.saveAllDisplayProp(true);
 	}
 	
 	private function enterFrameHandler(event:Event):void 

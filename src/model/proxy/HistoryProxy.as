@@ -158,34 +158,35 @@ public class HistoryProxy extends Proxy
 	
 	/**
 	 * 保存所有显示对象的属性
+	 * @param	isNext	是否保存下一步
+	 * @return	历史数据
 	 */
-	public function saveAllDisplayProp(isNext:Boolean):void
+	public function saveAllDisplayProp(isNext:Boolean):HistoryVo
 	{
 		var hVo:HistoryVo = new HistoryVo();
 		hVo.type = HistoryVo.ALL_PROP;
-		var historyVoList:Array = [[], [], []];
+		hVo.historyVoList = [[], [], []];
 		var spt:Sprite;
 		var count:int = Layer.STAGE_BG_LAYER.numChildren;
 		for (var i:int = 0; i < count; i++) 
 		{
 			spt = Layer.STAGE_BG_LAYER.getChildAt(i) as Sprite;
-			historyVoList[0].push(this.createHistoryVo(spt, HistoryVo.PROP));
+			hVo.historyVoList[0].push(this.createHistoryVo(spt, HistoryVo.PROP));
 		}
 		count = Layer.TERRAIN_LAYER.numChildren;
 		for (i = 0; i < count; i++) 
 		{
 			spt = Layer.TERRAIN_LAYER.getChildAt(i) as Sprite;
-			historyVoList[1].push(this.createHistoryVo(spt, HistoryVo.PROP));
+			hVo.historyVoList[1].push(this.createHistoryVo(spt, HistoryVo.PROP));
 		}
 		count = Layer.STAGE_FG_LAYER.numChildren;
 		for (i = 0; i < count; i++) 
 		{
 			spt = Layer.STAGE_FG_LAYER.getChildAt(i) as Sprite;
-			historyVoList[2].push(this.createHistoryVo(spt, HistoryVo.PROP));
+			hVo.historyVoList[2].push(this.createHistoryVo(spt, HistoryVo.PROP));
 		}
-		if (!isNext) hVo.historyVoList = historyVoList;
-		else hVo.nextHistoryVoList = historyVoList;
-		this.addHistory(hVo);
+		if (!isNext) this.addHistory(hVo);
+		return hVo;
 	}
 
 }

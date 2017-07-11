@@ -49,7 +49,6 @@ public class HistoryVo
 	public var displayList:Array;
 	//保存所有物体的属性操作记录的列表
 	public var historyVoList:Array;
-	public var nextHistoryVoList:Array;
 	public function HistoryVo() 
 	{
 		

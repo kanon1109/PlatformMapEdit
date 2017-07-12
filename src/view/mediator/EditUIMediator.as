@@ -394,6 +394,7 @@ public class EditUIMediator extends Mediator
 			trace("nextHistory hVo", hVo.type);
 			var faceComponet:SurfaceComponet;
 			var spt:Sprite;
+			var nextVo:HistoryVo;
 			if (hVo.type == HistoryVo.DELETE)
 			{
 				if (hVo.target is SurfaceComponet)
@@ -426,12 +427,37 @@ public class EditUIMediator extends Mediator
 			}
 			else if (hVo.type == HistoryVo.PROP)
 			{
-				var nextVo:HistoryVo = hVo.nextVo;
+				nextVo = hVo.nextVo;
 				this.select(this.setHistoryVo(nextVo));
 			}
 			else if (hVo.type == HistoryVo.CLEAR)
 			{
 				this.removeAll();
+			}
+			else  if (hVo.type == HistoryVo.ALL_PROP)
+			{
+				nextVo = hVo.nextVo;
+				var historyVo:HistoryVo;
+				var count:int =	nextVo.historyVoList[0].length;
+				for (var i:int = 0; i < count; i++) 
+				{
+					historyVo = nextVo.historyVoList[0][i];
+					this.setHistoryVo(historyVo);
+				}
+		
+				count =	nextVo.historyVoList[1].length;
+				for (i = 0; i < count; i++) 
+				{
+					historyVo = nextVo.historyVoList[1][i];
+					this.setHistoryVo(historyVo);
+				}
+				
+				count =	nextVo.historyVoList[2].length;
+				for (i = 0; i < count; i++) 
+				{
+					historyVo = nextVo.historyVoList[2][i];
+					this.setHistoryVo(historyVo);
+				}
 			}
 		}
 	}

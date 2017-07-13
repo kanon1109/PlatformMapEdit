@@ -37,7 +37,7 @@ import view.ui.SurfaceComponet;
  * 增加	[body]
  * 增加	重置锚点功能
  * 增加 左右跳跃 向下depth搜索
- * 增加 保存图片
+ * 增加 [保存图片]
  * 增加 保存地图元素
  * @author Kanon
  */
@@ -130,6 +130,7 @@ public class EditUIMediator extends Mediator
 	 */
 	private function initFile():void 
 	{
+		trace("File.desktopDirectory", File.desktopDirectory);
 		this.saveFile = File.desktopDirectory;
 		this.saveFile.addEventListener(Event.SELECT, selectSaveFileHandler);
 		this.saveFile.url += ".json"; //确认后缀名
@@ -537,13 +538,27 @@ public class EditUIMediator extends Mediator
 	{
 		var arr:Array = [];
 		var count:int = Layer.TERRAIN_LAYER.numChildren;
+		var node:Object;
+		var img:Image;
+		node = {};
+		node.type = "stage";
+		var stageX:Number = Layer.STAGE_LAYER.x;
+		var stageY:Number = Layer.STAGE_LAYER.y;
+		var stageScale:Number = Layer.STAGE_LAYER.scaleX;
+		node.stageX = stageX;
+		node.stageY = stageY;
+		node.stageScale = stageScale;
+		arr.push(node);
+		Layer.STAGE_LAYER.scaleX = 1;
+		Layer.STAGE_LAYER.scaleY = 1;
+		this.editUI.resetStagePos();
 		for (var i:int = 0; i < count; ++i) 
 		{
+			node = { };
 			var sc:SurfaceComponet = Layer.TERRAIN_LAYER.getChildAt(i) as SurfaceComponet;
-			var node:Object = { };
-			node.name = sc.name;
 			var pos:Point = sc.parent.localToGlobal(new Point(sc.x, sc.y));
 			pos = this.editUI.stagePanel.globalToLocal(pos);
+			node.name = sc.name;
 			node.x = pos.x;
 			node.y = pos.y;
 			node.depth = sc.depth;
@@ -561,9 +576,49 @@ public class EditUIMediator extends Mediator
 			node.rightH = sc.rightH;
 			node.leftRestrict = sc.leftRestrict;
 			node.rightRestrict = sc.rightRestrict;
+			node.type = "face";
+			arr.push(node);
+		}
+		
+		count = Layer.STAGE_BG_LAYER.numChildren;
+		for (i = 0; i < count; ++i) 
+		{
+			node = { };
+			img = Layer.STAGE_BG_LAYER.getChildAt(i) as Image;
+			node.name = img.name;
+			node.resName = img.resName;
+			node.pathName = img.pathName;
+			node.rotation = img.rotation;
+			node.type = "bg";
+			node.depth = i;
+			node.x = img.x;
+			node.y = img.y;
+			node.scaleX = img.scaleX;
+			node.scaleY = img.scaleY;
+			arr.push(node);
+		}
+		
+		count = Layer.STAGE_FG_LAYER.numChildren;
+		for (i = 0; i < count; ++i) 
+		{
+			node = { };
+			img = Layer.STAGE_FG_LAYER.getChildAt(i) as Image;
+			node.name = img.name;
+			node.resName = img.resName;
+			node.pathName = img.pathName;
+			node.rotation = img.rotation;
+			node.type = "fg";
+			node.depth = i;
+			node.x = img.x;
+			node.y = img.y;
+			node.scaleX = img.scaleX;
+			node.scaleY = img.scaleY;
 			arr.push(node);
 		}
 		this.saveDataStr = JSON.stringify(arr);
+		Layer.STAGE_LAYER.x = stageX;
+		Layer.STAGE_LAYER.y = stageY;
+		this.editUI.scaleStage(stageScale)
 	}
 	
 	/**
@@ -579,30 +634,58 @@ public class EditUIMediator extends Mediator
 		for (var i:int = 0; i < num; i++)
 		{
 			var data:Object = arr[i];
-			var sc:SurfaceComponet = new SurfaceComponet();
-			sc.name = data.name;
-			sc.x = data.x - this.editUI.stageWidth / 2;
-			sc.y = data.y - this.editUI.stageHeight / 2;
-			sc.depth = data.depth;
-			sc.upLeftPoint.x = data.upLeftX;
-			sc.downLeftPoint.x = data.downLeftX;
-			sc.upRightPoint.x = data.upRightX;
-			sc.downRightPoint.x = data.downRightX;
-			sc.upLeftPoint.y = data.upY;
-			sc.upRightPoint.y = data.upY;
-			sc.downLeftPoint.y = data.downY;
-			sc.downRightPoint.y = data.downY;
-			sc.leftBlock = data.leftBlock;
-			sc.rightBlock = data.rightBlock;
-			sc.upBlock = data.upBlock;
-			sc.downBlock = data.downBlock;
-			sc.leftH = data.leftH;
-			sc.rightH = data.rightH;
-			sc.leftRestrict = data.leftRestrict;
-			sc.rightRestrict = data.rightRestrict;
-			sc.draw();
-			Layer.TERRAIN_LAYER.addChild(sc);
-			this.sendNotification(Message.COPY, sc);
+			if (data.type == "stage")
+			{
+				Layer.STAGE_LAYER.x = data.stageX;
+				Layer.STAGE_LAYER.y = data.stageY;
+				this.editUI.scaleStage(data.stageScale)
+				this.editUI.vSlider.value = data.stageScale * 50;
+			}
+			else if (data.type == "face")
+			{
+				var sc:SurfaceComponet = new SurfaceComponet();
+				sc.name = data.name;
+				sc.x = data.x - this.editUI.stageWidth / 2;
+				sc.y = data.y - this.editUI.stageHeight / 2;
+				sc.depth = data.depth;
+				sc.upLeftPoint.x = data.upLeftX;
+				sc.downLeftPoint.x = data.downLeftX;
+				sc.upRightPoint.x = data.upRightX;
+				sc.downRightPoint.x = data.downRightX;
+				sc.upLeftPoint.y = data.upY;
+				sc.upRightPoint.y = data.upY;
+				sc.downLeftPoint.y = data.downY;
+				sc.downRightPoint.y = data.downY;
+				sc.leftBlock = data.leftBlock;
+				sc.rightBlock = data.rightBlock;
+				sc.upBlock = data.upBlock;
+				sc.downBlock = data.downBlock;
+				sc.leftH = data.leftH;
+				sc.rightH = data.rightH;
+				sc.leftRestrict = data.leftRestrict;
+				sc.rightRestrict = data.rightRestrict;
+				sc.draw();
+				Layer.TERRAIN_LAYER.addChild(sc);
+				this.sendNotification(Message.COPY, sc);
+			}
+			else if (data.type == "bg" || 
+					 data.type == "fg")
+			{
+				var image:Image = new Image();
+				image.name = data.name;
+				image.resName = data.resName;
+				image.pathName = data.pathName;
+				image.load(data.pathName);
+				image.x = data.x;
+				image.y = data.y;
+				image.scaleX = data.scaleX;
+				image.scaleY = data.scaleY;
+				image.rotation = data.rotation;
+				image.addEventListener(ErrorEvent.ERROR, loadImageErrorHandler);
+				image.addEventListener(MouseEvent.MOUSE_DOWN, sptOnMouseDownHandler);
+				if (data.type == "bg") Layer.STAGE_BG_LAYER.addChildAt(image, data.depth);
+				else if (data.type == "fg") Layer.STAGE_FG_LAYER.addChildAt(image, data.depth);
+			}
 		}
 	}
 		

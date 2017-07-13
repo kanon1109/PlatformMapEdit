@@ -245,6 +245,17 @@ public class EditUI extends Sprite
 	}
 	
 	/**
+	 * 重置舞台位置
+	 */
+	public function resetStagePos():void
+	{
+		Layer.STAGE_LAYER.x = this.center.x;
+		Layer.STAGE_LAYER.y = this.center.y;
+		Layer.RUN_LAYER.x = this.center.x;
+		Layer.RUN_LAYER.y = this.center.y;
+	}
+	
+	/**
 	 * 初始化遮罩
 	 */
 	private function initMask():void
@@ -388,9 +399,9 @@ public class EditUI extends Sprite
 		this.checkBox.visible = !flag;
 		
 		this.faceComponetsPanel.visible = !flag;
-		Layer.STAGE_BG_LAYER.visible = !flag;
+		//Layer.STAGE_BG_LAYER.visible = !flag;
 		Layer.TERRAIN_LAYER.visible = !flag;
-		Layer.STAGE_FG_LAYER.visible = !flag;
+		//Layer.STAGE_FG_LAYER.visible = !flag;
 	}
 }
 }

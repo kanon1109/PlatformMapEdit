@@ -39,6 +39,8 @@ import view.ui.SurfaceComponet;
  * 增加 左右跳跃 向下depth搜索
  * 增加 [保存图片]
  * 增加 保存地图元素
+ * bug 左边连续三个倾斜的face向上移动掉下
+ * bug 左边边界向左下移动，下落时掉下
  * @author Kanon
  */
 public class EditUIMediator extends Mediator 

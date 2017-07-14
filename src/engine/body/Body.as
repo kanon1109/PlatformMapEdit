@@ -232,16 +232,24 @@ public class Body
 									//同一层的face
 									height = face.downPosY - this.prevFace.downPosY;
 									curPosY = this.prevFaceY + height;
-									trace("this.prevFace ", this.prevFace.name);
-									trace("height", height);
-									trace("curPosY", curPosY);
-									trace("face", face.name);
-									var leftX:Number = face.getLeftRange(curPosY);
-									var rightX:Number = face.getRightRange(curPosY);
-									trace("leftX - thick", leftX - thick);
-									trace("rightX + thick", rightX + thick);
-									trace("this.x", this.x);
-									trace("this.inVerticalRange(posY)", face.inVerticalRange(posY));
+									if (face.name == "instance313")
+									{
+										trace("this.prevFace ", this.prevFace.name);
+										trace("height", height);
+										trace("curPosY", curPosY);
+										trace("face", face.name);
+										var leftX:Number = face.getLeftRange(curPosY);
+										var rightX:Number = face.getRightRange(curPosY);
+										trace("leftX - thick", leftX - thick);
+										trace("rightX + thick", rightX + thick);
+										trace("this.x", this.x);
+										trace("this.x >= leftX - this.thick && this.x <= rightX + this.thick", this.x >= leftX - this.thick && this.x <= rightX + this.thick)
+										trace("this.inVerticalRange(posY)", face.inVerticalRange(posY));
+									
+										trace("face.y + face.upLeftPoint.y", face.y + face.upLeftPoint.y);
+										trace("face.y + face.downLeftPoint.y", face.y + face.downLeftPoint.y);
+
+									}
 									if (face.inFaceRage(this.x, curPosY, this.thick))
 									{
 										posY = curPosY;

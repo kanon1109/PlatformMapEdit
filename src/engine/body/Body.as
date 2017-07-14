@@ -219,6 +219,7 @@ public class Body
 						}
 						else
 						{
+							trace("----------------this.positionVerticalState------------------", this.positionVerticalState);
 							//左右跳跃
 							count = FaceMangager.faceAry.length;
 							posY = this.prevFaceY;
@@ -231,10 +232,21 @@ public class Body
 									//同一层的face
 									height = face.downPosY - this.prevFace.downPosY;
 									curPosY = this.prevFaceY + height;
+									trace("this.prevFace ", this.prevFace.name);
+									trace("height", height);
+									trace("curPosY", curPosY);
+									trace("face", face.name);
+									var leftX:Number = face.getLeftRange(curPosY);
+									var rightX:Number = face.getRightRange(curPosY);
+									trace("leftX - thick", leftX - thick);
+									trace("rightX + thick", rightX + thick);
+									trace("this.x", this.x);
+									trace("this.inVerticalRange(posY)", face.inVerticalRange(posY));
 									if (face.inFaceRage(this.x, curPosY, this.thick))
 									{
 										posY = curPosY;
 										nextFace = face;
+										trace("posY nextFace ", posY, nextFace.name)
 									}
 								}
 								if (nextFace && this.y >= posY && this.prevY < posY)

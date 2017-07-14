@@ -556,8 +556,7 @@ public class EditUIMediator extends Mediator
 		{
 			node = { };
 			var sc:SurfaceComponet = Layer.TERRAIN_LAYER.getChildAt(i) as SurfaceComponet;
-			var pos:Point = sc.parent.localToGlobal(new Point(sc.x, sc.y));
-			pos = this.editUI.stagePanel.globalToLocal(pos);
+			var pos:Point = new Point(sc.x + this.editUI.stageWidth / 2, sc.y + this.editUI.stageHeight / 2);
 			node.name = sc.name;
 			node.x = pos.x;
 			node.y = pos.y;

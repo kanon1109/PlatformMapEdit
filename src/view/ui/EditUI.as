@@ -313,10 +313,8 @@ public class EditUI extends Sprite
 		this.allBox.visible = spt != null;
 		if (spt)
 		{
-			var pos:Point = spt.parent.localToGlobal(new Point(spt.x, spt.y));
-			pos = this.stagePanel.globalToLocal(pos);
-			this.posXValueTxt.text = pos.x.toString();
-			this.posYValueTxt.text = pos.y.toString();
+			this.posXValueTxt.text = String(spt.x + this.stageWidth / 2);
+			this.posYValueTxt.text = String(spt.y + this.stageHeight / 2);
 			
 			if (spt is SurfaceComponet)
 			{

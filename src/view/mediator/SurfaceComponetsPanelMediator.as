@@ -151,14 +151,14 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		{
 			this.faceComponet.leftRestrict = this.editUI.leftRestrict.selected;
 			this.faceComponet.rightRestrict = this.editUI.rightRestrict.selected;
-			if (this.faceComponet.leftH <= 0)
-				this.faceComponet.leftBlock = this.editUI.leftBlock.selected;
-			else
-				this.editUI.leftBlock.selected = false;
-			if (this.faceComponet.rightH <= 0)
-				this.faceComponet.rightBlock = this.editUI.rightBlock.selected;
-			else
-				this.editUI.rightBlock.selected = false;
+			this.faceComponet.leftBlock = this.editUI.leftBlock.selected;
+			this.faceComponet.rightBlock = this.editUI.rightBlock.selected;
+			if (this.faceComponet.leftBlock) this.faceComponet.leftH = 0;
+			if (this.faceComponet.rightBlock) this.faceComponet.rightH = 0;
+			
+			this.editUI.leftHeightTxt.text = this.faceComponet.leftH.toString();
+			this.editUI.rightHeightTxt.text = this.faceComponet.rightH.toString();
+			
 			this.faceComponet.upBlock = this.editUI.upBlock.selected;
 			this.faceComponet.downBlock = this.editUI.downBlock.selected;
 			this.faceComponet.draw();

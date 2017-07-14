@@ -202,7 +202,7 @@ public class SurfaceComponet extends Sprite
 	{
 		this.graphics.clear();
 		this.graphics.lineStyle(1, 0x000000);
-		this.graphics.beginFill(0x388AE4, .65);
+		this.graphics.beginFill(0x388AE4, .85);
 		this.graphics.moveTo(this.upLeftPoint.x, this.upLeftPoint.y);
 		this.graphics.lineTo(this.upRightPoint.x, this.upRightPoint.y);
 		this.graphics.lineTo(this.downRightPoint.x, this.downRightPoint.y);

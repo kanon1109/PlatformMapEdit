@@ -232,7 +232,7 @@ public class Surface
 	public function inRight(posX:Number, posY:Number, thick:Number = 0):Boolean
 	{
 		var rightX:Number = this.getRightRange(posY);
-		if (this.leftBlock) return posX >= rightX - thick;
+		if (this.rightBlock) return posX >= rightX - thick;
 		else return posX >= rightX + thick;
 	}
 

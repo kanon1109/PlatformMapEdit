@@ -89,8 +89,11 @@ public class RunModeMediator extends Mediator
 					
 		face = FaceMangager.getFaceByName("instance204");
 		this.body.face = face
-		this.body.x = face.x + face.width / 2;
-		this.body.y = face.y + face.height / 2;
+		if (this.body.face)
+		{
+			this.body.x = face.x + face.width / 2;
+			this.body.y = face.y + face.height / 2;
+		}
 	}
 	
 	/**

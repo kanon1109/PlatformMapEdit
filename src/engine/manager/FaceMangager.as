@@ -236,6 +236,25 @@ public class FaceMangager
 	}
 	
 	/**
+	 * 根据名字获取face
+	 * @param	name	face的名字
+	 * @return	face
+	 */
+	public static function getFaceByName(name:String):Surface
+	{
+		var count:int = faceAry.length;
+		for (var i:int = 0; i < count; i++) 
+		{
+			var face:Surface = faceAry[i];
+			if (face.name == name)
+			{
+				return face;
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * 创建面的地图
 	 * @param	data		数据
 	 */

@@ -63,11 +63,12 @@ public class RunModeMediator extends Mediator
 	 */
 	private function createSurfaceMap():void
 	{
+		var face:Surface;
 		var count:int = Layer.TERRAIN_LAYER.numChildren;
 		for (var i:int = 0; i < count; ++i) 
 		{
 			var sc:SurfaceComponet = Layer.TERRAIN_LAYER.getChildAt(i) as SurfaceComponet;
-			var face:Surface = new Surface(sc.upLeftPoint.x, sc.downLeftPoint.x,
+			face = new Surface(sc.upLeftPoint.x, sc.downLeftPoint.x,
 										   sc.upRightPoint.x, sc.downRightPoint.x, 
 										   sc.upLeftPoint.y, sc.downRightPoint.y);
 			face.name = sc.name;
@@ -83,12 +84,13 @@ public class RunModeMediator extends Mediator
 			face.leftRestrict = sc.leftRestrict;
 			face.rightRestrict = sc.rightRestrict;
 			FaceMangager.add(face);
-			
-			this.body.face = face;
-			this.body.x = face.x + face.width / 2;
-			this.body.y = face.y + face.height / 2;
-			trace( face.width,  face.height);
 		}
+		
+					
+		face = FaceMangager.getFaceByName("instance204");
+		this.body.face = face
+		this.body.x = face.x + face.width / 2;
+		this.body.y = face.y + face.height / 2;
 	}
 	
 	/**

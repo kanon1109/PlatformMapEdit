@@ -165,12 +165,15 @@ public class Body
 								{
 									posY = face.upPosY;
 									nextFace = face;
+									if (this.x < face.x + face.upLeftPoint.x && face.leftBlock) 
+										this.x = face.x + face.upLeftPoint.x;
+									if (this.x > face.x + face.upRightPoint.x && face.rightBlock) 
+										this.x = face.x + face.upRightPoint.x;
 								}
 							}
 						}
 						if (nextFace && this.y >= posY && this.prevY < posY)
 						{
-							trace(nextFace.name, posY);
 							this.touchDown(nextFace, posY);
 							return;
 						}

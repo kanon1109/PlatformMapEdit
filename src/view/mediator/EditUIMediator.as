@@ -39,8 +39,10 @@ import view.ui.SurfaceComponet;
  * 增加 左右跳跃 向下depth搜索
  * 增加 [保存图片]
  * 增加 保存地图元素
- * bug [左边连续三个倾斜的face向上移动掉下]
- * bug [左边边界向左下移动，下落时掉下]
+ * bug  [左边连续三个倾斜的face向上移动掉下]
+ * bug  [左边边界向左下移动，下落时掉下]
+ * bug  [直接按快捷键保存崩溃]
+ * bug  [保存图片的绝对路径会有路径问题]
  * @author Kanon
  */
 public class EditUIMediator extends Mediator 
@@ -280,7 +282,6 @@ public class EditUIMediator extends Mediator
 		var hVo:HistoryVo = this.historyProxy.prevHistory();
 		if (hVo)
 		{
-			trace("hVo.type", hVo.type);
 			var faceComponet:SurfaceComponet;
 			var image:Image;
 			var spt:Sprite;
@@ -394,7 +395,6 @@ public class EditUIMediator extends Mediator
 		var hVo:HistoryVo = this.historyProxy.nextHistory();
 		if (hVo)
 		{
-			trace("nextHistory hVo", hVo.type);
 			var faceComponet:SurfaceComponet;
 			var spt:Sprite;
 			var nextVo:HistoryVo;
@@ -551,9 +551,6 @@ public class EditUIMediator extends Mediator
 		node.stageY = stageY;
 		node.stageScale = stageScale;
 		arr.push(node);
-		Layer.STAGE_LAYER.scaleX = 1;
-		Layer.STAGE_LAYER.scaleY = 1;
-		this.editUI.resetStagePos();
 		for (var i:int = 0; i < count; ++i) 
 		{
 			node = { };
@@ -617,9 +614,6 @@ public class EditUIMediator extends Mediator
 			arr.push(node);
 		}
 		this.saveDataStr = JSON.stringify(arr);
-		Layer.STAGE_LAYER.x = stageX;
-		Layer.STAGE_LAYER.y = stageY;
-		this.editUI.scaleStage(stageScale)
 	}
 	
 	/**
@@ -628,7 +622,6 @@ public class EditUIMediator extends Mediator
 	 */
 	public function parsing(dataStr:String):void
 	{
-		trace("dataStr", dataStr);
 		var arr:Array = JSON.parse(dataStr) as Array;
 		var num:int = arr.length;
 		//arr.sortOn("depth", Array.NUMERIC);
@@ -673,17 +666,17 @@ public class EditUIMediator extends Mediator
 					 data.type == "fg")
 			{
 				var image:Image = new Image();
+				image.addEventListener(ErrorEvent.ERROR, loadImageErrorHandler);
+				image.addEventListener(MouseEvent.MOUSE_DOWN, sptOnMouseDownHandler);
 				image.name = data.name;
 				image.resName = data.resName;
 				image.pathName = data.pathName;
-				image.load(data.pathName);
 				image.x = data.x;
 				image.y = data.y;
 				image.scaleX = data.scaleX;
 				image.scaleY = data.scaleY;
 				image.rotation = data.rotation;
-				image.addEventListener(ErrorEvent.ERROR, loadImageErrorHandler);
-				image.addEventListener(MouseEvent.MOUSE_DOWN, sptOnMouseDownHandler);
+				image.load("res/" + data.resName);
 				if (data.type == "bg") Layer.STAGE_BG_LAYER.addChildAt(image, data.depth);
 				else if (data.type == "fg") Layer.STAGE_FG_LAYER.addChildAt(image, data.depth);
 			}
@@ -810,7 +803,12 @@ public class EditUIMediator extends Mediator
 		else if (event.ctrlKey && event.keyCode == Keyboard.S)
 		{
 			this.save();
-			this.saveFile.save(this.saveDataStr);
+			var stream:FileStream = new FileStream();
+			stream.open(this.saveFile, FileMode.WRITE);
+			stream.writeUTFBytes(this.saveDataStr);
+			stream.close();
+			Alert.show("", "保存成功");
+			//this.saveFile.save(this.saveDataStr);
 		}
 		else if (event.ctrlKey && event.keyCode == Keyboard.Z)
 		{
@@ -953,6 +951,7 @@ public class EditUIMediator extends Mediator
 		fileStream.open(this.dataFile, FileMode.READ);
 		var dataStr:String = fileStream.readUTFBytes(fileStream.bytesAvailable);
 		this.parsing(dataStr);
+		this.saveFile.url = this.dataFile.url;
 	}
 		
 	private function loadBtnClickHandler(event:MouseEvent):void 
@@ -967,6 +966,7 @@ public class EditUIMediator extends Mediator
 		stream.open(file, FileMode.WRITE);
 		stream.writeUTFBytes(this.saveDataStr);
 		stream.close();
+		Alert.show("", "保存成功");
 	}
 	
 	private function runBtnClickHandler(event:MouseEvent):void 

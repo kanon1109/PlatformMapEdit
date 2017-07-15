@@ -141,7 +141,7 @@ public class RunModeMediator extends Mediator
 			this.body.moveV(2);
 		
 		if (event.keyCode == Keyboard.SPACE)
-			this.body.jump(12);
+			this.body.jump(10);
 	}
 }
 }

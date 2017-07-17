@@ -218,7 +218,7 @@ public class Surface
 	public function inLeft(posX:Number, posY:Number, thick:Number = 0):Boolean
 	{
 		var leftX:Number = this.getLeftRange(posY);
-		if (this.leftBlock) return posX <= leftX + thick;
+		if (this.leftBlock || this._leftH > 0) return posX <= leftX + thick;
 		else return posX <= leftX - thick;
 	}
 	
@@ -232,7 +232,7 @@ public class Surface
 	public function inRight(posX:Number, posY:Number, thick:Number = 0):Boolean
 	{
 		var rightX:Number = this.getRightRange(posY);
-		if (this.rightBlock) return posX >= rightX - thick;
+		if (this.rightBlock || this._rightH > 0) return posX >= rightX - thick;
 		else return posX >= rightX + thick;
 	}
 

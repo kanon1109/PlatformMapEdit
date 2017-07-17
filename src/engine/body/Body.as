@@ -303,22 +303,20 @@ public class Body
 	{
 		if (!this.isJump) return;
 		var face:Surface = FaceMangager.seachSameDepthCurRangeFace(this);
-		tempFace = face;
-		if (tempFace) trace("face", tempFace.name);
+		//tempFace = face;
+		//if (tempFace) trace("face", tempFace.name);
 		if (face)
 		{
 			var height:Number = face.downPosY - this.prevFace.downPosY;
 			var posY:Number = this.prevFaceY + height;
 			if (face.inLeft(this.x, posY, this.thick) && this.jumpVx < 0)
 			{
-				trace("left face ", face.name,  face.leftBlock);
-				trace("this.y ", this.y,  this.prevFaceY - face.leftH);
 				if (this.y >= this.prevFaceY - face.leftH || face.leftBlock)
 					this.blockSpring();
 			}
 			else if (face.inRight(this.x, posY, this.thick) && this.jumpVx > 0)
 			{
-				trace("right face ", face.name,  face.leftBlock);
+				trace("face.name", face.name);
 				if (this.y >= this.prevFaceY - face.rightH || face.rightBlock)
 					this.blockSpring();
 			}

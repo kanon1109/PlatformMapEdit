@@ -107,7 +107,7 @@ public class RunModeMediator extends Mediator
 		this.body.thick = width / 2;
 		this.body.g = 0.7;
 		var rect:Sprite = new Sprite();
-		rect.graphics.beginFill(0xFF0080, .5);
+		rect.graphics.beginFill(0xFF0080, .8);
 		rect.graphics.drawRect(-width / 2, -height, width, height);
 		rect.graphics.endFill();
 		Layer.RUN_LAYER.addChild(rect);

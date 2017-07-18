@@ -329,7 +329,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 	
 	private function ptMouseUpHandler(event:MouseEvent):void 
 	{
-		if (this.faceComponet) this.autoAbsorbFacePoint(this.faceComponet);
+		if (this.faceComponet && this.isOnCtrlKey) this.autoAbsorbFacePoint(this.faceComponet);
 		this.curPtSpt = null;
 		Layer.STAGE.removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		Layer.STAGE.removeEventListener(MouseEvent.MOUSE_UP, ptMouseUpHandler);
@@ -422,7 +422,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 	private function stageMouseUpHandler(event:MouseEvent):void 
 	{
 		this.faceComponet.stopDrag();
-		if (this.faceComponet) this.autoAbsorbFacePoint(this.faceComponet);
+		if (this.faceComponet && this.isOnCtrlKey) this.autoAbsorbFacePoint(this.faceComponet);
 		Layer.STAGE.removeEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler);
 		Layer.STAGE.removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		if (!Layer.TERRAIN_LAYER.contains(this.faceComponet))

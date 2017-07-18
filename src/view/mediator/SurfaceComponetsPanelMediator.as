@@ -105,7 +105,6 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		this.editUI.resetBtn.addEventListener(MouseEvent.CLICK, resetBtnClickHandler);
 		this.editUI.anchorResetBtn.addEventListener(MouseEvent.CLICK, anchorResetBtnClickHandler);
 		
-
 		this.faceComponetsPanel.rect.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		this.faceComponetsPanel.quad1.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		this.faceComponetsPanel.quad2.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
@@ -268,7 +267,6 @@ public class SurfaceComponetsPanelMediator extends Mediator
 				this.faceComponet.downRightPoint.x = newDownRightX;
 				this.faceComponet.upRightPoint.x = newUpRightX;
 			}
-			
 			
 			if (this.faceComponet.leftH > 0)
 				this.editUI.leftBlock.selected = false;
@@ -462,17 +460,13 @@ public class SurfaceComponetsPanelMediator extends Mediator
 			var curFace:SurfaceComponet = Layer.TERRAIN_LAYER.getChildAt(i) as SurfaceComponet;
 			if (curFace == face) continue;
 			var curPotArr:Array = [];
-			pot = new Point(curFace.upLeftPoint.x, curFace.upLeftPoint.y);
-			pot = curFace.localToGlobal(pot);
+			pot = new Point(curFace.upLeftPoint.x + curFace.x, curFace.upLeftPoint.y + curFace.y);
 			curPotArr.push(pot);
-			pot = new Point(curFace.upRightPoint.x, curFace.upRightPoint.y);
-			pot = curFace.localToGlobal(pot);
+			pot = new Point(curFace.upRightPoint.x + curFace.x, curFace.upRightPoint.y + curFace.y);
 			curPotArr.push(pot);
-			pot = new Point(curFace.downLeftPoint.x, curFace.downLeftPoint.y);
-			pot = curFace.localToGlobal(pot);
+			pot = new Point(curFace.downLeftPoint.x + curFace.x, curFace.downLeftPoint.y + curFace.y);
 			curPotArr.push(pot);
-			pot = new Point(curFace.downRightPoint.x, curFace.downRightPoint.y);
-			pot = curFace.localToGlobal(pot);
+			pot = new Point(curFace.downRightPoint.x + curFace.x, curFace.downRightPoint.y + curFace.y);
 			curPotArr.push(pot);
 			var length:int = curPotArr.length;
 			var tempFacePot:Point;
@@ -480,8 +474,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 			for (var j:int = 0; j < length; j++) 
 			{
 				pot = curPotArr[j];
-				var facePot:Point = new Point(face.upLeftPoint.x, face.upLeftPoint.y);
-				facePot = face.localToGlobal(facePot);
+				var facePot:Point = new Point(face.upLeftPoint.x + face.x, face.upLeftPoint.y + face.y);
 				if (Point.distance(facePot, pot) < dis)
 				{
 					dis = Point.distance(facePot, pot);
@@ -489,8 +482,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 					tempCurFacePot = pot;
 				}
 					
-				facePot =  new Point(face.upRightPoint.x, face.upRightPoint.y);
-				facePot = face.localToGlobal(facePot);
+				facePot =  new Point(face.upRightPoint.x + face.x, face.upRightPoint.y + face.y);
 				if (Point.distance(facePot, pot) < dis)
 				{
 					dis = Point.distance(facePot, pot);
@@ -498,8 +490,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 					tempCurFacePot = pot;
 				}
 					
-				facePot =  new Point(face.downLeftPoint.x, face.downLeftPoint.y);
-				facePot = face.localToGlobal(facePot);
+				facePot =  new Point(face.downLeftPoint.x + face.x, face.downLeftPoint.y + face.y);
 				if (Point.distance(facePot, pot) < dis)
 				{
 					dis = Point.distance(facePot, pot);
@@ -507,8 +498,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 					tempCurFacePot = pot;
 				}
 					
-				facePot =  new Point(face.downRightPoint.x, face.downRightPoint.y);
-				facePot = face.localToGlobal(facePot);
+				facePot =  new Point(face.downRightPoint.x + face.x, face.downRightPoint.y + face.y);
 				if (Point.distance(facePot, pot) < dis)
 				{
 					dis = Point.distance(facePot, pot);

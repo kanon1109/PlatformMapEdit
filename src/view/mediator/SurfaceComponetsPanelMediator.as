@@ -313,6 +313,7 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		this.faceComponet.upRightPoint.addEventListener(MouseEvent.MOUSE_DOWN, ptMouseDownHandler);
 		this.faceComponet.downRightPoint.addEventListener(MouseEvent.MOUSE_DOWN, ptMouseDownHandler);
 		Layer.STAGE.addEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler);
+		//Layer.STAGE.addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 	}
 		
 	private function ptMouseDownHandler(event:MouseEvent):void 
@@ -328,6 +329,8 @@ public class SurfaceComponetsPanelMediator extends Mediator
 	
 	private function ptMouseUpHandler(event:MouseEvent):void 
 	{
+		if (this.faceComponet) this.autoAbsorbFacePoint(this.faceComponet);
+		this.curPtSpt = null;
 		Layer.STAGE.removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		Layer.STAGE.removeEventListener(MouseEvent.MOUSE_UP, ptMouseUpHandler);
 		if (this.curHistoryVo)
@@ -419,7 +422,9 @@ public class SurfaceComponetsPanelMediator extends Mediator
 	private function stageMouseUpHandler(event:MouseEvent):void 
 	{
 		this.faceComponet.stopDrag();
+		if (this.faceComponet) this.autoAbsorbFacePoint(this.faceComponet);
 		Layer.STAGE.removeEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler);
+		Layer.STAGE.removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		if (!Layer.TERRAIN_LAYER.contains(this.faceComponet))
 		{
 			var pos:Point = Layer.TERRAIN_LAYER.globalToLocal(new Point(event.stageX, event.stageY));
@@ -438,7 +443,88 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		this.historyProxy.saveHistory(this.faceComponet, HistoryVo.PROP);
 		this.faceComponet.startDrag();
 		Layer.STAGE.addEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler);
+		//Layer.STAGE.addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		this.sendNotification(Message.FACE_MOUSE_DOWN, this.faceComponet);
+	}
+	
+	/**
+	 * 自动吸附点
+	 * @param	face	面
+	 */
+	private function autoAbsorbFacePoint(face:SurfaceComponet):void
+	{
+		if (!face) return;
+		var count:int = Layer.TERRAIN_LAYER.numChildren;
+		var dis:Number = Infinity;
+		var pot:Point;
+		for (var i:int = 0; i < count; ++i) 
+		{
+			var curFace:SurfaceComponet = Layer.TERRAIN_LAYER.getChildAt(i) as SurfaceComponet;
+			if (curFace == face) continue;
+			var curPotArr:Array = [];
+			pot = new Point(curFace.upLeftPoint.x, curFace.upLeftPoint.y);
+			pot = curFace.localToGlobal(pot);
+			curPotArr.push(pot);
+			pot = new Point(curFace.upRightPoint.x, curFace.upRightPoint.y);
+			pot = curFace.localToGlobal(pot);
+			curPotArr.push(pot);
+			pot = new Point(curFace.downLeftPoint.x, curFace.downLeftPoint.y);
+			pot = curFace.localToGlobal(pot);
+			curPotArr.push(pot);
+			pot = new Point(curFace.downRightPoint.x, curFace.downRightPoint.y);
+			pot = curFace.localToGlobal(pot);
+			curPotArr.push(pot);
+			var length:int = curPotArr.length;
+			var tempFacePot:Point;
+			var tempCurFacePot:Point;
+			for (var j:int = 0; j < length; j++) 
+			{
+				pot = curPotArr[j];
+				var facePot:Point = new Point(face.upLeftPoint.x, face.upLeftPoint.y);
+				facePot = face.localToGlobal(facePot);
+				if (Point.distance(facePot, pot) < dis)
+				{
+					dis = Point.distance(facePot, pot);
+					tempFacePot = facePot;
+					tempCurFacePot = pot;
+				}
+					
+				facePot =  new Point(face.upRightPoint.x, face.upRightPoint.y);
+				facePot = face.localToGlobal(facePot);
+				if (Point.distance(facePot, pot) < dis)
+				{
+					dis = Point.distance(facePot, pot);
+					tempFacePot = facePot;
+					tempCurFacePot = pot;
+				}
+					
+				facePot =  new Point(face.downLeftPoint.x, face.downLeftPoint.y);
+				facePot = face.localToGlobal(facePot);
+				if (Point.distance(facePot, pot) < dis)
+				{
+					dis = Point.distance(facePot, pot);
+					tempFacePot = facePot;
+					tempCurFacePot = pot;
+				}
+					
+				facePot =  new Point(face.downRightPoint.x, face.downRightPoint.y);
+				facePot = face.localToGlobal(facePot);
+				if (Point.distance(facePot, pot) < dis)
+				{
+					dis = Point.distance(facePot, pot);
+					tempFacePot = facePot;
+					tempCurFacePot = pot;
+				}
+			}
+			
+			if (dis <= 20)
+			{
+				var subPot:Point = tempFacePot.subtract(tempCurFacePot);
+				face.x -= subPot.x;
+				face.y -= subPot.y;
+				break;
+			}
+		}
 	}
 }
 }

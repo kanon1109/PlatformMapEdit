@@ -23,6 +23,7 @@ import model.vo.HistoryVo;
 import org.puremvc.as3.interfaces.INotification;
 import org.puremvc.as3.patterns.mediator.Mediator;
 import utils.AdvanceColorUtil;
+import utils.Cookie;
 import view.ui.EditUI;
 import view.ui.SurfaceComponet;
 /**
@@ -40,7 +41,7 @@ import view.ui.SurfaceComponet;
  * 增加 更新人物
  * 增加 [自动吸附功能]
  * 增加 左右跳跃 向下depth搜索
- * 增加 保存地图元素
+ * 增加 [保存地图元素]
  * bug  [左边连续三个倾斜的face向上移动掉下]
  * bug  [左边边界向左下移动，下落时掉下]
  * bug  [直接按快捷键保存崩溃]
@@ -136,7 +137,6 @@ public class EditUIMediator extends Mediator
 	 */
 	private function initFile():void 
 	{
-		trace("File.desktopDirectory", File.desktopDirectory);
 		this.saveFile = File.desktopDirectory;
 		this.saveFile.addEventListener(Event.SELECT, selectSaveFileHandler);
 		this.saveFile.url += ".json"; //确认后缀名
@@ -145,9 +145,11 @@ public class EditUIMediator extends Mediator
 		this.imageFile = new File();
 		this.imageFile.addEventListener(Event.SELECT, selectImageFileHandler);
 		
+		var filePath:String = Cookie.read("filePath");
 		this.dataFilter = new FileFilter("data", "*.json");
-		this.dataFile = new File();
+		this.dataFile = new File(filePath);
 		this.dataFile.addEventListener(Event.SELECT, selectDataFileHandler);
+		if (filePath) this.openFile();
 	}
 	
 	/**
@@ -948,6 +950,16 @@ public class EditUIMediator extends Mediator
 	}
 	
 	private function dataFileLoadComplete(event:Event):void
+	{
+		trace("this.dataFile", this.dataFile.nativePath);
+		Cookie.save("filePath", this.dataFile.nativePath);
+		this.openFile();
+	}
+	
+	/**
+	 * 打开文件
+	 */
+	private function openFile():void
 	{
 		var fileStream:FileStream = new FileStream();
 		fileStream.open(this.dataFile, FileMode.READ);

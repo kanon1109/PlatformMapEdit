@@ -104,6 +104,8 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		this.editUI.heightTxt.addEventListener(FocusEvent.FOCUS_OUT, txtFocusOutHandler);
 		this.editUI.resetBtn.addEventListener(MouseEvent.CLICK, resetBtnClickHandler);
 		this.editUI.anchorResetBtn.addEventListener(MouseEvent.CLICK, anchorResetBtnClickHandler);
+		this.editUI.flipXBtn.addEventListener(MouseEvent.CLICK, flipXBtnClickHandler);
+		this.editUI.flipYBtn.addEventListener(MouseEvent.CLICK, flipYBtnClickHandler);
 		
 		this.faceComponetsPanel.rect.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		this.faceComponetsPanel.quad1.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
@@ -112,6 +114,22 @@ public class SurfaceComponetsPanelMediator extends Mediator
 		this.faceComponetsPanel.trapezoid2.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownHandler);
 		Layer.STAGE.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDownHandler);
 		Layer.STAGE.addEventListener(KeyboardEvent.KEY_UP, onKeyUpHandler);
+	}
+	
+	//纵向翻转整个surface属性
+	private function flipYBtnClickHandler(event:MouseEvent):void 
+	{
+		if (this.faceComponet)
+			this.faceComponet.flipY();
+		this.editUI.selectSpt(this.faceComponet);
+	}
+	
+	//横向翻转整个surface属性
+	private function flipXBtnClickHandler(event:MouseEvent):void 
+	{
+		if (this.faceComponet)
+			this.faceComponet.flipX();
+		this.editUI.selectSpt(this.faceComponet);
 	}
 	
 	private function anchorResetBtnClickHandler(event:MouseEvent):void 

@@ -40,10 +40,21 @@ public class Alert
 	
 	static private function closeHandler(event:Event):void 
 	{
-		contentTxt.parent.removeChild(contentTxt);
+		close();
+	}
+	
+	/**
+	 * 关闭
+	 */
+	public static function close():void
+	{
+		if(contentTxt) contentTxt.parent.removeChild(contentTxt);
 		contentTxt = null;
-		alert.removeEventListener(Event.CLOSE, closeHandler);
-		alert.parent.removeChild(alert);
+		if (alert)
+		{
+			alert.removeEventListener(Event.CLOSE, closeHandler);
+			alert.parent.removeChild(alert);
+		}
 		alert = null;
 	}
 	

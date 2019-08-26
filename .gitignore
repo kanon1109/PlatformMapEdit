@@ -1,3 +1,5 @@
 # Build and Release Folders
 /obj/PlatformMapEditConfig.xml
 /obj/PlatformMapEditConfig.old
+/obj/*
+/air/*

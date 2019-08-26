@@ -9,6 +9,7 @@ import com.bit101.components.PushButton;
 import com.bit101.components.Style;
 import com.bit101.components.VBox;
 import com.bit101.components.VUISlider;
+import componets.Alert;
 import flash.display.Shape;
 import flash.display.Sprite;
 import flash.events.Event;
@@ -56,6 +57,8 @@ public class EditUI extends Sprite
 	public var resetBtn:PushButton;
 	public var anchorResetBtn:PushButton;
 	public var allAnchorResetBtn:PushButton;
+	public var flipXBtn:PushButton;
+	public var flipYBtn:PushButton;
 	//是否是运行模式
 	public var isRunMode:Boolean;
 	public var widthTxt:InputText;
@@ -213,11 +216,9 @@ public class EditUI extends Sprite
 		this.nameTxt.setSize(70, 20);
 		this.nameTxt.restrict = "0-9\a-z\A-Z";
 		
-		this.resetBtn = new PushButton(this.faceAttributeLayout, 0, 0, "reset");
-		this.resetBtn.setSize(40, 20);
+
 		
-		this.anchorResetBtn = new PushButton(this.faceAttributeLayout, 0, 0, "reset anchor");
-		this.anchorResetBtn.setSize(70, 20);
+
 		
 		this.faceChickBoxAttributeLayout = new HBox(this.checkBox);
 		this.leftRestrict = new CheckBox(this.faceChickBoxAttributeLayout, 0, 5, "left restrict:");
@@ -238,7 +239,17 @@ public class EditUI extends Sprite
 		this.heightTxt = new InputText(this.faceChickBoxAttributeLayout);
 		this.heightTxt.setSize(30, 20);
 		this.heightTxt.restrict = "0-9.";
+		
+		this.resetBtn = new PushButton(this.faceChickBoxAttributeLayout, 0, 0, "reset");
+		this.resetBtn.setSize(40, 20);
+		
+		this.anchorResetBtn = new PushButton(this.faceChickBoxAttributeLayout, 0, 0, "reset anchor");
+		this.anchorResetBtn.setSize(90, 20);
 
+		this.flipXBtn = new PushButton(this.faceChickBoxAttributeLayout, 0, 0, "flipX");
+		this.flipYBtn = new PushButton(this.faceChickBoxAttributeLayout, 0, 0, "flipY");
+		this.flipXBtn.setSize(40, 20);
+		this.flipYBtn.setSize(40, 20);
 		
 		var vBox:VBox = new VBox(this.componentsPanel);
 		this.faceComponetsPanel = new SurfaceComponetsPanel(vBox);
@@ -400,6 +411,8 @@ public class EditUI extends Sprite
 		//Layer.STAGE_BG_LAYER.visible = !flag;
 		Layer.TERRAIN_LAYER.visible = !flag;
 		//Layer.STAGE_FG_LAYER.visible = !flag;
+		
+		if (flag) Alert.close();
 	}
 }
 }

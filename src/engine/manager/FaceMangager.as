@@ -256,11 +256,12 @@ public class FaceMangager
 	
 	/**
 	 * 创建面的地图
-	 * @param	data		数据
+	 * @param	mapData		数据
 	 */
-	public static function createFaceMapByData(data:Object):void
+	public static function createFaceMapByData(mapData:Object):void
 	{
-		var arr:Array = data as Array;
+		trace(data);
+		var arr:Array = mapData as Array;
 		var count:int = arr.length;
 		for (var i:int = 0; i < count; i++) 
 		{

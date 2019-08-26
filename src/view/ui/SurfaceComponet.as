@@ -290,6 +290,8 @@ public class SurfaceComponet extends Sprite
 		faceComponet.downRightPoint.y = this.downRightPoint.y;
 		faceComponet.leftBlock = this.leftBlock;
 		faceComponet.rightBlock = this.rightBlock;
+		faceComponet.downBlock = this.downBlock;
+		faceComponet.upBlock = this.upBlock;
 		faceComponet.leftRestrict = this.leftRestrict;
 		faceComponet.rightRestrict = this.rightRestrict;
 		faceComponet.leftH = this.leftH;
@@ -367,6 +369,57 @@ public class SurfaceComponet extends Sprite
 			return this.downRightPoint.x 
 		else
 			return this.upRightPoint.x;
+	}
+	
+	/**
+	 * 横向翻转
+	 */
+	public function flipX():void
+	{
+		var leftBlock:Boolean = this.leftBlock;
+		var rightBlock:Boolean = this.rightBlock;
+		var leftRestrict:Boolean = this.leftRestrict;
+		var rightRestrict:Boolean = this.rightRestrict;
+
+		var leftH:Number = this.leftH;
+		var rightH:Number = this.rightH;
+		
+		var upLeftX:Number = this.upLeftPoint.x;
+		var downLeftX:Number = this.downLeftPoint.x;
+		var upRightX:Number = this.upRightPoint.x;
+		var downRightX:Number = this.downRightPoint.x;
+		
+		var leftGap:Number = upLeftX - downLeftX;
+		var rightGap:Number = upRightX - downRightX;
+		
+		this.leftBlock = rightBlock;
+		this.rightBlock = leftBlock;
+		
+		this.leftRestrict = rightRestrict;
+		this.rightRestrict = leftRestrict;
+		this.rightH = leftH;
+		this.leftH = rightH;
+		
+		this.downRightPoint.x = this.upRightPoint.x + leftGap;
+		this.downLeftPoint.x = this.upLeftPoint.x + rightGap;
+		this.draw();
+	}
+	
+	/**
+	 * 纵向翻转
+	 */
+	public function flipY():void
+	{
+		var upLeftX:Number = this.upLeftPoint.x;
+		var downLeftX:Number = this.downLeftPoint.x;
+		var upRightX:Number = this.upRightPoint.x;
+		var downRightX:Number = this.downRightPoint.x;
+		
+		this.upLeftPoint.x = downLeftX;
+		this.upRightPoint.x = downRightX;
+		this.downRightPoint.x = upRightX;
+		this.downLeftPoint.x = upLeftX;
+		this.draw();
 	}
 }
 }
